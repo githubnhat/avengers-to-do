@@ -33,7 +33,9 @@
           <!-- popup cua details-task -->
           <p-dialog header="{{task.name}}" [(visible)]="displayDetailTask" [modal]="true" [style]="{width: '50vw'}"
             [draggable]="false" [resizable]="false">
-            <p class="m-0">{{task.description}}</p>
+
+            <p class="m-0">{{task.description}}</p>   <!-- <app-task-detail [input]="selectedTask"></app-task-detail> -->
+
             <ng-template pTemplate="footer">
               <p-button icon="pi pi-check" (click)="displayDetailTask=false" label="Ok" styleClass="p-button-text">
               </p-button>
