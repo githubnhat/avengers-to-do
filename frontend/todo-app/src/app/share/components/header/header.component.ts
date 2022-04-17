@@ -1,0 +1,77 @@
+import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+
+
+@Component({
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss']
+})
+export class HeaderComponent implements OnInit {
+
+  paramText: string = ""
+  items: MenuItem[] = [
+    {
+      label: "Create",
+      icon: 'pi pi-fw pi-plus',
+    },
+    {
+      label: 'Login',
+      icon: 'pi pi-user',
+      routerLink: ['/login'],
+    },
+    {
+      label: 'Register',
+      icon: 'pi pi-user-plus',
+      routerLink: ['/register'],
+    },
+
+    {
+      label: 'Dashboards',
+      icon: 'pi pi-check-square',
+      routerLink: ['/dashboards'],
+    },
+  ];
+  activeMenuLink: string = "";
+  activeMenuItem: string = ""
+  private _history: string[] = []
+  constructor(
+    private router: Router,
+    private location: Location
+  ) { }
+
+  ngOnInit(): void {
+    this.fetchUrlData()
+  }
+  back(): void {
+    this._history.pop()
+    if (this._history.length > 0) {
+      this.location.back()
+    } else {
+      this.router.navigateByUrl('/')
+    }
+  }
+
+  fetchUrlData(): void {
+    this.router.events.subscribe(_res => {
+      if (_res instanceof NavigationEnd) {
+        this._history.push(_res.urlAfterRedirects)
+        this.paramText = _res.url.split('/')[1]
+        switch (this.paramText) {
+          case "dashboards": {
+            this.items[0].label = "Create dash board"
+            break;
+          }
+          case "dashboard": {
+            this.items[0].label = "Create item list"
+            break;
+          }
+          default:
+            break;
+        }
+      }
+    })
+  }
+}

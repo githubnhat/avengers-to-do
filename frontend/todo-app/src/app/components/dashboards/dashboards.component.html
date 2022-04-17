@@ -1,0 +1,20 @@
+
+<p-table [columns]="tableHeaders" [value]="listDashboards">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr (click)="onSelectDashboard(rowData.id)">
+            <td *ngFor="let col of columns">
+            {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+        There are {{listDashboards?.length}} cars
+    </ng-template>
+</p-table>
