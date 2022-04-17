@@ -13,6 +13,7 @@ import { HeaderComponent } from './share/components/header/header.component';
 import { DashboardComponent } from './components/dashboards/dashboard/dashboard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+
 const COMPONENTS = [
   AppComponent,
   LoginComponent,

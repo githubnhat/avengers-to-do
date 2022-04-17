@@ -135,4 +135,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
 
+  displayDetailTask: boolean | undefined;
+
+  showDetailTask() {
+    this.displayDetailTask = true;
+}
+
 }
