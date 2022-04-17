@@ -1,0 +1,13 @@
+<p-menubar [model]="items">
+    <ng-template pTemplate="start">
+      <div class="left-container">
+      <button (click)="back()" pButton class="p-button-text">
+        <i class="pi pi-arrow-left back-btn" style="font-size: 2rem"></i>
+      </button>
+    <h2>{{paramText}}</h2>
+  </div>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <input type="text" pInputText placeholder="Search">
+    </ng-template>
+  </p-menubar>
