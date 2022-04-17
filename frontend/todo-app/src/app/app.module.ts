@@ -12,6 +12,9 @@ import { DashboardsComponent } from './components/dashboards/dashboards.componen
 import { HeaderComponent } from './share/components/header/header.component';
 import { DashboardComponent } from './components/dashboards/dashboard/dashboard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { AuthService } from './services/auth.service';
+import { AuthGuardsService } from './services/auth-guards.service';
 
 
 const COMPONENTS = [
@@ -40,7 +43,10 @@ const MODULES = [
   imports: [
     ...MODULES
   ],
-  providers: [],
+  providers: [
+    MessageService,
+    AuthGuardsService
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

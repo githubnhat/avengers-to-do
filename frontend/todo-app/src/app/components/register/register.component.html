@@ -3,17 +3,17 @@
     <h1>REGISTER</h1>
   </div>
 
-  <form action="">
+  <form [formGroup]="registerForm" (submit)="onSubmit($event)">
     <div class="username">
-      <input type="text" pInputText placeholder="Username" />
+      <input formControlName="username" type="text" pInputText placeholder="Username" />
     </div>
     <br />
     <div class="password">
-      <input type="password" pInputText placeholder="Password" />
+      <input formControlName="password" type="password" pInputText placeholder="Password" />
     </div>
     <br />
     <div class="password_verify">
-      <input type="password" pInputText placeholder="Confirm Password" />
+      <input formControlName="verifyPassword" type="password" pInputText placeholder="Confirm Password" />
     </div>
     <br />
     <button
@@ -25,3 +25,4 @@
     ></button>
   </form>
 </div>
+<p-toast position="top-right" key="register"></p-toast>

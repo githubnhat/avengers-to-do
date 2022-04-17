@@ -3,13 +3,13 @@
     <h1>LOGIN</h1>
   </div>
 
-  <form action="">
+  <form (submit)="onSubmit()" [formGroup]="loginForm">
     <div class="username">
-      <input type="text" pInputText placeholder="Username" />
+      <input formControlName="username" type="text" pInputText placeholder="Username" />
     </div>
     <br />
     <div class="password">
-      <input type="password" pInputText placeholder="Password" />
+      <input formControlName="password" type="password" pInputText placeholder="Password" />
     </div>
     <br />
     <button
@@ -21,3 +21,4 @@
     ></button>
   </form>
 </div>
+<p-toast position="top-right" key="login"></p-toast>
