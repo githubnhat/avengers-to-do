@@ -11,6 +11,7 @@ import { PrimeNgModule } from './share/primeng.module';
 import { DashboardsComponent } from './components/dashboards/dashboards.component';
 import { HeaderComponent } from './share/components/header/header.component';
 import { DashboardComponent } from './components/dashboards/dashboard/dashboard.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const COMPONENTS = [
   AppComponent,
@@ -18,6 +19,7 @@ const COMPONENTS = [
   RegisterComponent,
   DashboardsComponent,
   HeaderComponent,
+  DashboardComponent
 ]
 
 const MODULES = [
@@ -26,12 +28,13 @@ const MODULES = [
   AppRoutingModule,
   PrimeNgModule,
   HttpClientModule,
+  ReactiveFormsModule,
+  FormsModule
 ]
 
 @NgModule({
   declarations: [
     ...COMPONENTS,
-    DashboardComponent
   ],
   imports: [
     ...MODULES

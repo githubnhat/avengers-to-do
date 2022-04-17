@@ -9,24 +9,25 @@ import { TabViewModule } from 'primeng/tabview';
 import { DragDropModule } from 'primeng/dragdrop';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
-
+import { DialogModule } from 'primeng/dialog';
 
 const PRIMENG_MODULE = [
-    ButtonModule,
-    InputTextModule,
-    MenubarModule,
-    TabViewModule,
-    DragDropModule,
-    PanelModule,
-    TableModule,
+  ButtonModule,
+  InputTextModule,
+  MenubarModule,
+  TabViewModule,
+  DragDropModule,
+  PanelModule,
+  TableModule,
+  DialogModule
 ]
 
 @NgModule({
-    exports: [
-        ...PRIMENG_MODULE
-    ],
-    imports: [
-        ...PRIMENG_MODULE
-    ],
+  exports: [
+    ...PRIMENG_MODULE
+  ],
+  imports: [
+    ...PRIMENG_MODULE
+  ],
 })
 export class PrimeNgModule { }
