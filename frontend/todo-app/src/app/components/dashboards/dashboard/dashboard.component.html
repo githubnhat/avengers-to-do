@@ -13,7 +13,7 @@
         <div *ngFor="let task of tasklist.listTask">
           <div *ngIf="task.id !== 'newtask'" class="task-item task-valid" pDraggable="task" pDroppable="task"
             (onDragStart)="dragStartHandler(task)" (drop)="dropHandler($event,tasklist)" (onDragEnd)="dragEndHandler()"
-            pDroppable="dd">
+            pDroppable="dd"  (click)="showDetailTask()">
             <p>{{task.name}}</p>
             <div class="task-item__actions">
               <button (click)="deleteTask(task,tasklist)" pButton
@@ -29,6 +29,17 @@
                 (click)="cancelNewTask(tasklist)"></button>
             </div>
           </div>
+
+          <!-- popup cua details-task -->
+          <p-dialog header="{{task.name}}" [(visible)]="displayDetailTask" [modal]="true" [style]="{width: '50vw'}"
+            [draggable]="false" [resizable]="false">
+            <p class="m-0">{{task.description}}</p>
+            <ng-template pTemplate="footer">
+              <p-button icon="pi pi-check" (click)="displayDetailTask=false" label="Ok" styleClass="p-button-text">
+              </p-button>
+            </ng-template>
+          </p-dialog>
+          <!-- end popup cua detail-task -->
         </div>
         <div pDroppable="task" class="task-item task-not-found" *ngIf="tasklist.listTask.length == 0"
           (drop)="dropHandler($event,tasklist)">
