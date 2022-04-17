@@ -11,6 +11,11 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   getAllDashboards(): Observable<Dashboard[]> {
-    return this.http.get<Dashboard[]>("../../../assets")
+    return this.http.get<Dashboard[]>("")
   }
+
+  getDashboardById(id: string): Observable<Dashboard> {
+    return this.http.get<Dashboard>("")
+  }
+
 }

@@ -14,10 +14,6 @@ export class HeaderComponent implements OnInit {
   paramText: string = ""
   items: MenuItem[] = [
     {
-      label: "Create",
-      icon: 'pi pi-fw pi-plus',
-    },
-    {
       label: 'Login',
       icon: 'pi pi-user',
       routerLink: ['/login'],
@@ -60,14 +56,6 @@ export class HeaderComponent implements OnInit {
         this._history.push(_res.urlAfterRedirects)
         this.paramText = _res.url.split('/')[1]
         switch (this.paramText) {
-          case "dashboards": {
-            this.items[0].label = "Create dash board"
-            break;
-          }
-          case "dashboard": {
-            this.items[0].label = "Create item list"
-            break;
-          }
           default:
             break;
         }
