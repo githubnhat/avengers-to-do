@@ -20,7 +20,7 @@ public class TaskListController {
     private final TaskListService taskListService;
 
     @PostMapping("/taskList")
-    public ResponseEntity<?> login(@RequestBody TaskListRequest request) {
+    public ResponseEntity<?> createTaskList(@RequestBody TaskListRequest request) {
         try {
             return ResponseEntity.ok(taskListService.createTaskList(request));
         } catch (IllegalArgumentException ex) {

@@ -1,4 +1,5 @@
 package com.avengers.todo.services;
+
 import com.avengers.todo.entity.Boards;
 import com.avengers.todo.entity.TaskList;
 import com.avengers.todo.payloads.TaskListRequest;
@@ -16,16 +17,15 @@ public class TaskListService {
     private final TaskListRepository taskListRepository;
 
     public TaskList createTaskList(TaskListRequest request) {
-        Boards boards = boardRepository.findById(request.getBoardsId()).orElse(null);
+        Boards board = boardRepository.findById(request.getBoardsId()).orElse(null);
 
-        if(boards == null){
+        if (board == null) {
             throw new IllegalStateException("Board not found");
         }
 
-
-        return taskListRepository.save(TaskList.builder()
+        TaskList entity = TaskList.builder()
                 .title(request.getTitle())
-                .boards(boards).build()
-        );
+                .boards(board).build();
+        return taskListRepository.save(entity);
     }
 }

@@ -19,7 +19,7 @@ public abstract class BaseEntity {
             strategy = GenerationType.IDENTITY
     )
     @Column(columnDefinition = "serial")
-        protected Integer id;
+        protected Long id;
     @CreatedBy
     @Column(name = "created_by")
     protected String createdBy;
