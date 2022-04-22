@@ -1,4 +1,8 @@
+<div class="add-dashboard-area">
 
+    <button pButton class="p-panel-header-icon btn" icon="pi pi-plus" label="Add dashboard"
+        (click)="onCreateNewList()"></button>
+</div>
 <p-table [columns]="tableHeaders" [value]="listDashboards">
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -7,10 +11,11 @@
             </th>
         </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr (click)="onSelectDashboard(rowData.id)">
             <td *ngFor="let col of columns">
-            {{rowData[col.field]}}
+                {{rowData[col.field]}}
             </td>
         </tr>
     </ng-template>
@@ -18,3 +23,16 @@
         There are {{listDashboards?.length}} dashboard
     </ng-template>
 </p-table>
+<p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Create new dashboard"
+    [(visible)]="displayCreateNewListDialog">
+    <form [formGroup]="createListForm">
+        <input pInputText formControlName="name" placeholder="Input Name">
+        <input pInputText formControlName="description" placeholder="Description">
+    </form>
+    <p-footer>
+        <button pButton type="submit" [disabled]="!createListForm.valid" icon="pi pi-check" class=" p-button-text "
+            (click)="newDashBoard()"></button>
+        <button pButton (click)="displayCreateNewListDialog = false" icon="pi pi-times"
+            class=" p-button-text "></button>
+    </p-footer>
+</p-dialog>
