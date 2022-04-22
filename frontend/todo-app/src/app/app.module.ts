@@ -15,7 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AuthService } from './services/auth.service';
 import { AuthGuardsService } from './services/auth-guards.service';
-
+import { CommentComponent } from './components/dashboards/dashboard/comment/comment.component';
 
 const COMPONENTS = [
   AppComponent,
@@ -23,8 +23,9 @@ const COMPONENTS = [
   RegisterComponent,
   DashboardsComponent,
   HeaderComponent,
-  DashboardComponent
-]
+  DashboardComponent,
+  CommentComponent,
+];
 
 const MODULES = [
   BrowserModule,
@@ -33,20 +34,13 @@ const MODULES = [
   PrimeNgModule,
   HttpClientModule,
   ReactiveFormsModule,
-  FormsModule
-]
+  FormsModule,
+];
 
 @NgModule({
-  declarations: [
-    ...COMPONENTS,
-  ],
-  imports: [
-    ...MODULES
-  ],
-  providers: [
-    MessageService,
-    AuthGuardsService
-  ],
+  declarations: [...COMPONENTS],
+  imports: [...MODULES],
+  providers: [MessageService, AuthGuardsService],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
