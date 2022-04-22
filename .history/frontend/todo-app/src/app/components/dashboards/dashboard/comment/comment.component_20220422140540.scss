@@ -1,0 +1,15 @@
+.comments-area {
+  height: 500px;
+  .show-comment-area {
+    height: 95%;
+    overflow-y: auto;
+    margin-bottom: 10px;
+  }
+  .type-message-area {
+    ::ng-deep {
+      .p-inputtext {
+        width: 100%;
+      }
+    }
+  }
+}
