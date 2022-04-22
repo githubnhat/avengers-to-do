@@ -8,7 +8,6 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
-
 const PRIMENG_MODULE = [
   ButtonModule,
   InputTextModule,
