@@ -1,0 +1,52 @@
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.comments-area {
+  height: 500px;
+  .show-comment-area {
+    height: 50%;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 5px;
+    .comment-area {
+      margin: 5px;
+      .comment {
+        background-color: white;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 10px;
+        width: fit-content;
+      }
+    }
+  }
+  .type-message-area {
+    ::ng-deep {
+      .p-inputtext {
+        width: 100%;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  body {
+    .comments-area {
+    }
+  }
+}

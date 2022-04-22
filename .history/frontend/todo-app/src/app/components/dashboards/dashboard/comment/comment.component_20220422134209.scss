@@ -1,0 +1,10 @@
+.comments-area {
+  height: 500px;
+  .type-message-area {
+    ::ng-deep {
+      .p-inputtext {
+        width: 100%;
+      }
+    }
+  }
+}

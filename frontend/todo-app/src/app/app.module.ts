@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AuthService } from './services/auth.service';
 import { AuthGuardsService } from './services/auth-guards.service';
+import { CommentComponent } from './components/dashboards/dashboard/comment/comment.component';
 
 
 const COMPONENTS = [
@@ -39,6 +40,7 @@ const MODULES = [
 @NgModule({
   declarations: [
     ...COMPONENTS,
+    CommentComponent,
   ],
   imports: [
     ...MODULES
