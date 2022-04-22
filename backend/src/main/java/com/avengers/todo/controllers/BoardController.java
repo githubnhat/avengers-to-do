@@ -28,4 +28,14 @@ public class BoardController {
                     .build());
         }
     }
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        try {
+            return ResponseEntity.ok(boardService.getAll());
+        } catch (IllegalArgumentException ex) {
+            log.error("API /api/v1/boards: ", ex);
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
+        }
+    }
+
 }

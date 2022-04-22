@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 //@RequiredArgsConstructor
@@ -22,5 +24,8 @@ public class BoardService {
         }
         Boards entity = Boards.builder().name(request.getName()).description(request.getDescription()).build();
         return boardRepository.save(entity);
+    }
+    public List<Boards> getAll (){
+        return boardRepository.findAll();
     }
 }
