@@ -21,7 +21,7 @@ public class BoardController {
     public ResponseEntity<?> createNewBoard(@RequestBody CreateBoardRequest request) {
         try {
             return ResponseEntity.ok(boardService.createNewBoard(request));
-        } catch (IllegalArgumentException ex) {
+        } catch (Exception ex) {
             log.error("API /api/v1/boards: ", ex);
             return ResponseEntity.badRequest().body(ErrorResponse.builder()
                     .message(ex.getMessage())
@@ -32,7 +32,7 @@ public class BoardController {
     public ResponseEntity<?> getAll() {
         try {
             return ResponseEntity.ok(boardService.getAll());
-        } catch (IllegalArgumentException ex) {
+        } catch (Exception ex) {
             log.error("API /api/v1/boards: ", ex);
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
         }
