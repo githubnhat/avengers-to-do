@@ -4,15 +4,13 @@ import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
 
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-
-  paramText: string = ""
+  paramText: string = '';
   items: MenuItem[] = [
     {
       label: 'Login',
@@ -31,37 +29,37 @@ export class HeaderComponent implements OnInit {
       routerLink: ['/dashboards'],
     },
   ];
-  activeMenuLink: string = "";
-  activeMenuItem: string = ""
-  private _history: string[] = []
+  activeMenuLink: string = '';
+  activeMenuItem: string = '';
+  private _history: string[] = [];
   constructor(
     private router: Router,
     private location: Location,
     private authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.fetchUrlData()
+    this.fetchUrlData();
   }
   back(): void {
-    this._history.pop()
+    this._history.pop();
     if (this._history.length > 0) {
-      this.location.back()
+      this.location.back();
     } else {
-      this.router.navigateByUrl('/')
+      this.router.navigateByUrl('/');
     }
   }
 
   fetchUrlData(): void {
-    this.router.events.subscribe(_res => {
+    this.router.events.subscribe((_res) => {
       if (_res instanceof NavigationEnd) {
-        this._history.push(_res.urlAfterRedirects)
-        this.paramText = _res.url.split('/')[1]
+        this._history.push(_res.urlAfterRedirects);
+        this.paramText = _res.url.split('/')[1];
         switch (this.paramText) {
           default:
             break;
         }
       }
-    })
+    });
   }
 }

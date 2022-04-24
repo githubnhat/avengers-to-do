@@ -1,6 +1,6 @@
 <div class="add-dashboard-area">
 
-    <button pButton class="p-panel-header-icon btn" icon="pi pi-plus" label="Add dashboard"
+    <button pButton class="p-panel-header-icon btn" icon="pi pi-plus" label="Add Workboard"
         (click)="onCreateNewList()"></button>
 </div>
 <p-table [columns]="tableHeaders" [value]="listDashboards">
@@ -20,10 +20,10 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-        There are {{listDashboards?.length}} dashboard
+        There are {{listDashboards?.length}} Workboard
     </ng-template>
 </p-table>
-<p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Create new dashboard"
+<p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Create new Workboard"
     [(visible)]="displayCreateNewListDialog">
     <form [formGroup]="createListForm">
         <input pInputText formControlName="name" placeholder="Input Name">

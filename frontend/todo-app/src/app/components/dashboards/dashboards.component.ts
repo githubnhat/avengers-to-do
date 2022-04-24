@@ -38,7 +38,7 @@ export class DashboardsComponent implements OnInit {
   tableHeaders = [
     {
       field: 'name',
-      header: 'Dashboard Name',
+      header: 'Workboard Name',
       className: 'dashboard-name',
       show: true,
     },
