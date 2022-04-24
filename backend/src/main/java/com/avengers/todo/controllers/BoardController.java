@@ -20,7 +20,7 @@ public class BoardController {
     @PostMapping
     public ResponseEntity<?> createNewBoard(@RequestBody CreateBoardRequest request) {
         try {
-            return ResponseEntity.ok(boardService.createNewBoard(request));
+            return ResponseEntity.ok(boardService.create(request));
         } catch (Exception ex) {
             log.error("API /api/v1/boards: ", ex);
             return ResponseEntity.badRequest().body(ErrorResponse.builder()
