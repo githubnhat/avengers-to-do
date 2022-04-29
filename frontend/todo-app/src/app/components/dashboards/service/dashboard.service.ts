@@ -29,22 +29,19 @@ export class DashboardService {
   createTask(body: any) {
     return this.http.post(
       `${environment.endPoint}/tasks`,
-      body,
-      this.httpOptions
+      body
     );
   }
 
   createTaskList(body: any) {
     return this.http.post(
       `${environment.endPoint}/taskList`,
-      body,
-      this.httpOptions
+      body
     );
   }
   getAllTaskList(boardsId: any): Observable<any> {
     return this.http.get<any>(
-      `${environment.endPoint}/taskList/${boardsId}`,
-      this.httpOptions
+      `${environment.endPoint}/taskList/${boardsId}`
     );
   }
 }

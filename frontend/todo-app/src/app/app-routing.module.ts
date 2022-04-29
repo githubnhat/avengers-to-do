@@ -8,7 +8,10 @@ import { AuthGuardsService } from './services/auth-guards.service';
 import { LoginGuardService } from './services/login-guard.service';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent, canActivate: [LoginGuardService] },
+  {
+    path: 'login', component: LoginComponent,
+    // canActivate: [LoginGuardService]
+  },
   { path: 'register', component: RegisterComponent },
   {
     path: 'dashboards',
