@@ -22,4 +22,7 @@ public class Tasks extends BaseEntity {
     @ManyToMany
     @JoinTable(name = "tasks_users", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Users> users;
+
+    @OneToMany(mappedBy = "tasks")
+    private List<Comment> comments;
 }
