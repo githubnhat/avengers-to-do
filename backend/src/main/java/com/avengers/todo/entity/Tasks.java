@@ -23,6 +23,6 @@ public class Tasks extends BaseEntity {
     @JoinTable(name = "tasks_users", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Users> users;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isDone;
+    @OneToMany(mappedBy = "tasks")
+    private List<Comment> comments;
 }

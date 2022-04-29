@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 @Data
@@ -23,4 +24,7 @@ public class Users extends BaseEntity {
     private List<Boards> boards;
     @ManyToMany(mappedBy = "users")
     private List<Tasks> tasks;
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
 }
