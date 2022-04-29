@@ -22,9 +22,9 @@ public class TaskListController {
     public ResponseEntity<?> createTaskList(@RequestBody TaskListRequest request) {
 
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Creating task lít is successfully", taskListService.createTaskList(request)));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Creating task list is successfully", taskListService.createTaskList(request)));
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot create board", ""));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot create task list", ""));
         }
 
 
