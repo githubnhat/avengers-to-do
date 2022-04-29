@@ -1,5 +1,6 @@
 package com.avengers.todo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,8 @@ import java.util.List;
 public class TaskList extends BaseEntity {
     private String title;
     @ManyToOne
-    @JoinColumn(name = "board_id", nullable = false)
+    @JoinColumn(name="board_id", nullable=false)
+    @JsonIgnore
     private Boards boards;
     @OneToMany(mappedBy = "taskList")
     private List<Tasks> tasks;
