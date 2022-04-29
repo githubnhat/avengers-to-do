@@ -7,30 +7,22 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class DashboardService {
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-    }),
-  };
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllDashboards(): Observable<Dashboard[]> {
     return this.http.get<Dashboard[]>(
-      `${environment.endPoint}/boards`,
-      this.httpOptions
+      `${environment.endPoint}/boards`
     );
   }
 
   getDashboardById(id: string): Observable<Dashboard> {
-    return this.http.get<Dashboard>('');
+    return this.http.get<Dashboard>(`${environment.endPoint}/boards`);
   }
 
   createDashboard(body: any) {
     return this.http.post(
       `${environment.endPoint}/boards`,
-      body,
-      this.httpOptions
+      body
     );
   }
 }

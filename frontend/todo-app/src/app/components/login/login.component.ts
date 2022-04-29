@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
       password: this.loginForm.value.password,
     }
     this.authService.login(body).then((_res) => {
-      this.authService.getHeader(_res.accessToken)
+      this.authService.setHeader(_res.accessToken)
       this.notification.setNotification({ key: "toast", severity: 'success', summary: 'Success', detail: 'Login successfully' });
       this.loginForm.setValue({
         username: [null],

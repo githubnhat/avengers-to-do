@@ -60,7 +60,7 @@ export class DashboardsComponent implements OnInit {
     private dashboardService: DashboardService,
     private router: Router,
     private form: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchDashboards();
@@ -68,9 +68,7 @@ export class DashboardsComponent implements OnInit {
       name: [null, [Validators.required]],
       description: [null, [Validators.required]],
     });
-    this.dashboardService.getAllDashboards().subscribe((data) => {
-      this.listDashboards = data;
-    });
+
   }
 
   onSelectDashboard(dashboardId: string): void {
@@ -79,24 +77,11 @@ export class DashboardsComponent implements OnInit {
 
   fetchDashboards(): void {
     this.subscription.push(
-      this.dashboardService.getAllDashboards().subscribe(
-        (_respone) => {},
-        (_error) => {
-          this.listDashboards = [...this.mockDashboards];
-        }
-      )
+      this.dashboardService.getAllDashboards().subscribe((data) => {
+        this.listDashboards = data;
+      })
     );
   }
-  // addNewDashboard(boardUser: BoardUser): void {
-  //   this.isCreateNewDashboard = true;
-  //   boardUser.listDashboard.push({
-  //     id: '1',
-  //     name: 'abc',
-  //     description: 'abc',
-  //     createdDate: '',
-  //     createdBy: '',
-  //   });
-  // }
 
   newDashBoard(): void {
     this.displayCreateNewListDialog = true;
@@ -104,18 +89,14 @@ export class DashboardsComponent implements OnInit {
       name: this.createListForm.value.name,
       description: this.createListForm.value.description,
     };
-    console.log(body);
-
     this.dashboardService.createDashboard(body).subscribe((data: any) => {
       this.item = data;
-      console.log(data);
-
       this.listDashboards.push(this.item);
-      console.log(this.listDashboards);
     });
     this.displayCreateNewListDialog = false;
     this.createListForm.reset();
   }
+
   onCreateNewList(): void {
     this.displayCreateNewListDialog = true;
   }

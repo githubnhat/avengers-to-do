@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PrimeNgModule } from './share/primeng.module';
 import { DashboardsComponent } from './components/dashboards/dashboards.component';
 import { HeaderComponent } from './share/components/header/header.component';
@@ -16,6 +16,8 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from './services/auth.service';
 import { AuthGuardsService } from './services/auth-guards.service';
 import { CommentComponent } from './components/dashboards/dashboard/comment/comment.component';
+import { HttpAuthInterceptor } from './interceptors/http-auth.interceptor';
+import { HttpHandlerInterceptor } from './interceptors/http-handler.interceptor';
 
 const COMPONENTS = [
   AppComponent,
@@ -40,7 +42,21 @@ const MODULES = [
 @NgModule({
   declarations: [...COMPONENTS],
   imports: [...MODULES],
-  providers: [MessageService, AuthGuardsService],
+  providers: [
+    MessageService
+    , AuthGuardsService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpHandlerInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpAuthInterceptor,
+      multi: true
+    }
+
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
