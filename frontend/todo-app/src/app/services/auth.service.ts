@@ -7,11 +7,12 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  private _httpHeaders!: HttpHeaders
+  private _httpHeaders!: string
 
   constructor(private http: HttpClient) { }
 
   get httpHeaders() {
+    this.getHeader()
     return this._httpHeaders
   }
 
@@ -23,13 +24,17 @@ export class AuthService {
     return this.http.post(`${environment.endPoint}/login`, body).toPromise()
   }
 
-  getHeader(accessToken: string): HttpHeaders {
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: `Bearer ${accessToken}`
-    })
+  setHeader(accessToken: string): string {
+    const headers: string = `Bearer ${accessToken}`
     window.localStorage.setItem("accessToken", accessToken)
     this._httpHeaders = headers
     return headers
+  }
+
+  getHeader() {
+    const accessToken = localStorage.getItem("accessToken")
+    const headers: string = `Bearer ${accessToken}`
+    this._httpHeaders = headers
   }
 
 

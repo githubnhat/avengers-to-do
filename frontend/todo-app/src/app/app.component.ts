@@ -17,24 +17,13 @@ export class AppComponent {
   constructor(
     private messageService: MessageService,
     private notification: Notification,
-    private authService: AuthService,
-    private router: Router
   ) { }
 
   ngOnInit() {
-    this.checkAuth()
     this.notification.getNotification().subscribe(_message => {
       if (_message)
         this.messageService.add(_message)
     })
-  }
-
-  checkAuth() {
-    console.log(window.localStorage.getItem("accessToken"))
-    if (window.localStorage.getItem("accessToken")) {
-      this.authService.getHeader(window.sessionStorage.getItem("accessToken") + "")
-      this.router.navigateByUrl("/dashboards")
-    }
   }
 
   showMessage(event: any) {

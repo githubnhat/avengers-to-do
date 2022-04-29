@@ -62,7 +62,7 @@ export class DashboardsComponent implements OnInit {
     private dashboardService: DashboardService,
     private router: Router,
     private form: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchDashboards();
@@ -70,9 +70,7 @@ export class DashboardsComponent implements OnInit {
       name: [null, [Validators.required]],
       description: [null, [Validators.required]],
     });
-    this.dashboardService.getAllDashboards().subscribe((data) => {
-      this.listDashboards = data;
-    });
+
   }
 
   onSelectDashboard(dashboardId: string): void {
@@ -81,12 +79,9 @@ export class DashboardsComponent implements OnInit {
 
   fetchDashboards(): void {
     this.subscription.push(
-      this.dashboardService.getAllDashboards().subscribe(
-        (_respone) => {},
-        (_error) => {
-          this.listDashboards = [...this.mockDashboards];
-        }
-      )
+      this.dashboardService.getAllDashboards().subscribe((data) => {
+        this.listDashboards = data;
+      })
     );
   }
 
@@ -96,8 +91,6 @@ export class DashboardsComponent implements OnInit {
       name: this.createListForm.value.name,
       description: this.createListForm.value.description,
     };
-    console.log(body);
-
     this.dashboardService.createDashboard(body).subscribe((data: any) => {
       this.item = data;
       this.listDashboards.push(this.item);
@@ -105,6 +98,7 @@ export class DashboardsComponent implements OnInit {
     this.displayCreateNewListDialog = false;
     this.createListForm.reset();
   }
+
   onCreateNewList(): void {
     this.displayCreateNewListDialog = true;
   }
