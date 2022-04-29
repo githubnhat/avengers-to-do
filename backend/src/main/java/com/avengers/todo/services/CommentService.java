@@ -4,6 +4,7 @@ import com.avengers.todo.entity.Comment;
 import com.avengers.todo.entity.Tasks;
 import com.avengers.todo.entity.Users;
 import com.avengers.todo.payloads.CommentRequest;
+import com.avengers.todo.payloads.CommentResponse;
 import com.avengers.todo.repositories.CommentRepository;
 import com.avengers.todo.repositories.TaskRepository;
 import com.avengers.todo.repositories.UsersRepository;
@@ -25,7 +26,6 @@ public class CommentService {
         if (!(user.isPresent()&&tasks.isPresent())) {
             throw new IllegalArgumentException("User or Task is not found!");
         }
-        Comment comment = new Comment(request.getContent(),user.get(),tasks.get());
-        return commentRepository.save(comment);
+        return commentRepository.save(new Comment(request.getContent(),user.get(),tasks.get()));
     }
 }

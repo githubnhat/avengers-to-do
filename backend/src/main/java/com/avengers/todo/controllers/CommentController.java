@@ -1,6 +1,7 @@
 package com.avengers.todo.controllers;
 
 import com.avengers.todo.common.ErrorResponse;
+import com.avengers.todo.entity.Comment;
 import com.avengers.todo.payloads.CommentRequest;
 import com.avengers.todo.payloads.ResponseObject;
 import com.avengers.todo.repositories.CommentRepository;
@@ -21,7 +22,8 @@ private final CommentService commentService;
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CommentRequest request) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Query Create Comment Successfully", commentService.create(request)));
+            commentService.create(request);
+            return ResponseEntity.ok().build();
         } catch (Exception ex) {
             log.error("API /api/v1/comment: ", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Create Comment", ""));

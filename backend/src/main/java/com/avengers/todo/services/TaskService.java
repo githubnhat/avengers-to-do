@@ -9,6 +9,7 @@ import com.avengers.todo.payloads.TaskResponse;
 import com.avengers.todo.repositories.CommentRepository;
 import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
+import com.avengers.todo.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class TaskService {
     private final TaskListRepository taskListRepository;
     private final CommentRepository commentRepository;
 
+    private final UsersRepository usersRepository;
     public CreateTask create(CreateTask request) {
         TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElse(null);
         if (taskList == null) {
@@ -47,6 +49,7 @@ public class TaskService {
                 .comments(comments.stream().map(e -> CommentResponse.builder()
                         .id(e.getId())
                         .content(e.getContent())
+                        .fullName(usersRepository.findById(e.getUser().getId()).get().getFullName())
                         .build()).collect(Collectors.toList()))
                 .build();
     }
