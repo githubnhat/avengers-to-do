@@ -12,8 +12,10 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor
-public class TaskListResponse {
+public class TaskResponse {
     private Long id;
-    private String title;
-    private List<TaskResponse> listTask;
+    private String name;
+    private String description;
+    private Boolean isDone;
+    private List<CommentResponse> comments;
 }

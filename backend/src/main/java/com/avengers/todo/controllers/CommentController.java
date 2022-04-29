@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
 private final CommentService commentService;
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody CommentRequest request) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Query Create Board Successfully", commentService.create(request)));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Query Create Comment Successfully", commentService.create(request)));
         } catch (Exception ex) {
             log.error("API /api/v1/comment: ", ex);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Create", ""));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Create Comment", ""));
         }
     }
 }

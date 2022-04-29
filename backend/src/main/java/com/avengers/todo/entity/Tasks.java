@@ -25,4 +25,6 @@ public class Tasks extends BaseEntity {
 
     @OneToMany(mappedBy = "tasks")
     private List<Comment> comments;
+
+    private Boolean isDone;
 }

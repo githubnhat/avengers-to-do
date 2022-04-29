@@ -5,12 +5,11 @@ import com.avengers.todo.entity.TaskList;
 import com.avengers.todo.entity.Tasks;
 import com.avengers.todo.payloads.TaskListRequest;
 import com.avengers.todo.payloads.TaskListResponse;
-import com.avengers.todo.payloads.TaskReponse;
+import com.avengers.todo.payloads.TaskResponse;
 import com.avengers.todo.repositories.BoardRepository;
 import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class TaskListService {
 
         for(TaskList t : taskList){
             List<Tasks> tasks = taskRepository.getAllTaskByTaskListId(t.getId());
-            List<TaskReponse> taskReponses = tasks.stream().map(e -> TaskReponse.builder()
+            List<TaskResponse> taskReponses = tasks.stream().map(e -> TaskResponse.builder()
                     .id(e.getId()).name(e.getName()).description(e.getDescription())
                     .isDone(e.getIsDone())
                     .build()).collect(Collectors.toList());
