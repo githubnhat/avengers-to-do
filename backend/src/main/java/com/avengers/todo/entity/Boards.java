@@ -23,6 +23,7 @@ public class Boards extends BaseEntity {
     private String name;
     private String description;
     @OneToMany(mappedBy = "boards")
+    @JsonIgnore
     private Set<TaskList> taskLists;
     @ManyToMany
     @JoinTable(name = "boards_users",

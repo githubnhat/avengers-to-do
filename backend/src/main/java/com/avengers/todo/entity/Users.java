@@ -21,4 +21,6 @@ public class Users extends BaseEntity {
     private boolean isActive;
     @ManyToMany(mappedBy = "users")
     private List<Boards> boards;
+    @ManyToMany(mappedBy = "users")
+    private List<Tasks> tasks;
 }
