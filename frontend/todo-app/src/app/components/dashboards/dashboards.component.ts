@@ -35,6 +35,8 @@ export class DashboardsComponent implements OnInit {
   item!: Dashboard;
   listDashboards: Dashboard[] = [];
 
+  taskListid: any;
+
   tableHeaders = [
     {
       field: 'name',
@@ -87,16 +89,6 @@ export class DashboardsComponent implements OnInit {
       )
     );
   }
-  // addNewDashboard(boardUser: BoardUser): void {
-  //   this.isCreateNewDashboard = true;
-  //   boardUser.listDashboard.push({
-  //     id: '1',
-  //     name: 'abc',
-  //     description: 'abc',
-  //     createdDate: '',
-  //     createdBy: '',
-  //   });
-  // }
 
   newDashBoard(): void {
     this.displayCreateNewListDialog = true;
@@ -108,10 +100,7 @@ export class DashboardsComponent implements OnInit {
 
     this.dashboardService.createDashboard(body).subscribe((data: any) => {
       this.item = data;
-      console.log(data);
-
       this.listDashboards.push(this.item);
-      console.log(this.listDashboards);
     });
     this.displayCreateNewListDialog = false;
     this.createListForm.reset();
