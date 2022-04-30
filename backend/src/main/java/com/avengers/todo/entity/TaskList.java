@@ -26,4 +26,5 @@ public class TaskList extends BaseEntity {
     @OneToMany(mappedBy = "taskList")
     private List<Tasks> tasks;
 
+    private Boolean active;
 }

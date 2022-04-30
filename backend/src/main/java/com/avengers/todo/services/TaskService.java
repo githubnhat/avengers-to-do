@@ -1,11 +1,13 @@
 package com.avengers.todo.services;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.avengers.todo.entity.Comment;
 import com.avengers.todo.entity.TaskList;
 import com.avengers.todo.entity.Tasks;
 import com.avengers.todo.payloads.CommentResponse;
 import com.avengers.todo.payloads.CreateTask;
 import com.avengers.todo.payloads.TaskResponse;
+import com.avengers.todo.payloads.UpdateTaskRequest;
 import com.avengers.todo.repositories.CommentRepository;
 import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,5 +55,30 @@ public class TaskService {
                         .fullName(usersRepository.findById(e.getUser().getId()).get().getFullName())
                         .build()).collect(Collectors.toList()))
                 .build();
+    }
+
+
+    public void updateTask(UpdateTaskRequest updateTaskRequest) {
+        Long taskIdRequest = updateTaskRequest.getTaskId();
+        String nameRequest = updateTaskRequest.getName();
+        String descriptionRequest = updateTaskRequest.getDescription();
+        Boolean isDoneRequest = updateTaskRequest.getIsDone();
+
+        Tasks tasks = taskRepository.findById(taskIdRequest)
+                .orElseThrow(() ->  new IllegalArgumentException("Task is not exist"));
+
+        if(nameRequest != null && nameRequest.length() > 0 && !Objects.equals(tasks.getName(), nameRequest)){
+            tasks.setName(nameRequest);
+        }
+
+        if(descriptionRequest != null && descriptionRequest.length() > 0 && !Objects.equals(tasks.getDescription(), descriptionRequest)){
+            tasks.setDescription(descriptionRequest);
+        }
+
+        if(isDoneRequest != null  && !(isDoneRequest == tasks.getIsDone())){
+            tasks.setIsDone(isDoneRequest);
+        }
+
+        taskRepository.save(tasks);
     }
 }

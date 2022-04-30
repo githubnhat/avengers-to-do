@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface TaskListRepository extends JpaRepository<TaskList, Long> {
 
-    @Query(value = "select t.* from  task_list t join boards b on t.board_id =  b.id where b.id = :boardsId ", nativeQuery = true)
+    @Query(value = "select t.* from  task_list t join boards b on t.board_id =  b.id where b.id = :boardsId and t.active = true ", nativeQuery = true)
     List<TaskList> getAllTaskListByBoardId(@Param("boardsId") Long boardsId);
 }
