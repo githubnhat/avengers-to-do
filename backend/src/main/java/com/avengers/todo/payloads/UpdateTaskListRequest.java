@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateTaskListRequest {
-    private Long TaskListId;
+    private Long taskListId;
     private String title;
 }

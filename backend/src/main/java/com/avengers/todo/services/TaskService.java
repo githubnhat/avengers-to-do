@@ -1,19 +1,18 @@
 package com.avengers.todo.services;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import com.avengers.todo.entity.Boards;
 import com.avengers.todo.entity.Comment;
 import com.avengers.todo.entity.TaskList;
 import com.avengers.todo.entity.Tasks;
-import com.avengers.todo.payloads.CommentResponse;
-import com.avengers.todo.payloads.CreateTask;
-import com.avengers.todo.payloads.TaskResponse;
-import com.avengers.todo.payloads.UpdateTaskRequest;
+import com.avengers.todo.payloads.*;
 import com.avengers.todo.repositories.CommentRepository;
 import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
 import com.avengers.todo.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +36,7 @@ public class TaskService {
                 .name(request.getName())
                 .description(request.getDescription())
                 .isDone(false)
+                .active(true)
                 .taskList(taskList).build());
         return CreateTask.builder().name(request.getName()).description(request.getName()).usersList(Collections.emptyList()).build();
     }
@@ -66,20 +66,38 @@ public class TaskService {
         Boolean isDoneRequest = updateTaskRequest.getIsDone();
 
         Tasks tasks = taskRepository.findById(taskIdRequest)
-                .orElseThrow(() ->  new IllegalArgumentException("Task is not exist"));
+                .orElseThrow(() -> new IllegalArgumentException("Task is not exist"));
 
-        if(nameRequest != null && nameRequest.length() > 0 && !Objects.equals(tasks.getName(), nameRequest)){
+        if (nameRequest != null && nameRequest.length() > 0 && !Objects.equals(tasks.getName(), nameRequest)) {
             tasks.setName(nameRequest);
         }
 
-        if(descriptionRequest != null && descriptionRequest.length() > 0 && !Objects.equals(tasks.getDescription(), descriptionRequest)){
+        if (descriptionRequest != null && descriptionRequest.length() > 0 && !Objects.equals(tasks.getDescription(), descriptionRequest)) {
             tasks.setDescription(descriptionRequest);
         }
 
-        if(isDoneRequest != null  && !(isDoneRequest == tasks.getIsDone())){
+        if (isDoneRequest != null && !(isDoneRequest == tasks.getIsDone())) {
             tasks.setIsDone(isDoneRequest);
         }
 
+        taskRepository.save(tasks);
+    }
+
+    public void delete(Long id) {
+        Tasks tasks = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+        if (tasks.isActive()) {
+            tasks.setActive(false);
+            taskRepository.save(tasks);
+        } else {
+            throw new IllegalArgumentException("Task is not exist");
+        }
+    }
+
+    public void changeId(Long id, UpdateTaskListRequest request) {
+        Tasks tasks = taskRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Task not found"));
+        TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElseThrow(()-> new IllegalArgumentException("TaskList not found"));
+        tasks.setTaskList(taskList);
         taskRepository.save(tasks);
     }
 }

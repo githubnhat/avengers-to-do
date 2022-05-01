@@ -24,7 +24,7 @@ public class BoardService {
 
     public List<Boards> getAll() {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        return boardRepository.findMyBoards(username);
+        return boardRepository.findMyBoards(username,true);
     }
 
     public GetBoardIdResponse getById(Long id) {
