@@ -1,7 +1,7 @@
 package com.avengers.todo.controllers;
 
 import com.avengers.todo.common.ErrorResponse;
-import com.avengers.todo.payloads.CreateBoardRequest;
+import com.avengers.todo.payloads.HandleBoard;
 import com.avengers.todo.payloads.ResponseObject;
 import com.avengers.todo.services.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 
 @RestController
@@ -21,15 +20,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateBoardRequest request) {
-//        try {
-//            return ResponseEntity.ok(boardService.create(request));
-//        } catch (Exception ex) {
-//            log.error("API /api/v1/boards: ", ex);
-//            return ResponseEntity.badRequest().body(ErrorResponse.builder()
-//                    .message(ex.getMessage())
-//                    .build());
-//        }
+    public ResponseEntity<?> create(@RequestBody HandleBoard request) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Query Create Board Successfully", boardService.create(request)));
         } catch (Exception ex) {
@@ -47,4 +38,30 @@ public class BoardController {
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(boardService.getById(id));
+        } catch (Exception ex) {
+            log.error("API /api/v1/boards/id: ", ex);
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@RequestBody HandleBoard request, @PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(boardService.update(request, id));
+        } catch (Exception ex) {
+            log.error("API update/boards", ex);
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        boardService.delete(id);
+    }
+
 }

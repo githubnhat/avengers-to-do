@@ -37,7 +37,6 @@ public class TaskController {
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message("Server Error"));
         }
     }
-
     @PutMapping()
     public ResponseEntity<?> updateTask(
             @RequestBody UpdateTaskRequest updateTaskRequest
