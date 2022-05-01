@@ -14,10 +14,16 @@ export class HttpHandlerInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) { }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const authReq = request.clone({
-      headers: request.headers.set('Content-Type', 'application/json')
-        .set('Authorization', `${this.authService.httpHeaders}`)
-    });
-    return next.handle(authReq);
+    if (!request.url.includes('api/v1/login') && !request.url.includes('api/v1/register')) {
+      const authReq = request.clone({
+        headers: request.headers
+          .set('Content-Type', 'application/json')
+          .set('Authorization', `${this.authService.httpHeaders}`)
+      });
+      return next.handle(authReq);
+    } else {
+      return next.handle(request);
+    }
+
   }
 }
