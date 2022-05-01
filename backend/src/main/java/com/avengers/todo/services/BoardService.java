@@ -18,7 +18,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     public Boards create(HandleBoard request) {
-        Boards entity = Boards.builder().name(request.getName()).description(request.getDescription()).build();
+        Boards entity = Boards.builder().name(request.getName()).description(request.getDescription()).active(true).build();
         return boardRepository.save(entity);
     }
 
@@ -42,6 +42,12 @@ public class BoardService {
     }
 
     public void delete(Long id) {
-        boardRepository.deleteById(id);
+        Boards boards = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Boards not found"));
+        if (boards.isActive()) {
+            boards.setActive(false);
+            boardRepository.save(boards);
+        } else {
+            throw new IllegalArgumentException("Board is not exist");
+        }
     }
 }

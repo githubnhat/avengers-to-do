@@ -60,8 +60,14 @@ public class BoardController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        boardService.delete(id);
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+       try{
+           boardService.delete(id);
+           return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Delete Success",""));
+       }catch (Exception ex){
+           log.error("Delete Board",ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("FAILED", "Cannot Delete", ""));
+       }
     }
 
 }

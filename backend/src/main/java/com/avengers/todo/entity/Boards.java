@@ -31,4 +31,5 @@ public class Boards extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnore
     private List<Users> users;
+    private boolean active;
 }
