@@ -15,17 +15,23 @@ import java.util.List;
 @Entity
 public class Tasks extends BaseEntity {
     private String name;
+
     private String description;
+
     @ManyToOne
     @JoinColumn(name = "task_list_id", nullable = false)
     private TaskList taskList;
+
     @ManyToMany
-    @JoinTable(name = "tasks_users", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "tasks_users",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Users> users;
 
     @OneToMany(mappedBy = "tasks")
     private List<Comment> comments;
 
     private Boolean isDone;
+
     private boolean active;
 }

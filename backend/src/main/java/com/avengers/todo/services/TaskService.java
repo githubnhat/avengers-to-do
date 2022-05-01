@@ -1,7 +1,5 @@
 package com.avengers.todo.services;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-import com.avengers.todo.entity.Boards;
 import com.avengers.todo.entity.Comment;
 import com.avengers.todo.entity.TaskList;
 import com.avengers.todo.entity.Tasks;
@@ -43,7 +41,7 @@ public class TaskService {
 
 
     public TaskResponse getTask(Long id) {
-        Tasks task = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        Tasks task = taskRepository.findByIdAndActiveTrue(id).orElseThrow(() -> new IllegalArgumentException("Task not found"));
         List<Comment> comments = commentRepository.findCommentsByTaskId(id);
         return TaskResponse.builder()
                 .id(task.getId())
@@ -54,6 +52,7 @@ public class TaskService {
                         .id(e.getId())
                         .content(e.getContent())
                         .fullName(usersRepository.findById(e.getUser().getId()).get().getFullName())
+                        .createdDate(e.getCreatedDate())
                         .build()).collect(Collectors.toList()))
                 .build();
     }
@@ -95,8 +94,8 @@ public class TaskService {
     }
 
     public void changeId(Long id, UpdateTaskListRequest request) {
-        Tasks tasks = taskRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Task not found"));
-        TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElseThrow(()-> new IllegalArgumentException("TaskList not found"));
+        Tasks tasks = taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElseThrow(() -> new IllegalArgumentException("TaskList not found"));
         tasks.setTaskList(taskList);
         taskRepository.save(tasks);
     }

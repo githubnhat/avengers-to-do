@@ -33,9 +33,12 @@ public class TaskController {
     public ResponseEntity<?> getTask(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(taskService.getTask(id));
+        } catch (IllegalArgumentException e) {
+            log.error("Get task details: ", e);
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(e.getMessage()).build());
         } catch (Exception ex) {
             log.error("Get task details: ", ex);
-            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("Server Error"));
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("Server Error").build());
         }
     }
 

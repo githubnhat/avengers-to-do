@@ -26,7 +26,7 @@ private final CommentService commentService;
             return ResponseEntity.ok().build();
         } catch (Exception ex) {
             log.error("API /api/v1/comment: ", ex);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot Create Comment", ""));
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("Comment failed").build());
         }
     }
 }

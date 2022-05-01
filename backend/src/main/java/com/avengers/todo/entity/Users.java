@@ -17,11 +17,16 @@ import java.util.List;
 @Entity
 public class Users extends BaseEntity {
     private String username;
+
     private String password;
+
     private String fullName;
+
     private boolean isActive;
-    @ManyToMany(mappedBy = "users")
-    private List<Boards> boards;
+
+    @OneToMany(mappedBy = "users")
+    private List<BoardsUsers> boardsUsers;
+
     @ManyToMany(mappedBy = "users")
     private List<Tasks> tasks;
 
