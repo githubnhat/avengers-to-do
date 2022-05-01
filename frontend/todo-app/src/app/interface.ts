@@ -35,3 +35,10 @@ export interface BoardUser {
   userId: string;
   listDashboard: Dashboard[];
 }
+
+export interface Message {
+  key: 'toast',
+  severity: 'warn' | 'success' | 'info' | 'error' | "null",
+  summary: 'Warning' | 'Success' | 'Information' | 'Error',
+  detail: string
+}

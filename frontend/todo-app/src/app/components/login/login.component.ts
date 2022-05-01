@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
-import { Notification } from 'src/app/services/notification';
+import { HandleMessageService } from 'src/app/services/handle-message.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private notification: Notification
+    private handleMessageService: HandleMessageService
   ) { }
 
   ngOnInit(): void {
@@ -35,14 +35,12 @@ export class LoginComponent implements OnInit {
     }
     this.authService.login(body).then((_res) => {
       this.authService.setHeader(_res.accessToken)
-      this.notification.setNotification({ key: "toast", severity: 'success', summary: 'Success', detail: 'Login successfully' });
+      this.handleMessageService.setMessage({ key: "toast", severity: 'success', summary: 'Success', detail: 'Login successfully' });
       this.loginForm.setValue({
         username: [null],
         password: [null],
       })
       this.router.navigateByUrl("/dashboards")
-    }, (error) => {
-      this.notification.setNotification({ key: "toast", severity: 'error', summary: 'Error', detail: error.error.message });
     }
     )
   }
