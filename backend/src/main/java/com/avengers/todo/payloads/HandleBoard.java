@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class HandleBoard {
-    private Long id;
     private String name;
     private String description;
 
