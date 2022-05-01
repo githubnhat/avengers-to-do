@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -61,13 +63,22 @@ public class BoardController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-       try{
-           boardService.delete(id);
-           return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Delete Success",""));
-       }catch (Exception ex){
-           log.error("Delete Board",ex);
+        try {
+            boardService.delete(id);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Delete Success", ""));
+        } catch (Exception ex) {
+            log.error("Delete Board", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("FAILED", "Cannot Delete", ""));
-       }
+        }
     }
 
+    @GetMapping("/{id}/users")
+    public ResponseEntity<?> getUsersInBoard(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(boardService.getUsersInBoard(id));
+        } catch (Exception ex) {
+            log.error("API /api/v1/boards/{id}/users: ", ex);
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
+        }
+    }
 }

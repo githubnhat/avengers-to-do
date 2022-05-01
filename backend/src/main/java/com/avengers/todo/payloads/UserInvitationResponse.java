@@ -1,19 +1,14 @@
 package com.avengers.todo.payloads;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-public class CommentResponse {
+public class UserInvitationResponse {
     private Long id;
+    private String username;
     private String fullName;
-    private String content;
-    private Date createdDate;
 }

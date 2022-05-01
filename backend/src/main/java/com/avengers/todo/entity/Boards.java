@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.Set;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import java.util.List;
 
 @Data
@@ -21,15 +18,16 @@ import java.util.List;
 @Entity
 public class Boards extends BaseEntity {
     private String name;
+
     private String description;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "boards")
-    @JsonIgnore
     private Set<TaskList> taskLists;
-    @ManyToMany
-    @JoinTable(name = "boards_users",
-            joinColumns = @JoinColumn(name = "board_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+
     @JsonIgnore
-    private List<Users> users;
+    @OneToMany(mappedBy = "boards")
+    private List<BoardsUsers> boardsUsers;
+
     private boolean active;
 }
