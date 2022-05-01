@@ -3,6 +3,7 @@ import com.avengers.todo.common.ErrorResponse;
 import com.avengers.todo.entity.TaskList;
 import com.avengers.todo.payloads.ResponseObject;
 import com.avengers.todo.payloads.TaskListRequest;
+import com.avengers.todo.payloads.UpdateTaskListRequest;
 import com.avengers.todo.services.TaskListService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class TaskListController {
     public ResponseEntity<?> createTaskList(@RequestBody TaskListRequest request) {
 
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Creating task list is successfully", taskListService.createTaskList(request)));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Create task list successfully", taskListService.createTaskList(request)));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("failed", "Cannot create task list", ""));
         }
@@ -32,15 +33,6 @@ public class TaskListController {
 
     @GetMapping(path = "{boardsId}")
     public ResponseEntity<?> getAllTaskList(@PathVariable Long boardsId){
-//        try {
-//            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Getting all task list is successfully", taskListService.getAllTaskList(boardsId)));
-//        } catch (Exception ex) {
-//            log.error("API /api/v1/boards: ", ex);
-//            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
-//        }
-
-        boolean exists = false;
-
         try {
             return ResponseEntity.ok(taskListService.getAllTaskList(boardsId));
         } catch (Exception ex) {
@@ -48,4 +40,29 @@ public class TaskListController {
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
         }
     }
+
+    @PutMapping()
+    public ResponseEntity<?> updateTaskList(
+            @RequestBody UpdateTaskListRequest updateTaskListRequest
+            ){
+        try {
+            taskListService.updateTaskList(updateTaskListRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Update task list successfully", ""));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot update task list", ""));
+        }
+    }
+
+    @DeleteMapping (path = "{taskListID}")
+    public ResponseEntity<?> deleteTaskList(@PathVariable Long taskListID){
+        try {
+            taskListService.deleteTaskList(taskListID);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Delete task list successfully", ""));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot delete task list", ""));
+        }
+    }
+
+
+
 }

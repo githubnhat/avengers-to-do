@@ -1,7 +1,7 @@
 import { Guid } from 'guid-typescript';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BoardUser } from './../../interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Dashboard } from '../../interface';
@@ -12,7 +12,7 @@ import { DashboardService } from './service/dashboard.service';
   templateUrl: './dashboards.component.html',
   styleUrls: ['./dashboards.component.scss'],
 })
-export class DashboardsComponent implements OnInit {
+export class DashboardsComponent implements OnInit, OnDestroy {
   public isCreateNewDashboard = false;
 
   public isDisabledSubmitNewDashboard: boolean = false;
@@ -32,7 +32,6 @@ export class DashboardsComponent implements OnInit {
       modifiedDate: '',
     },
   ];
-  item!: Dashboard;
   listDashboards: Dashboard[] = [];
 
   taskListid: any;
@@ -54,6 +53,12 @@ export class DashboardsComponent implements OnInit {
       field: 'createdBy',
       header: 'Created By',
       className: 'created-by',
+      show: true,
+    },
+    {
+      field: 'description',
+      header: 'Description',
+      className: 'description',
       show: true,
     },
   ];
@@ -92,8 +97,7 @@ export class DashboardsComponent implements OnInit {
       description: this.createListForm.value.description,
     };
     this.dashboardService.createDashboard(body).subscribe((data: any) => {
-      this.item = data;
-      this.listDashboards.push(this.item);
+      this.listDashboards.push(data.data);
     });
     this.displayCreateNewListDialog = false;
     this.createListForm.reset();
@@ -101,5 +105,11 @@ export class DashboardsComponent implements OnInit {
 
   onCreateNewList(): void {
     this.displayCreateNewListDialog = true;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach(_x => {
+      _x.unsubscribe()
+    })
   }
 }

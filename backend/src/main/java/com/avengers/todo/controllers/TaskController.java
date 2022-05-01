@@ -3,6 +3,7 @@ package com.avengers.todo.controllers;
 import com.avengers.todo.common.ErrorResponse;
 import com.avengers.todo.payloads.CreateTask;
 import com.avengers.todo.payloads.ResponseObject;
+import com.avengers.todo.payloads.UpdateTaskRequest;
 import com.avengers.todo.services.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +37,16 @@ public class TaskController {
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message("Server Error"));
         }
     }
-
+    @PutMapping()
+    public ResponseEntity<?> updateTask(
+            @RequestBody UpdateTaskRequest updateTaskRequest
+            ) {
+        try {
+            taskService.updateTask(updateTaskRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Update task successfully", ""));
+        } catch (Exception ex) {
+            log.error("tasks", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot update task", ""));
+        }
+    }
 }

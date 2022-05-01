@@ -34,13 +34,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private dashboardService: DashboardService,
     private form: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchUrlData();
-    this.dashboardService.getAllTaskList(this.dashboardId).subscribe((data) => {
-      this.taskLists = data;
-    });
+  }
+
+  fetchTasks(): void {
+    this.subscription.push(
+      this.dashboardService.getAllTaskList(this.dashboardId).subscribe((data) => {
+        this.taskLists = data;
+      })
+    )
   }
 
   ngOnDestroy(): void {
@@ -89,7 +94,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       title: this.createListForm.value.name,
     });
     this.dashboardService.createTaskList(body).subscribe((data) => {
-      console.log(data);
     });
     this.displayCreateNewListDialog = false;
   }
@@ -100,16 +104,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .pipe(
           switchMap((paramMap, index) => {
             this.dashboardId = paramMap.get('dashboardId') + '';
-            return this.dashboardService.getDashboardById(this.dashboardId);
+            return this.dashboardService.getAllTaskList(this.dashboardId);
           })
         )
         .subscribe(
           (_respone) => {
-            // Will be get an error
+            this.taskLists = _respone;
           },
           (error) => {
             console.log(
-              `this.dashboardService.getDashboardById(${this.dashboardId})`
             );
           }
         )
@@ -124,15 +127,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       name: '',
     });
   }
+
   submitNewTask(id: any): void {
-    console.log(this.taskName);
     let body = {
       taskListId: id,
       name: this.taskName,
       description: '',
     };
     this.dashboardService.createTask(body).subscribe((data) => {
-      console.log(data);
+      this.fetchTasks();
     });
   }
   cancelNewTask(taskList: TaskList): void {
@@ -147,7 +150,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       return _x.id !== task.id;
     });
     if (this.newTaskMapping.some((_id) => _id !== task.id)) {
-      // CALL API DELETE HERE
     }
   }
 
