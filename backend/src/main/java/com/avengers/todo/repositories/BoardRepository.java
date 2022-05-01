@@ -11,7 +11,7 @@ public interface BoardRepository extends JpaRepository<Boards, Long> {
     @Query(value = "select b.* " +
             "from boards b " +
             "left join boards_users bu on b.id=bu.board_id " +
-            "where b.created_by =:username OR bu.user_id IN(select id from users where username =:username)"
+            "where (b.created_by =:username OR bu.user_id IN(select id from users where username =:username))AND b.active =:active"
             , nativeQuery = true)
-    List<Boards> findMyBoards(@Param("username") String username);
+    List<Boards> findMyBoards(@Param("username") String username, @Param("active") boolean active);
 }

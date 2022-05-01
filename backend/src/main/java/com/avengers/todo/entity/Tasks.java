@@ -27,4 +27,5 @@ public class Tasks extends BaseEntity {
     private List<Comment> comments;
 
     private Boolean isDone;
+    private boolean active;
 }

@@ -3,6 +3,7 @@ package com.avengers.todo.controllers;
 import com.avengers.todo.common.ErrorResponse;
 import com.avengers.todo.payloads.CreateTask;
 import com.avengers.todo.payloads.ResponseObject;
+import com.avengers.todo.payloads.UpdateTaskListRequest;
 import com.avengers.todo.payloads.UpdateTaskRequest;
 import com.avengers.todo.services.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -37,16 +38,38 @@ public class TaskController {
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message("Server Error"));
         }
     }
+
     @PutMapping()
     public ResponseEntity<?> updateTask(
             @RequestBody UpdateTaskRequest updateTaskRequest
-            ) {
+    ) {
         try {
             taskService.updateTask(updateTaskRequest);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Update task successfully", ""));
         } catch (Exception ex) {
             log.error("tasks", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot update task", ""));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            taskService.delete(id);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Delete task successfully", ""));
+        } catch (Exception ex) {
+            log.error("tasks", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot Delete task", ""));
+        }
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> changeId(@PathVariable Long id , @RequestBody UpdateTaskListRequest request){
+        try {
+            taskService.changeId(id, request);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Change task successfully", ""));
+        } catch (Exception ex) {
+            log.error("tasks", ex);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot Change task", ""));
         }
     }
 }
