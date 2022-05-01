@@ -6,6 +6,7 @@ import com.avengers.todo.entity.Tasks;
 import com.avengers.todo.payloads.TaskListRequest;
 import com.avengers.todo.payloads.TaskListResponse;
 import com.avengers.todo.payloads.TaskResponse;
+import com.avengers.todo.payloads.UpdateTaskListRequest;
 import com.avengers.todo.repositories.BoardRepository;
 import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +34,7 @@ public class TaskListService {
 
         TaskList entity = TaskList.builder()
                 .title(request.getTitle())
+                .active(true)
                 .boards(board).build();
         return taskListRepository.save(entity);
     }
@@ -64,4 +67,27 @@ public class TaskListService {
     }
 
 
+    public void deleteTaskList(Long taskListID) {
+        TaskList taskList = taskListRepository.findById(taskListID)
+                .orElseThrow(() ->  new IllegalArgumentException("Task list is not exist"));
+
+        if(taskList.getActive()){
+            taskList.setActive(false);
+            taskListRepository.save(taskList);
+        }else {
+            throw new IllegalArgumentException("Task list is not exist");
+        }
+    }
+
+    public void updateTaskList(UpdateTaskListRequest updateTaskListRequest) {
+        String titleRequest = updateTaskListRequest.getTitle();
+        TaskList taskList = taskListRepository.findById(updateTaskListRequest.getTaskListId())
+                .orElseThrow(() ->  new IllegalArgumentException("Task list is not exist"));
+
+        if(titleRequest != null && titleRequest.length() > 0 && !Objects.equals(taskList.getTitle(), titleRequest)){
+            taskList.setTitle(titleRequest);
+        }
+
+        taskListRepository.save(taskList);
+    }
 }
