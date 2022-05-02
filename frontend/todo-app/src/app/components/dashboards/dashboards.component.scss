@@ -1,6 +1,7 @@
 .add-dashboard-area {
     margin: 10px;
     .btn {
-        width: 200px;
+        min-width: 300px;
+        cursor: pointer;
     }
 }

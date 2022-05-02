@@ -7,12 +7,10 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class DashboardService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllDashboards(): Observable<Dashboard[]> {
-    return this.http.get<Dashboard[]>(
-      `${environment.endPoint}/boards`
-    );
+    return this.http.get<Dashboard[]>(`${environment.endPoint}/boards`);
   }
 
   getDashboardById(id: string): Observable<Dashboard> {
@@ -20,21 +18,32 @@ export class DashboardService {
   }
 
   createDashboard(body: any) {
-    return this.http.post(
-      `${environment.endPoint}/boards`,
+    return this.http.post(`${environment.endPoint}/boards`, body);
+  }
+
+  getTeamMembers(boardId: string): Observable<MemberInBoard[]> {
+    return this.http.get<MemberInBoard[]>(
+      `${environment.endPoint}/boards/${boardId}/users`
+    );
+  }
+
+  getMembersCanInvite(boardId: string): Observable<Member[]> {
+    return this.http.get<Member[]>(
+      `${environment.endPoint}/invitation/board/${boardId}/users`
+    );
+  }
+  addTeamMembers(boardId: string, body: any): Observable<MemberInBoard> {
+    return this.http.post<MemberInBoard>(
+      `${environment.endPoint}/boards/${boardId}/users`,
       body
     );
   }
 
-  getTeamMembers(boardId: string): Observable<MemberInBoard[]> {
-    return this.http.get<MemberInBoard[]>(`${environment.endPoint}/boards/${boardId}/users`);
+  updateDashboard(id: string, body: any) {
+    return this.http.put(`${environment.endPoint}/boards/${id}`, body);
   }
 
-  getMembersCanInvite(boardId: string): Observable<Member[]> {
-    return this.http.get<Member[]>(`${environment.endPoint}/invitation/board/${boardId}/users`);
+  deleteDashboard(id: string) {
+    return this.http.delete(`${environment.endPoint}/boards/${id}`);
   }
-  addTeamMembers(boardId: string, body: any): Observable<MemberInBoard> {
-    return this.http.post<MemberInBoard>(`${environment.endPoint}/boards/${boardId}/users`, body);
-  }
-
 }

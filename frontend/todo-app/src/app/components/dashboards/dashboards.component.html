@@ -1,6 +1,6 @@
 <div class="add-dashboard-area">
 
-    <button pButton class="p-panel-header-icon btn" icon="pi pi-plus" label="Add Workboard"
+    <button pButton class="p-panel-header-icon btn" icon="pi pi-plus" label="Add New Workboard"
         (click)="onCreateNewList()"></button>
 </div>
 <p-table [columns]="tableHeaders" [value]="listDashboards">
@@ -9,35 +9,71 @@
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
+            <th>
+                Action
+            </th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr (click)="onSelectDashboard(rowData.id)">
-          <ng-container  *ngFor="let col of columns" [ngSwitch]="col.field">
-            <td *ngSwitchCase="'createdDate'">
-                {{rowData[col.field] | date}}
+        <tr>
+            <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+                <td *ngSwitchCase="'createdDate'">
+                    {{rowData[col.field] | date}}
+                </td>
+                <td *ngSwitchDefault="">
+                    {{rowData[col.field]}}
+                </td>
+            </ng-container>
+            <td>
+                <button pButton icon="pi pi-info" (click)="onSelectDashboard(rowData.id)" class="p-button-infor"
+                    label="Detail" [style]="{marginRight:'10px'}"></button>
+                <button pButton icon="pi pi-pencil" class="p-button-success" (click)="onEditDashboard(rowData)"
+                    label="Edit" [style]="{marginRight:'10px'}"></button>
+                <button pButton icon="pi pi-trash" class="p-button-danger" label="Delete"
+                    (click)="onDeleteDashboard(rowData)"></button>
+
             </td>
-            <td *ngSwitchDefault="">
-              {{rowData[col.field]}}
-          </td>
-          </ng-container>
         </tr>
     </ng-template>
     <ng-template pTemplate="summary">
         There are {{listDashboards?.length}} Workboard
     </ng-template>
 </p-table>
-<p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Create new Workboard"
-    [(visible)]="displayCreateNewListDialog">
+<p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Add New Workboard"
+    [(visible)]="displayCreateNewListDialog" [breakpoints]="{'400px': '75vw', '640px': '100vw'}"
+    [style]="{width: '400px'}">
     <form [formGroup]="createListForm">
-        <input pInputText formControlName="name" placeholder="Input Name">
-        <input pInputText formControlName="description" placeholder="Description">
+        <div> <input pInputText formControlName="name" placeholder="Enter Name Workboard" [style]="{width: '100%'}">
+        </div>
+        <br>
+        <div>
+            <input pInputText formControlName="description" placeholder="Enter Description Workboard"
+                [style]="{width: '100%'}">
+        </div>
     </form>
     <p-footer>
-        <button pButton type="submit" [disabled]="!createListForm.valid" icon="pi pi-check" class=" p-button-text "
-            (click)="newDashBoard()"></button>
+        <button pButton type="submit" [disabled]="!createListForm.valid" icon="pi pi-check"
+            class=" p-button-text p-button-success " label="Create" (click)="newDashBoard()"></button>
         <button pButton (click)="displayCreateNewListDialog = false" icon="pi pi-times"
-            class=" p-button-text "></button>
+            class=" p-button-text p-button-danger " label="Cancel"></button>
+    </p-footer>
+</p-dialog>
+<p-dialog class="edit-list-dialog" *ngIf="this.displayEditBoard" header="Edit Workboard" [(visible)]="displayEditBoard"
+    [breakpoints]="{'400px': '75vw', '640px': '100vw'}" [style]="{width: '400px'}">
+    <form [formGroup]="editForm">
+        <div> <input pInputText formControlName="name" placeholder="Enter Name Workboard" [style]="{width: '100%'}">
+        </div>
+        <br>
+        <div>
+            <input pInputText formControlName="description" placeholder="Enter Description Workboard"
+                [style]="{width: '100%'}">
+        </div>
+    </form>
+    <p-footer>
+        <button pButton type="submit" [disabled]="!editForm.valid" icon="pi pi-check"
+            class=" p-button-text p-button-success " label="Save" (click)="onUpdateDashBoard()"></button>
+        <button pButton (click)="displayEditBoard = false" icon="pi pi-times" class=" p-button-text p-button-danger "
+            label="Cancel"></button>
     </p-footer>
 </p-dialog>
