@@ -31,8 +31,18 @@ export class HttpAuthInterceptor implements HttpInterceptor {
               severity: "error",
               summary: "Error"
             }
+            window.localStorage.setItem("accessToken", '')
             this.router.navigateByUrl("/login");
-          } else {
+          }
+          else if (error.status === 405) {
+            errorMessage = {
+              detail: "Method is not allowed",
+              key: "toast",
+              severity: "error",
+              summary: "Error"
+            }
+          }
+          else {
             errorMessage = {
               detail: error.error.message,
               key: "toast",

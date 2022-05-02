@@ -18,7 +18,7 @@ export class HttpHandlerInterceptor implements HttpInterceptor {
       const authReq = request.clone({
         headers: request.headers
           .set('Content-Type', 'application/json')
-          .set('Authorization', `${this.authService.httpHeaders}`)
+          .set('Authorization', `Bearer ${this.authService.httpHeaders}`)
       });
       return next.handle(authReq);
     } else {
