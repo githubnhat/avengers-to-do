@@ -2,12 +2,13 @@
   padding: 10px 10px 10px 10px
 }
 .board{
-    justify-content: space-around;
+    // justify-content: space-around;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     &__list-item{
         margin-top: 50px;
-        width: 400px;
+        margin-right: 50px;
+        min-width: 400px;
     }
     .task-item{
       width: 100%;

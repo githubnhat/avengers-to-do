@@ -18,6 +18,7 @@ import { AuthGuardsService } from './services/auth-guards.service';
 import { CommentComponent } from './components/dashboards/dashboard/comment/comment.component';
 import { HttpAuthInterceptor } from './interceptors/http-auth.interceptor';
 import { HttpHandlerInterceptor } from './interceptors/http-handler.interceptor';
+import { TeamMembersDialogComponent } from './components/dashboards/dashboard/components/team-members-dialog/team-members-dialog.component';
 
 const COMPONENTS = [
   AppComponent,
@@ -40,7 +41,7 @@ const MODULES = [
 ];
 
 @NgModule({
-  declarations: [...COMPONENTS],
+  declarations: [...COMPONENTS, TeamMembersDialogComponent],
   imports: [...MODULES],
   providers: [
     MessageService

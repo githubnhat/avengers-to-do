@@ -32,6 +32,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
               summary: "Error"
             }
             window.localStorage.setItem("accessToken", '')
+            console.log(window.localStorage.getItem("accessToken"))
             this.router.navigateByUrl("/login");
           }
           else if (error.status === 405) {
