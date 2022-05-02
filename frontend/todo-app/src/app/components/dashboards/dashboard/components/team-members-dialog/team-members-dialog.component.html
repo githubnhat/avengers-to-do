@@ -1,0 +1,61 @@
+
+<p-dialog class="team-members-dialog" [style]="{width: '80vw'}" header="Team Members"
+[(visible)]="displayTeamMembers">
+<p-button (onClick)="showAddNewMemberDialog()">Add New Member</p-button>
+<p-table [columns]="tableHeaders" [value]="listMembers">
+  <ng-template pTemplate="header" let-columns>
+      <tr>
+          <th *ngFor="let col of columns">
+              {{col.header}}
+          </th>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+          <td *ngFor="let col of columns">
+              {{rowData[col.field]}}
+          </td>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="summary">
+      There are {{listMembers?.length}} Members
+  </ng-template>
+</p-table>
+<p-footer>
+  <button pButton (click)="onClose()" icon="pi pi-times" class="p-button-text"></button>
+</p-footer>
+</p-dialog>
+
+
+<p-dialog  [style]="{width: '80vw'}" class="add-team-member-dialog" *ngIf="this.displayAddTeamMember" header="Edit task list"
+  [(visible)]="displayAddTeamMember">
+  <p-table [columns]="tableAddMemberHeaders" [value]="listMembersCanInvite">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+          <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+            <td *ngSwitchCase="'action'">
+                <p-button>Invite</p-button>
+            </td>
+            <td *ngSwitchDefault>
+              {{rowData[col.field]}}
+          </td>
+          </ng-container>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+        There are {{listMembersCanInvite?.length}} members can invite
+    </ng-template>
+  </p-table>
+  <p-footer>
+    <button pButton (click)="onCloseAddTeamMemberDialog()" icon="pi pi-times" class="p-button-text"></button>
+  </p-footer>
+</p-dialog>

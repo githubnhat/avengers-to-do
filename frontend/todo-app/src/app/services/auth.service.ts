@@ -14,7 +14,6 @@ export class AuthService {
   }
 
   get httpHeaders() {
-
     return this._httpHeaders
   }
 
@@ -34,7 +33,8 @@ export class AuthService {
 
   getHeader() {
     const accessToken = localStorage.getItem("accessToken")
-    console.log(accessToken)
+    if (accessToken)
+      this._httpHeaders = accessToken;
   }
 
 

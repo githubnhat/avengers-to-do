@@ -13,18 +13,20 @@ import { HandleMessageService } from 'src/app/services/handle-message.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  private dashboardId: string = '';
+
   private subscription: Subscription[] = [];
   private draggedTask?: Task;
   private selectedTaskListId: string = '';
   private newTaskMapping: string[] = [];
 
+  public dashboardId: string = '';
   public isDisabledSubmitNewTask: boolean = false;
   public isCreateNewTask = false;
   public createListForm!: FormGroup;
   public editTaskListForm!: FormGroup
   public displayCreateNewListDialog: boolean = false;
   public displayEditTaskList: boolean = false;
+  public displayTeamMembers: boolean = false;
 
   taskLists: TaskList[] = [];
   item!: Task;
@@ -52,6 +54,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.taskLists = data;
       })
     )
+  }
+
+  showTeamMember(): void {
+    this.displayTeamMembers = true;
+  }
+
+  onCloseTeamMembersDialog(event: boolean) {
+    this.displayTeamMembers = false;
   }
 
   ngOnDestroy(): void {
@@ -156,6 +166,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         severity: 'success',
         summary: 'Success'
       }
+      this.fetchUrlData()
       this.handleMessageService.setMessage(message)
     })
   }

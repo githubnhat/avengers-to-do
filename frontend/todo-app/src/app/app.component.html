@@ -1,3 +1,6 @@
-<app-header ></app-header>
-<router-outlet (messageEmit)="showMessage($event)"></router-outlet>
-<p-toast key="toast"></p-toast>
+
+  <app-header class="header"></app-header>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+  <p-toast key="toast"></p-toast>

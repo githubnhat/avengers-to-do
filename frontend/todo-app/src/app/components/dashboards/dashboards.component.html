@@ -14,9 +14,14 @@
 
     <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr (click)="onSelectDashboard(rowData.id)">
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
+          <ng-container  *ngFor="let col of columns" [ngSwitch]="col.field">
+            <td *ngSwitchCase="'createdDate'">
+                {{rowData[col.field] | date}}
             </td>
+            <td *ngSwitchDefault="">
+              {{rowData[col.field]}}
+          </td>
+          </ng-container>
         </tr>
     </ng-template>
     <ng-template pTemplate="summary">

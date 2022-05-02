@@ -42,3 +42,18 @@ export interface Message {
   summary: 'Warning' | 'Success' | 'Information' | 'Error',
   detail: string
 }
+
+export interface MemberInBoard {
+  invitationId: number,
+  fullName: string,
+  joinDate: string,
+  inviteDate: string,
+  status: "PENDING" | "APPROVED"
+}
+
+export interface Member {
+  id: number,
+  username: string,
+  fullName: string
+}
+
