@@ -8,6 +8,8 @@
         <ng-template pTemplate="icons">
           <button pButton class="p-panel-header-icon" icon="pi pi-plus" [disabled]="isCreateNewTask"
             (click)="addNewTask(tasklist)"></button>
+            <button pButton class="p-panel-header-icon" icon="pi pi-pencil" [disabled]="isCreateNewTask"
+            (click)="editTaskList(tasklist)"></button>
           <button pButton class="p-panel-header-icon" icon="pi pi-trash"></button>
         </ng-template>
         <div *ngFor="let task of tasklist.listTask">
@@ -59,3 +61,16 @@
     <button pButton (click)="displayCreateNewListDialog = false" icon="pi pi-times" class="p-button-text"></button>
   </p-footer>
 </p-dialog>
+
+<p-dialog class="edit-task-list-dialog" *ngIf="this.displayEditTaskList" header="Edit task list"
+  [(visible)]="displayEditTaskList">
+  <form [formGroup]="editTaskListForm">
+    <input pInputText formControlName="title" placeholder="Input Task List Title" />
+  </form>
+  <p-footer>
+    <button pButton [disabled]="!editTaskListForm.valid" icon="pi pi-check" class="p-button-text"
+      (click)="onSubmitEditTaskList()"></button>
+    <button pButton (click)="displayCreateNewListDialog = false" icon="pi pi-times" class="p-button-text"></button>
+  </p-footer>
+</p-dialog>
+

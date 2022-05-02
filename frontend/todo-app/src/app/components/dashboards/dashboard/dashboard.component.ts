@@ -2,9 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, switchMap } from 'rxjs';
-import { Task, TaskList } from 'src/app/interface';
+import { Message, Task, TaskList } from 'src/app/interface';
 import { DashboardService } from '../service/dashboard.service';
 import { Guid } from 'guid-typescript';
+import { TaskListService } from '../service/task-list.service';
+import { HandleMessageService } from 'src/app/services/handle-message.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -14,15 +16,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private dashboardId: string = '';
   private subscription: Subscription[] = [];
   private draggedTask?: Task;
-
+  private selectedTaskListId: string = '';
   private newTaskMapping: string[] = [];
 
   public isDisabledSubmitNewTask: boolean = false;
   public isCreateNewTask = false;
   public createListForm!: FormGroup;
+  public editTaskListForm!: FormGroup
   public displayCreateNewListDialog: boolean = false;
+  public displayEditTaskList: boolean = false;
 
-  taskLists: any[] = [];
+  taskLists: TaskList[] = [];
   item!: Task;
   listTask: Task[] = [];
 
@@ -32,7 +36,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private dashboardService: DashboardService,
+    private taskListService: TaskListService,
+    private handleMessageService: HandleMessageService,
     private form: FormBuilder
   ) { }
 
@@ -42,7 +47,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   fetchTasks(): void {
     this.subscription.push(
-      this.dashboardService.getAllTaskList(this.dashboardId).subscribe((data) => {
+      this.taskListService.getAllTaskList(this.dashboardId).subscribe((data) => {
+        console.log(data)
         this.taskLists = data;
       })
     )
@@ -69,7 +75,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.draggedTask = undefined;
   }
   dropHandler(event: Event, taskList: TaskList): void {
-    if (this.draggedTask) {
+    if (this.draggedTask && this.draggedTask.id !== taskList.id) {
       this.taskLists.forEach((_list) => {
         if (_list.id !== taskList.id) {
           _list.listTask = _list.listTask.filter(
@@ -93,7 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       listTask: [],
       title: this.createListForm.value.name,
     });
-    this.dashboardService.createTaskList(body).subscribe((data) => {
+    this.taskListService.createTaskList(body).subscribe((data) => {
     });
     this.displayCreateNewListDialog = false;
   }
@@ -104,11 +110,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         .pipe(
           switchMap((paramMap, index) => {
             this.dashboardId = paramMap.get('dashboardId') + '';
-            return this.dashboardService.getAllTaskList(this.dashboardId);
+            return this.taskListService.getAllTaskList(this.dashboardId);
           })
         )
         .subscribe(
           (_respone) => {
+            console.log(_respone)
             this.taskLists = _respone;
           },
           (error) => {
@@ -128,13 +135,38 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  editTaskList(taskList: TaskList): void {
+    this.selectedTaskListId = taskList.id
+    console.log(taskList)
+    this.displayEditTaskList = true;
+    this.editTaskListForm = this.form.group({
+      title: [taskList.title, [Validators.required]],
+    })
+  }
+  onSubmitEditTaskList(): void {
+    this.displayEditTaskList = false;
+    let body: any = {
+      taskListId: this.selectedTaskListId,
+      title: this.editTaskListForm.value.title
+    }
+    this.taskListService.updateTaskList(body).then(_x => {
+      let message: Message = {
+        detail: "Updated successfully",
+        key: 'toast',
+        severity: 'success',
+        summary: 'Success'
+      }
+      this.handleMessageService.setMessage(message)
+    })
+  }
+
   submitNewTask(id: any): void {
     let body = {
       taskListId: id,
       name: this.taskName,
       description: '',
     };
-    this.dashboardService.createTask(body).subscribe((data) => {
+    this.taskListService.createTask(body).subscribe((data) => {
       this.fetchTasks();
     });
   }

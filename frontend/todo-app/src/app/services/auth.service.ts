@@ -9,10 +9,12 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
   private _httpHeaders!: string
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.getHeader()
+  }
 
   get httpHeaders() {
-    this.getHeader()
+
     return this._httpHeaders
   }
 
@@ -25,16 +27,14 @@ export class AuthService {
   }
 
   setHeader(accessToken: string): string {
-    const headers: string = `Bearer ${accessToken}`
     window.localStorage.setItem("accessToken", accessToken)
-    this._httpHeaders = headers
-    return headers
+    this._httpHeaders = accessToken
+    return accessToken
   }
 
   getHeader() {
     const accessToken = localStorage.getItem("accessToken")
-    const headers: string = `Bearer ${accessToken}`
-    this._httpHeaders = headers
+    console.log(accessToken)
   }
 
 

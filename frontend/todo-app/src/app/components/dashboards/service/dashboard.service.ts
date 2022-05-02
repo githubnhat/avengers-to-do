@@ -26,22 +26,4 @@ export class DashboardService {
     );
   }
 
-  createTask(body: any) {
-    return this.http.post(
-      `${environment.endPoint}/tasks`,
-      body
-    );
-  }
-
-  createTaskList(body: any) {
-    return this.http.post(
-      `${environment.endPoint}/taskList`,
-      body
-    );
-  }
-  getAllTaskList(boardsId: any): Observable<any> {
-    return this.http.get<any>(
-      `${environment.endPoint}/taskList/${boardsId}`
-    );
-  }
 }
