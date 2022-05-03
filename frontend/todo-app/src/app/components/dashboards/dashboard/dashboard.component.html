@@ -18,11 +18,14 @@
         <div *ngFor="let task of tasklist.listTask">
           <div *ngIf="task.id !== 'newtask'" class="task-item task-valid" pDraggable="task" pDroppable="task"
             (onDragStart)="dragStartHandler(task)" (drop)="dropHandler($event, tasklist)" (onDragEnd)="dragEndHandler()"
-            pDroppable="dd" (click)="showDetailTask()">
-            <p>{{ task.name }}</p>
+            pDroppable="dd" >
+            <p [ngClass]="task.isDone? 'done': ''" class="task-item__title" (click)="showDetailTask()">{{ task.name }}</p>
             <div class="task-item__actions">
+              <button (click)="doneTask(task, tasklist)" pButton
+              class="p-panel-header-icon p-button-rounded p-button-text" [icon]="task.isDone? 'pi pi-times': 'pi pi-check'"></button>
               <button (click)="deleteTask(task, tasklist)" pButton
                 class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-trash"></button>
+
             </div>
           </div>
           <div *ngIf="task.id === 'newtask'" class="new-task task-item">

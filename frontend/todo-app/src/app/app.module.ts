@@ -19,6 +19,9 @@ import { CommentComponent } from './components/dashboards/dashboard/comment/comm
 import { HttpAuthInterceptor } from './interceptors/http-auth.interceptor';
 import { HttpHandlerInterceptor } from './interceptors/http-handler.interceptor';
 import { TeamMembersDialogComponent } from './components/dashboards/dashboard/components/team-members-dialog/team-members-dialog.component';
+import { LoadingPageComponent } from './components/loading-page/loading-page.component';
+import { LoaderService } from './services/loader.service';
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
 
 const COMPONENTS = [
   AppComponent,
@@ -28,6 +31,8 @@ const COMPONENTS = [
   HeaderComponent,
   DashboardComponent,
   CommentComponent,
+  TeamMembersDialogComponent,
+  LoadingPageComponent,
 ];
 
 const MODULES = [
@@ -41,7 +46,7 @@ const MODULES = [
 ];
 
 @NgModule({
-  declarations: [...COMPONENTS, TeamMembersDialogComponent],
+  declarations: [...COMPONENTS],
   imports: [...MODULES],
   providers: [
     MessageService
@@ -55,7 +60,8 @@ const MODULES = [
       provide: HTTP_INTERCEPTORS,
       useClass: HttpAuthInterceptor,
       multi: true
-    }
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
 
   ],
   bootstrap: [AppComponent],
