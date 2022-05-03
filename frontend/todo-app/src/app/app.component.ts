@@ -5,6 +5,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { Message } from './interface';
 import { AuthService } from './services/auth.service';
 import { HandleMessageService } from './services/handle-message.service';
+import { LoaderService } from './services/loader.service';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,12 @@ export class AppComponent {
   items!: any[];
   private subscription: Subscription[] = []
 
+  public isLoading = false;
+
   constructor(
     private messageService: MessageService,
-    private handleMessageService: HandleMessageService
+    private handleMessageService: HandleMessageService,
+    private loaderService: LoaderService
   ) { }
 
   ngOnInit() {
@@ -27,9 +31,10 @@ export class AppComponent {
         this.messageService.add(_message)
       })
     )
-  }
-
-  showMessage(event: any) {
-    console.log(event)
+    this.subscription.push(
+      this.loaderService.isLoading.asObservable().subscribe((_isLoading) => {
+        this.isLoading = _isLoading
+      })
+    )
   }
 }

@@ -7,6 +7,7 @@ import { DashboardService } from '../service/dashboard.service';
 import { Guid } from 'guid-typescript';
 import { TaskListService } from '../service/task-list.service';
 import { HandleMessageService } from 'src/app/services/handle-message.service';
+import { TaskService } from '../service/task.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -40,6 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private taskListService: TaskListService,
     private handleMessageService: HandleMessageService,
+    private taskService: TaskService,
     private form: FormBuilder
   ) { }
 
@@ -84,8 +86,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   dragEndHandler(): void {
     this.draggedTask = undefined;
   }
+
   dropHandler(event: Event, taskList: TaskList): void {
-    if (this.draggedTask && this.draggedTask.id !== taskList.id) {
+    if (this.draggedTask && !taskList.listTask.some(_task => _task.id === this.draggedTask?.id)) {
       this.taskLists.forEach((_list) => {
         if (_list.id !== taskList.id) {
           _list.listTask = _list.listTask.filter(
@@ -142,6 +145,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       description: '',
       id: 'newtask',
       name: '',
+      isDone: false,
     });
   }
 
@@ -167,6 +171,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
         summary: 'Success'
       }
       this.fetchUrlData()
+      this.handleMessageService.setMessage(message)
+    })
+  }
+
+  doneTask(task: Task, taskList: TaskList): void {
+    const body = {
+      taskId: task.id,
+      isDone: !task.isDone
+    }
+    let message: Message = {
+      detail: "Updated successfully",
+      key: 'toast',
+      severity: 'success',
+      summary: 'Success'
+    }
+    this.taskService.doneTask(body).then(() => {
+      task.isDone = body.isDone;
       this.handleMessageService.setMessage(message)
     })
   }
