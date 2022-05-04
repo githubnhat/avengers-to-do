@@ -1,13 +1,23 @@
-<p-menubar [model]="items">
+<p-menubar [model]="items" onload="update()">
     <ng-template pTemplate="start">
       <div class="left-container">
       <button (click)="back()" pButton class="p-button-text">
         <i class="pi pi-arrow-left back-btn" style="font-size: 2rem"></i>
       </button>
-    <h2>{{paramText}}</h2>
+    <!-- <h2>{{paramText}}</h2> -->
   </div>
     </ng-template>
     <ng-template pTemplate="end">
-      <input type="text" pInputText placeholder="Search">
+      <div class="right-menu">
+        <div class="right-menu-btn" *ngIf="is_login==null">
+          <p-button label="Login" routerLink="/login" icon="pi pi-user" iconPos="right"></p-button>
+        </div>
+        <div class="right-menu-btn" *ngIf="is_login==null">
+          <p-button label="Register" routerLink="/register"icon="pi pi-user-plus" iconPos="right"></p-button>
+        </div>
+        <div class="right-menu-btn" *ngIf="is_login!=null">
+          <button pButton pRipple type="button" label="LogOut" icon="pi pi-times" iconPos="right" class="p-button-danger p-button-text" (click)="logout()"></button>
+        </div>
+      </div>
     </ng-template>
   </p-menubar>

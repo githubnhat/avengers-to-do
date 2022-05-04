@@ -1,8 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
+import {ButtonModule} from 'primeng/button';
 
 @Component({
   selector: 'app-header',
@@ -13,17 +14,6 @@ export class HeaderComponent implements OnInit {
   paramText: string = '';
   items: MenuItem[] = [
     {
-      label: 'Login',
-      icon: 'pi pi-user',
-      routerLink: ['/login'],
-    },
-    {
-      label: 'Register',
-      icon: 'pi pi-user-plus',
-      routerLink: ['/register'],
-    },
-
-    {
       label: 'Dashboards',
       icon: 'pi pi-check-square',
       routerLink: ['/dashboards'],
@@ -32,15 +22,20 @@ export class HeaderComponent implements OnInit {
   activeMenuLink: string = '';
   activeMenuItem: string = '';
   private _history: string[] = [];
+
+  is_login:any;
   constructor(
-    private router: Router,
+    private router: Router, 
     private location: Location,
     private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.fetchUrlData();
+    this.update();
   }
+
+  
   back(): void {
     this._history.pop();
     if (this._history.length > 0) {
@@ -61,5 +56,18 @@ export class HeaderComponent implements OnInit {
         }
       }
     });
+  }
+
+
+  update(){
+    setInterval(()=>{
+      this.is_login = localStorage.getItem("accessToken");
+    },1000)
+  }
+
+  logout(){
+      this.authService.logout();
+      this.router.navigate(["/login"]);
+      window.location.reload();
   }
 }
