@@ -107,12 +107,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       title: this.createListForm.value.name,
       boardsId: this.dashboardId,
     };
-    this.taskLists.push({
-      id: Guid.create().toString(),
-      listTask: [],
-      title: this.createListForm.value.name,
-    });
-    this.taskListService.createTaskList(body).subscribe((data) => {
+    this.taskListService.createTaskList(body).subscribe((data: any) => {
+      this.taskLists.push({
+        id: data.data.id,
+        listTask: [],
+        title: this.createListForm.value.name,
+      });
     });
     this.displayCreateNewListDialog = false;
   }
@@ -199,6 +199,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       description: '',
     };
     this.taskListService.createTask(body).subscribe((data) => {
+
       this.fetchTasks();
     });
   }
