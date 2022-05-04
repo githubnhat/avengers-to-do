@@ -17,19 +17,6 @@ public class InvitationController {
 
     private final InvitationService invitationService;
 
-    @GetMapping("/board/{id}/users")
-    public ResponseEntity<?> getUsersCanInvite(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(invitationService.getUsersCanInvite(id));
-        } catch (IllegalStateException ex) {
-            log.error("API getUsersCanInvite invitation/board", ex);
-            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
-        } catch (Exception ex) {
-            log.error("API getUsersCanInvite invitation/board", ex);
-            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("Server Error").build());
-        }
-    }
-
     @PostMapping
     public ResponseEntity<?> inviteUsers(@RequestBody InvitationRequest request) {
         try {
