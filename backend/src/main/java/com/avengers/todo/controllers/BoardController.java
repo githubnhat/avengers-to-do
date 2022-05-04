@@ -76,9 +76,12 @@ public class BoardController {
     public ResponseEntity<?> getUsersInBoard(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(boardService.getUsersInBoard(id));
+        } catch (IllegalStateException e) {
+            log.error("API getUsersInBoard /api/v1/boards/{id}/users: ", e);
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(e.getMessage()).build());
         } catch (Exception ex) {
-            log.error("API /api/v1/boards/{id}/users: ", ex);
-            return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
+            log.error("API getUsersInBoard /api/v1/boards/{id}/users: ", ex);
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("Server error").build());
         }
     }
 }

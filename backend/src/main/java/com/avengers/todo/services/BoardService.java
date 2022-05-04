@@ -7,6 +7,7 @@ import com.avengers.todo.payloads.HandleBoard;
 import com.avengers.todo.payloads.UsersInBoardResponse;
 import com.avengers.todo.repositories.BoardRepository;
 import com.avengers.todo.repositories.BoardUserRepository;
+import com.avengers.todo.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
+    private final UsersRepository usersRepository;
 
     public Boards create(HandleBoard request) {
         Boards entity = Boards.builder().name(request.getName()).description(request.getDescription()).active(true).build();
@@ -57,8 +59,8 @@ public class BoardService {
     }
 
     public List<UsersInBoardResponse> getUsersInBoard(Long boardId) {
-        boardRepository.findByIdAndActiveTrue(boardId).orElseThrow(() -> new IllegalStateException("Board not found"));
-        return boardUserRepository.findByBoardsIdAndStatusIn(boardId, List.of(Constant.APPROVED_INVITATION, Constant.PENDING_INVITATION))
+        Boards board = boardRepository.findByIdAndActiveTrue(boardId).orElseThrow(() -> new IllegalStateException("Board not found"));
+        List<UsersInBoardResponse> result = boardUserRepository.findByBoardsIdAndStatusIn(boardId, List.of(Constant.APPROVED_INVITATION, Constant.PENDING_INVITATION))
                 .stream().map(e -> UsersInBoardResponse.builder()
                         .invitationId(e.getId())
                         .joinDate(Constant.APPROVED_INVITATION.equals(e.getStatus()) ? e.getModifiedDate() : null )
@@ -66,5 +68,13 @@ public class BoardService {
                         .fullName(e.getUsers().getFullName())
                         .status(e.getStatus())
                         .build()).collect(Collectors.toList());
+        result.add(UsersInBoardResponse.builder()
+                .invitationId(null)
+                .joinDate(board.getCreatedDate())
+                .inviteDate(board.getCreatedDate())
+                .fullName(usersRepository.findByUsername(board.getCreatedBy()).getFullName())
+                .status("OWNER")
+                .build());
+        return result;
     }
 }

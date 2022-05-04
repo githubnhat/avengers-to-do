@@ -1,13 +1,12 @@
 package com.avengers.todo.services;
 
 import com.avengers.todo.common.Constant;
-import com.avengers.todo.entity.BoardsUsers;
 import com.avengers.todo.entity.Boards;
+import com.avengers.todo.entity.BoardsUsers;
 import com.avengers.todo.entity.Users;
 import com.avengers.todo.payloads.InvitationRequest;
 import com.avengers.todo.payloads.InvitationResponse;
 import com.avengers.todo.payloads.UpdateInvitationRequest;
-import com.avengers.todo.payloads.UserInvitationResponse;
 import com.avengers.todo.repositories.BoardRepository;
 import com.avengers.todo.repositories.BoardUserRepository;
 import com.avengers.todo.repositories.UsersRepository;
@@ -28,41 +27,32 @@ public class InvitationService {
     private final BoardUserRepository boardUserRepository;
     private final UsersRepository usersRepository;
 
-    public List<UserInvitationResponse> getUsersCanInvite(Long boardId) {
-        Boards board = boardRepository.findByIdAndActiveTrue(boardId).orElseThrow(() -> new IllegalStateException("Board not found"));
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<String> userNamesInBoard = boardUserRepository.findByBoardsIdAndStatusIn(boardId, List.of(Constant.APPROVED_INVITATION, Constant.PENDING_INVITATION))
-                .stream().map(e -> e.getUsers().getUsername()).collect(Collectors.toList());
-        List<Users> allUsers = usersRepository.findByIsActiveTrue();
-        return allUsers.stream()
-                .filter(e -> !userNamesInBoard.contains(e.getUsername())
-                        && !StringUtils.equals(board.getCreatedBy(), e.getUsername())
-                        && !StringUtils.equals(username, e.getUsername()))
-                .map(e -> UserInvitationResponse.builder()
-                        .id(e.getId())
-                        .username(e.getUsername())
-                        .fullName(e.getFullName())
-                        .build())
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public void addUsersToBoard(InvitationRequest invitationRequest) {
+        invitationRequest.setUsername(StringUtils.trimToEmpty(invitationRequest.getUsername()));
+        if (StringUtils.isBlank(invitationRequest.getUsername())) {
+            throw new IllegalStateException("Username can not be empty");
+        }
         Boards board = boardRepository.findByIdAndActiveTrue(invitationRequest.getBoardId()).orElseThrow(() -> new IllegalStateException("Board not found"));
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         if (!StringUtils.equals(username, board.getCreatedBy())) {
             throw new IllegalStateException("Sorry, only the board owner can add members");
         }
-
-        List<Long> usersIdInBoard = boardUserRepository.findByBoardsIdAndStatusIn(invitationRequest.getBoardId(), List.of(Constant.APPROVED_INVITATION, Constant.PENDING_INVITATION))
-                .stream().map(e -> e.getUsers().getId()).collect(Collectors.toList());
-        usersIdInBoard.add(usersRepository.findByUsername(username).getId());
-        List<Long> newUsersId = invitationRequest.getUsersId().stream().filter(id -> !usersIdInBoard.contains(id)).collect(Collectors.toList());
-        newUsersId.forEach(id -> boardUserRepository.save(BoardsUsers.builder()
-                .users(usersRepository.findById(id).orElseThrow(() -> new IllegalStateException("User with ID " + id + " not found")))
+        Users userRequest = usersRepository.findByUsernameAndIsActive(invitationRequest.getUsername(), true);
+        if (userRequest == null) {
+            throw new IllegalStateException("User not found");
+        }
+        List<String> userNamesInBoard = boardUserRepository.findByBoardsIdAndStatusIn(invitationRequest.getBoardId(), List.of(Constant.APPROVED_INVITATION, Constant.PENDING_INVITATION))
+                .stream().map(e -> e.getUsers().getUsername()).collect(Collectors.toList());
+        userNamesInBoard.add(username);
+        if (userNamesInBoard.contains(invitationRequest.getUsername())) {
+            throw new IllegalStateException("This user joined the board");
+        }
+        boardUserRepository.save(BoardsUsers.builder()
+                .users(userRequest)
                 .boards(board)
                 .status(Constant.PENDING_INVITATION)
-                .build()));
+                .build());
     }
 
     public List<InvitationResponse> getInvitation() {
