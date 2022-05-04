@@ -37,5 +37,11 @@ export class AuthService {
       this._httpHeaders = accessToken;
   }
 
+  logout(){
+    if(localStorage.getItem("accessToken")!=null){
+      localStorage.removeItem("accessToken");
+    }    
+  }
+
 
 }

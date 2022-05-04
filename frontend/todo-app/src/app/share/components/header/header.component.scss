@@ -7,3 +7,11 @@
         text-transform: uppercase;
     }
 }
+.right-menu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .right-menu-btn{
+        padding: 10px;
+    }
+}
