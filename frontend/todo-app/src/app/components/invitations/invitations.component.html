@@ -1,0 +1,31 @@
+
+<p-table [columns]="tableHeaders" [value]="listInvitations">
+  <ng-template pTemplate="header" let-columns>
+      <tr>
+          <th *ngFor="let col of columns">
+              {{col.header}}
+          </th>
+      </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+        <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
+          <td *ngSwitchCase="'invitationTime'">
+              {{rowData[col.field] | date}}
+          </td>
+          <td *ngSwitchCase="'actions'">
+            <button (click)="acceptInvitation(rowData)" pButton class="actions__item p-button-text p-button-rounded p-button-success" icon="pi pi-check"></button>
+            <button pButton (click)="rejectInvitation(rowData)"  class="actions__item p-button-text p-button-rounded p-button-danger" icon="pi pi-times"></button>
+        </td>
+          <td *ngSwitchDefault="">
+              {{rowData[col.field]}}
+          </td>
+      </ng-container>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="summary">
+      There are {{listInvitations?.length}} Invitations
+  </ng-template>
+</p-table>
+

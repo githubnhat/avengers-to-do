@@ -17,7 +17,7 @@ export class AppComponent {
   items!: any[];
   private subscription: Subscription[] = []
 
-  public isLoading = false;
+
 
   constructor(
     private messageService: MessageService,
@@ -29,11 +29,6 @@ export class AppComponent {
     this.subscription.push(
       this.handleMessageService.getMessage().subscribe((_message: Message) => {
         this.messageService.add(_message)
-      })
-    )
-    this.subscription.push(
-      this.loaderService.isLoading.asObservable().subscribe((_isLoading) => {
-        this.isLoading = _isLoading
       })
     )
   }

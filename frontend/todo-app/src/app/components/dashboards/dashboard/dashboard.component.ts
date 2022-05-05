@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription[] = [];
   private draggedTask?: Task;
-  private selectedTaskListId: string = '';
+  private selectedTaskListId?: number
   private newTaskMapping: string[] = [];
 
   public dashboardId: string = '';
@@ -199,7 +199,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       description: '',
     };
     this.taskListService.createTask(body).subscribe((data) => {
-
       this.fetchTasks();
     });
   }
@@ -210,11 +209,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+  deleteTaskList(taskList: TaskList): void {
+    this.taskListService.deleteTaskList(taskList.id).then(() => {
+      this.handleMessageService.setMessage({
+        detail: "Delete successfully",
+        key: 'toast',
+        severity: 'success',
+        summary: 'Success'
+      })
+      this.fetchTasks()
+    })
+  }
+
   deleteTask(task: Task, tasklist: TaskList) {
-    tasklist.listTask = tasklist.listTask.filter((_x) => {
-      return _x.id !== task.id;
-    });
-    if (this.newTaskMapping.some((_id) => _id !== task.id)) {
+    if (task.id !== "newtask") {
+      this.taskService.deleteTask(parseInt(task.id)).then(() => {
+        this.handleMessageService.setMessage({
+          detail: "Delete successfully",
+          key: 'toast',
+          severity: 'success',
+          summary: 'Success'
+        })
+        this.fetchTasks()
+      })
     }
   }
 
