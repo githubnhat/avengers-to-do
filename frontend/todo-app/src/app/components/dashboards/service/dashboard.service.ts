@@ -14,7 +14,7 @@ export class DashboardService {
   }
 
   getDashboardById(id: string): Observable<Dashboard> {
-    return this.http.get<Dashboard>(`${environment.endPoint}/boards`);
+    return this.http.get<Dashboard>(`${environment.endPoint}/boards/${id}`);
   }
 
   createDashboard(body: any) {

@@ -78,14 +78,14 @@ export class TeamMembersDialogComponent implements OnInit, OnDestroy {
   getUserNameFromToken(): string {
     let token = this.authService.httpHeaders;
     let decoded: any = jwt_decode(token);
-    return decoded.userName;
+    return decoded.sub;
   }
 
   fetchMembers(): void {
     this.subscriptions.push(
       this.dashBoardService.getDashboardById(this.dashboardId).pipe(switchMap(_dashboard => {
-        if (_dashboard.createdBy !== this.getUserNameFromToken()) {
-          this.isOwner = false;
+        if (_dashboard.createdBy === this.getUserNameFromToken()) {
+          this.isOwner = true;
         }
         return this.dashBoardService.getTeamMembers(this.dashboardId)
       })).subscribe(_data => {

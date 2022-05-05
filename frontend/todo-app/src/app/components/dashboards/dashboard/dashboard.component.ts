@@ -200,6 +200,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
     this.taskListService.createTask(body).subscribe((data) => {
       this.fetchTasks();
+      this.isCreateNewTask = false;
     });
   }
   cancelNewTask(taskList: TaskList): void {

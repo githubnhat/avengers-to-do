@@ -22,7 +22,7 @@
         </td>
         <td *ngSwitchCase="'actions'">
           <button *ngIf="rowData.status !== 'OWNER' && isOwner" pButton (click)="removeMember(rowData)"  class="actions__item p-button-text p-button-rounded p-button-danger" icon="pi pi-times"></button>
-      </td>
+        </td>
         <td *ngSwitchDefault="">
           {{rowData[col.field]}}
       </td>
