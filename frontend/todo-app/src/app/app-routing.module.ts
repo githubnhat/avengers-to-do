@@ -6,6 +6,7 @@ import { DashboardsComponent } from './components/dashboards/dashboards.componen
 import { DashboardComponent } from './components/dashboards/dashboard/dashboard.component';
 import { AuthGuardsService } from './services/auth-guards.service';
 import { LoginGuardService } from './services/login-guard.service';
+import { InvitationsComponent } from './components/invitations/invitations.component';
 
 const routes: Routes = [
   {
@@ -19,8 +20,18 @@ const routes: Routes = [
     canActivate: [AuthGuardsService]
   },
   {
+    path: 'invitations',
+    component: InvitationsComponent,
+    canActivate: [AuthGuardsService]
+  },
+  {
     path: 'dashboard/:dashboardId',
     component: DashboardComponent,
+    canActivate: [AuthGuardsService]
+  },
+  {
+    path: '',
+    component: DashboardsComponent,
     canActivate: [AuthGuardsService]
   }
 

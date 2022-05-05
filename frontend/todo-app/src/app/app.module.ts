@@ -22,6 +22,8 @@ import { TeamMembersDialogComponent } from './components/dashboards/dashboard/co
 import { LoadingPageComponent } from './components/loading-page/loading-page.component';
 import { LoaderService } from './services/loader.service';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
+import { InvitationsComponent } from './components/invitations/invitations.component';
 
 const COMPONENTS = [
   AppComponent,
@@ -46,7 +48,7 @@ const MODULES = [
 ];
 
 @NgModule({
-  declarations: [...COMPONENTS],
+  declarations: [...COMPONENTS, InvitationsComponent],
   imports: [...MODULES],
   providers: [
     MessageService
@@ -59,6 +61,11 @@ const MODULES = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpAuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
       multi: true
     },
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }

@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
-import {ButtonModule} from 'primeng/button';
+import jwt_decode from "jwt-decode";
+import { DashboardService } from 'src/app/components/dashboards/service/dashboard.service';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +12,7 @@ import {ButtonModule} from 'primeng/button';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  userFullName: string = ''
   paramText: string = '';
   items: MenuItem[] = [
     {
@@ -23,19 +25,24 @@ export class HeaderComponent implements OnInit {
   activeMenuItem: string = '';
   private _history: string[] = [];
 
-  is_login:any;
+  isLogin: boolean = false;;
   constructor(
-    private router: Router, 
+    private router: Router,
     private location: Location,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+  ) { }
 
   ngOnInit(): void {
     this.fetchUrlData();
-    this.update();
+    this.checkLogin();
   }
 
-  
+  decodeJwt(): void {
+    let token = this.authService.httpHeaders;
+    let decoded: any = jwt_decode(token);
+    this.userFullName = decoded.fullName;
+  }
+
   back(): void {
     this._history.pop();
     if (this._history.length > 0) {
@@ -59,15 +66,23 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  update(){
-    setInterval(()=>{
-      this.is_login = localStorage.getItem("accessToken");
-    },1000)
+  checkLogin() {
+    this.authService.isLogin.subscribe(_state => {
+      this.isLogin = _state
+      if (this.isLogin === true) {
+        this.decodeJwt();
+      }
+    })
   }
 
-  logout(){
-      this.authService.logout();
-      this.router.navigate(["/login"]);
-      window.location.reload();
+  logout() {
+    this.authService.logout();
+    this.authService.setLogin(false)
+    this.router.navigate(["/login"]);
+    window.location.reload();
+  }
+  showInvitations(): void {
+    this.router.navigateByUrl('/invitations')
+
   }
 }

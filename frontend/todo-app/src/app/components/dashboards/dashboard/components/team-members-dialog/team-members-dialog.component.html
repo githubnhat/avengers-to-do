@@ -1,5 +1,5 @@
 
-<p-dialog class="team-members-dialog" [style]="{width: '80vw'}" header="Team Members"
+<p-dialog [closable]="false" class="team-members-dialog" [style]="{width: '80vw', 'max-height':'80vw'}" header="Team Members"
 [(visible)]="displayTeamMembers">
 <p-button (onClick)="showAddNewMemberDialog()">Add New Member</p-button>
 <p-table [columns]="tableHeaders" [value]="listMembers">
@@ -13,10 +13,22 @@
 
   <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr>
-          <td *ngFor="let col of columns">
-              {{rowData[col.field]}}
+        <ng-container  *ngFor="let col of columns" [ngSwitch]="col.field">
+          <td *ngSwitchCase="'joinDate'">
+              {{rowData[col.field] | date}}
           </td>
+          <td *ngSwitchCase="'inviteDate'">
+            {{rowData[col.field] | date}}
+        </td>
+        <td *ngSwitchCase="'actions'">
+          <button *ngIf="rowData.status !== 'OWNER' && isOwner" pButton (click)="removeMember(rowData)"  class="actions__item p-button-text p-button-rounded p-button-danger" icon="pi pi-times"></button>
+      </td>
+        <td *ngSwitchDefault="">
+          {{rowData[col.field]}}
+      </td>
+        </ng-container>
       </tr>
+
   </ng-template>
   <ng-template pTemplate="summary">
       There are {{listMembers?.length}} Members
@@ -28,33 +40,12 @@
 </p-dialog>
 
 
-<p-dialog  [style]="{width: '80vw'}" class="add-team-member-dialog" *ngIf="this.displayAddTeamMember" header="Edit task list"
+<p-dialog  class="add-team-member-dialog" [closable]="false" *ngIf="this.displayAddTeamMember" header="Invite Member"
   [(visible)]="displayAddTeamMember">
-  <p-table [columns]="tableAddMemberHeaders" [value]="listMembersCanInvite">
-    <ng-template pTemplate="header" let-columns>
-        <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
-        </tr>
-    </ng-template>
-
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr>
-          <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
-            <td *ngSwitchCase="'action'">
-                <p-button>Invite</p-button>
-            </td>
-            <td *ngSwitchDefault>
-              {{rowData[col.field]}}
-          </td>
-          </ng-container>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="summary">
-        There are {{listMembersCanInvite?.length}} members can invite
-    </ng-template>
-  </p-table>
+  <form [formGroup]="addTeamMemberForm">
+    <input pInputText formControlName="userName" placeholder="Input username" />
+    <button pButton [disabled]="addTeamMemberForm.invalid" (click)="inviteMember()" icon="pi pi-envelope" class="p-button-text"></button>
+  </form>
   <p-footer>
     <button pButton (click)="onCloseAddTeamMemberDialog()" icon="pi pi-times" class="p-button-text"></button>
   </p-footer>

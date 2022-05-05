@@ -25,6 +25,12 @@ export class TaskListService {
     );
   }
 
+  deleteTaskList(taskListId: number): Promise<any> {
+    return this.http.delete(
+      `${environment.endPoint}/taskList/${taskListId}`
+    ).toPromise();
+  }
+
   getAllTaskList(boardsId: any): Observable<any> {
     return this.http.get<any>(
       `${environment.endPoint}/taskList/${boardsId}`

@@ -1,23 +1,38 @@
-<p-menubar [model]="items" onload="update()">
-    <ng-template pTemplate="start">
-      <div class="left-container">
+<p-menubar [model]="items" [ngClass]="isLogin?'':'hide-menubar-item'">
+  <ng-template pTemplate="start">
+    <div class="left-container">
       <button (click)="back()" pButton class="p-button-text">
         <i class="pi pi-arrow-left back-btn" style="font-size: 2rem"></i>
       </button>
-    <!-- <h2>{{paramText}}</h2> -->
-  </div>
-    </ng-template>
-    <ng-template pTemplate="end">
-      <div class="right-menu">
-        <div class="right-menu-btn" *ngIf="is_login==null">
-          <p-button label="Login" routerLink="/login" icon="pi pi-user" iconPos="right"></p-button>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="end">
+    <div class="right-menu">
+      <ng-container *ngIf="!isLogin">
+        <div class="right-menu-btn">
+          <p-button label="Login" routerLinkActive="focus" routerLink="/login" icon="pi pi-user" iconPos="right"></p-button>
         </div>
-        <div class="right-menu-btn" *ngIf="is_login==null">
-          <p-button label="Register" routerLink="/register"icon="pi pi-user-plus" iconPos="right"></p-button>
+        <div class="right-menu-btn">
+          <p-button label="Register" routerLinkActive="focus" routerLink="/register" icon="pi pi-user-plus" iconPos="right"></p-button>
         </div>
-        <div class="right-menu-btn" *ngIf="is_login!=null">
-          <button pButton pRipple type="button" label="LogOut" icon="pi pi-times" iconPos="right" class="p-button-danger p-button-text" (click)="logout()"></button>
+      </ng-container>
+      <ng-container *ngIf="isLogin">
+        <div class="right-menu-btn">
+          <button pButton pRipple type="button" label="Invitation" icon="pi pi-envelope" iconPos="right"
+            class="p-button-info p-button-text" (click)="showInvitations()"></button>
         </div>
-      </div>
-    </ng-template>
-  </p-menubar>
+        <div class="right-menu-btn">
+          Hello {{userFullName}}!
+        </div>
+        <div class="right-menu-btn">
+          <button pButton pRipple type="button" label="LogOut" icon="pi pi-times" iconPos="right"
+            class="p-button-danger p-button-text" (click)="logout()"></button>
+        </div>
+
+      </ng-container>
+    </div>
+  </ng-template>
+</p-menubar>
+
+
+

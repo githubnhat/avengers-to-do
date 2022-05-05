@@ -40,7 +40,9 @@ export class LoginComponent implements OnInit {
         username: [null],
         password: [null],
       })
+      this.authService.setLogin(true);
       this.router.navigateByUrl("/dashboards")
+
     }
     )
   }
