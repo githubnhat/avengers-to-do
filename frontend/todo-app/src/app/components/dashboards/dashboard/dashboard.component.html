@@ -1,10 +1,18 @@
 <div class="content">
-  <button pButton class="create-new-list-btn" (click)="newTaskList()">
-    Create new list
-  </button>
-  <button pButton class="create-new-list-btn" (click)="showTeamMember()">
-    Team members
-  </button>
+  <div class="board-header">
+    <div class="board-header-left" >
+      <h2>Wordboard -> <span>{{workboardName}}</span></h2>
+    </div>
+    <div class="board-header-right">
+      <button pButton class="create-new-list-btn" (click)="newTaskList()">
+        Create new list
+      </button>
+      <button pButton class="create-new-list-btn" (click)="showTeamMember()">
+        Team members
+      </button>
+    </div>
+  </div>
+  
   <div *ngIf="taskLists.length === 0"class="not-found-task-list">
     <h2>This board have no task list</h2>
   </div>

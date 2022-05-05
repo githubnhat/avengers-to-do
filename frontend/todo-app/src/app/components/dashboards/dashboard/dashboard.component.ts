@@ -37,16 +37,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   taskList: any;
 
+  workboardName:String ='';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private taskListService: TaskListService,
     private handleMessageService: HandleMessageService,
     private taskService: TaskService,
-    private form: FormBuilder
+    private form: FormBuilder,
+    private dashboardService:DashboardService
   ) { }
 
   ngOnInit(): void {
     this.fetchUrlData();
+    this.fecthWorkboardName();
   }
 
   fetchTasks(): void {
@@ -240,5 +244,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   showDetailTask() {
     this.displayDetailTask = true;
+  }
+
+  fecthWorkboardName(){
+    this.dashboardService.getDashboardById(this.dashboardId).subscribe((_data)=>{
+      this.workboardName = _data.name;
+    })
   }
 }

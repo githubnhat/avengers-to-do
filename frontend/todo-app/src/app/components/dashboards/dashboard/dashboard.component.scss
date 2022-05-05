@@ -16,6 +16,25 @@
     }
     // display: flex;
   }
+  .board-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .board-header-left{
+      margin: 10px;
+    
+      h2{
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        color: #989898;
+        span{
+          color: #fdaa4b;
+        }
+      }
+    }
+    .board-header-right{
+      margin-right: 20px;
+    }
+  }
 }
 .board{
     // justify-content: space-around;
@@ -117,3 +136,5 @@
     }
   }
 }
+
+
