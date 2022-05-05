@@ -88,6 +88,10 @@ public class InvitationService {
 
     public void deleteInvitation(Long id) {
         BoardsUsers invitation = boardUserRepository.findById(id).orElseThrow(() -> new IllegalStateException("Invitation invalid"));
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        if (!StringUtils.equals(invitation.getBoards().getCreatedBy(), username)) {
+            throw new IllegalStateException("Sorry, only the board owner can remove members");
+        }
         invitation.setStatus(Constant.DELETED_INVITATION);
         boardUserRepository.save(invitation);
     }
