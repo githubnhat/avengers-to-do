@@ -19,7 +19,7 @@
           <div *ngIf="task.id !== 'newtask'" class="task-item task-valid" pDraggable="task" pDroppable="task"
             (onDragStart)="dragStartHandler(task)" (drop)="dropHandler($event, tasklist)" (onDragEnd)="dragEndHandler()"
             pDroppable="dd" >
-            <p [ngClass]="task.isDone? 'done': ''" class="task-item__title" (click)="showDetailTask()">{{ task.name }}</p>
+            <p [ngClass]="task.isDone? 'done': ''" class="task-item__title" (click)="showDetailTask(task.id)">{{ task.name }}</p>
             <div class="task-item__actions">
               <button (click)="doneTask(task, tasklist)" pButton
               class="p-panel-header-icon p-button-rounded p-button-text" [icon]="task.isDone? 'pi pi-times': 'pi pi-check'"></button>
@@ -38,15 +38,7 @@
             </div>
           </div>
 
-          <!-- popup cua details-task -->
-          <p-dialog header="{{ task.name }}" [(visible)]="displayDetailTask" [modal]="true" [style]="{ width: '50vw' }"
-            [draggable]="false" [resizable]="false">
-            <p class="m-0">{{ task.description }}</p>
-            <!-- <app-task-detail [input]="selectedTask"></app-task-detail> -->
-            <app-comment></app-comment>
-            <ng-template pTemplate="footer"> </ng-template>
-          </p-dialog>
-          <!-- end popup cua detail-task -->
+
         </div>
         <div pDroppable="task" class="task-item task-not-found" *ngIf="tasklist.listTask.length == 0"
           (drop)="dropHandler($event, tasklist)">
@@ -81,3 +73,6 @@
 </p-dialog>
 
 <app-team-members-dialog *ngIf="displayTeamMembers" [displayTeamMembers]="displayTeamMembers" [dashboardId]="dashboardId" (teamMembersEmitter)="onCloseTeamMembersDialog($event)"></app-team-members-dialog>
+
+<app-detail-task *ngIf="displayDetailTask" [taskId]="taskId" [displayDetailTask]="displayDetailTask" (detailTaskEmitter)="closeDetailTask($event)"></app-detail-task>
+

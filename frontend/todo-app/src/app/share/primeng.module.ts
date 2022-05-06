@@ -8,6 +8,10 @@ import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DropdownModule } from 'primeng/dropdown';
+import { CheckboxModule } from 'primeng/checkbox';
+
 const PRIMENG_MODULE = [
   ButtonModule,
   InputTextModule,
@@ -17,15 +21,14 @@ const PRIMENG_MODULE = [
   DragDropModule,
   PanelModule,
   TableModule,
-  DialogModule
-]
+  DialogModule,
+  DropdownModule,
+  InputTextareaModule,
+  CheckboxModule,
+];
 
 @NgModule({
-  exports: [
-    ...PRIMENG_MODULE
-  ],
-  imports: [
-    ...PRIMENG_MODULE
-  ],
+  exports: [...PRIMENG_MODULE],
+  imports: [...PRIMENG_MODULE],
 })
-export class PrimeNgModule { }
+export class PrimeNgModule {}

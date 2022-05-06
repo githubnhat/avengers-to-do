@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, switchMap } from 'rxjs';
@@ -14,7 +14,9 @@ import { TaskService } from '../service/task.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-
+  taskId!: any;
+  nameTask: string = '';
+  displayDetailTask: boolean = false;
   private subscription: Subscription[] = [];
   private draggedTask?: Task;
   private selectedTaskListId: string = '';
@@ -24,7 +26,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public isDisabledSubmitNewTask: boolean = false;
   public isCreateNewTask = false;
   public createListForm!: FormGroup;
-  public editTaskListForm!: FormGroup
+  public editTaskListForm!: FormGroup;
   public displayCreateNewListDialog: boolean = false;
   public displayEditTaskList: boolean = false;
   public displayTeamMembers: boolean = false;
@@ -43,7 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private handleMessageService: HandleMessageService,
     private taskService: TaskService,
     private form: FormBuilder
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fetchUrlData();
@@ -51,11 +53,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   fetchTasks(): void {
     this.subscription.push(
-      this.taskListService.getAllTaskList(this.dashboardId).subscribe((data) => {
-        console.log(data)
-        this.taskLists = data;
-      })
-    )
+      this.taskListService
+        .getAllTaskList(this.dashboardId)
+        .subscribe((data) => {
+          console.log(data);
+          this.taskLists = data;
+        })
+    );
   }
 
   showTeamMember(): void {
@@ -64,12 +68,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   onCloseTeamMembersDialog(event: boolean) {
     this.displayTeamMembers = false;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.forEach((_scription) => {
-      _scription.unsubscribe();
-    });
   }
 
   newTaskList(): void {
@@ -88,7 +86,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   dropHandler(event: Event, taskList: TaskList): void {
-    if (this.draggedTask && !taskList.listTask.some(_task => _task.id === this.draggedTask?.id)) {
+    if (
+      this.draggedTask &&
+      !taskList.listTask.some((_task) => _task.id === this.draggedTask?.id)
+    ) {
       this.taskLists.forEach((_list) => {
         if (_list.id !== taskList.id) {
           _list.listTask = _list.listTask.filter(
@@ -112,8 +113,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       listTask: [],
       title: this.createListForm.value.name,
     });
-    this.taskListService.createTaskList(body).subscribe((data) => {
-    });
+    this.taskListService.createTaskList(body).subscribe((data) => {});
     this.displayCreateNewListDialog = false;
   }
 
@@ -128,12 +128,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         )
         .subscribe(
           (_respone) => {
-            console.log(_respone)
+            console.log(_respone);
             this.taskLists = _respone;
           },
           (error) => {
-            console.log(
-            );
+            console.log();
           }
         )
     );
@@ -150,46 +149,46 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   editTaskList(taskList: TaskList): void {
-    this.selectedTaskListId = taskList.id
-    console.log(taskList)
+    this.selectedTaskListId = taskList.id;
+    console.log(taskList);
     this.displayEditTaskList = true;
     this.editTaskListForm = this.form.group({
       title: [taskList.title, [Validators.required]],
-    })
+    });
   }
   onSubmitEditTaskList(): void {
     this.displayEditTaskList = false;
     let body: any = {
       taskListId: this.selectedTaskListId,
-      title: this.editTaskListForm.value.title
-    }
-    this.taskListService.updateTaskList(body).then(_x => {
+      title: this.editTaskListForm.value.title,
+    };
+    this.taskListService.updateTaskList(body).then((_x) => {
       let message: Message = {
-        detail: "Updated successfully",
+        detail: 'Updated successfully',
         key: 'toast',
         severity: 'success',
-        summary: 'Success'
-      }
-      this.fetchUrlData()
-      this.handleMessageService.setMessage(message)
-    })
+        summary: 'Success',
+      };
+      this.fetchUrlData();
+      this.handleMessageService.setMessage(message);
+    });
   }
 
   doneTask(task: Task, taskList: TaskList): void {
     const body = {
       taskId: task.id,
-      isDone: !task.isDone
-    }
+      isDone: !task.isDone,
+    };
     let message: Message = {
-      detail: "Updated successfully",
+      detail: 'Updated successfully',
       key: 'toast',
       severity: 'success',
-      summary: 'Success'
-    }
+      summary: 'Success',
+    };
     this.taskService.doneTask(body).then(() => {
       task.isDone = body.isDone;
-      this.handleMessageService.setMessage(message)
-    })
+      this.handleMessageService.setMessage(message);
+    });
   }
 
   submitNewTask(id: any): void {
@@ -217,9 +216,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  displayDetailTask: boolean | undefined;
-
-  showDetailTask() {
+  showDetailTask(id: string) {
+    this.taskId = id;
     this.displayDetailTask = true;
+
+
+  }
+  closeDetailTask(event:any) {
+    this.displayDetailTask = event;
+  }
+  ngOnDestroy(): void {
+    this.subscription.forEach((_scription) => {
+      _scription.unsubscribe();
+    });
   }
 }
