@@ -17,10 +17,33 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.detail-task-container {
+  ::ng-deep {
+    .p-inputtext {
+      width: 100%;
+    }
+    .save-detail {
+      .p-button {
+        float: right;
+      }
+    }
+  }
+  .detail-info-task {
+    .task-item {
+      &__title.done {
+        transition: all 0.5s;
+        text-decoration: line-through;
+      }
+    }
+  }
+}
+
 .comments-area {
-  height: 500px;
+  margin-top: 20px;
+  height: 320px;
   .show-comment-area {
-    height: 50%;
+    height: 80%;
     overflow-y: auto;
     margin-bottom: 10px;
     background-color: rgb(240, 240, 240);
@@ -29,7 +52,7 @@
     .comment {
       background-color: white;
       border-radius: 5px;
-      padding: 5px;
+      padding: 20px;
       margin: 20px;
       width: fit-content;
     }
@@ -43,8 +66,4 @@
   }
 }
 @media only screen and (max-width: 600px) {
-  body {
-    .comments-area {
-    }
-  }
 }

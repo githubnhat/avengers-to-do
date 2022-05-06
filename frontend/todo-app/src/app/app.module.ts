@@ -15,15 +15,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AuthService } from './services/auth.service';
 import { AuthGuardsService } from './services/auth-guards.service';
-import { CommentComponent } from './components/dashboards/dashboard/comment/comment.component';
 import { HttpAuthInterceptor } from './interceptors/http-auth.interceptor';
 import { HttpHandlerInterceptor } from './interceptors/http-handler.interceptor';
 import { TeamMembersDialogComponent } from './components/dashboards/dashboard/components/team-members-dialog/team-members-dialog.component';
 import { LoadingPageComponent } from './components/loading-page/loading-page.component';
 import { LoaderService } from './services/loader.service';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { DetailTaskComponent } from './components/dashboards/dashboard/components/detail-task/detail-task.component';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { InvitationsComponent } from './components/invitations/invitations.component';
+
 
 const COMPONENTS = [
   AppComponent,
@@ -32,9 +33,9 @@ const COMPONENTS = [
   DashboardsComponent,
   HeaderComponent,
   DashboardComponent,
-  CommentComponent,
   TeamMembersDialogComponent,
   LoadingPageComponent,
+  DetailTaskComponent,
 ];
 
 const MODULES = [
@@ -51,18 +52,19 @@ const MODULES = [
   declarations: [...COMPONENTS, InvitationsComponent],
   imports: [...MODULES],
   providers: [
-    MessageService
-    , AuthGuardsService,
+    MessageService,
+    AuthGuardsService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpHandlerInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpAuthInterceptor,
-      multi: true
+      multi: true,
     },
+
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
@@ -73,4 +75,4 @@ const MODULES = [
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
