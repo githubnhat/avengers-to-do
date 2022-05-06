@@ -78,7 +78,6 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
       isDone: this.checked,
     };
     this.taskService.updateTaskDetail(body).subscribe((res) => {
-      console.log(res);
     });
     this.displayDetailTask = false;
     location.reload();
