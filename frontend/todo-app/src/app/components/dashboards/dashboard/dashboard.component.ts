@@ -88,20 +88,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   dropHandler(event: Event, taskList: TaskList): void {
+    const body = {
+      taskListId: taskList.id
+    }
     if (this.draggedTask && !taskList.listTask.some(_task => _task.id === this.draggedTask?.id)) {
-      this.taskLists.forEach((_list) => {
-        if (_list.id !== taskList.id) {
-          _list.listTask = _list.listTask.filter(
-            (_task: { id: string | undefined }) => {
-              return _task.id !== this.draggedTask?.id;
-            }
-          );
-        }
-      });
-
-      taskList.listTask = [...taskList.listTask, this.draggedTask];
+      this.taskService.changeIdTaskList(parseInt(this.draggedTask!.id), body).then(() => {
+        this.fetchTasks()
+      })
     }
   }
+
   onCreateNewList(): void {
     let body = {
       title: this.createListForm.value.name,
@@ -201,6 +197,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.taskListService.createTask(body).subscribe((data) => {
       this.fetchTasks();
       this.isCreateNewTask = false;
+      this.taskName = '';
     });
   }
   cancelNewTask(taskList: TaskList): void {

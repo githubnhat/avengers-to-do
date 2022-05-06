@@ -18,4 +18,8 @@ export class TaskService {
   deleteTask(taskId: number): Promise<any> {
     return this.http.delete<any>(`${environment.endPoint}/tasks/${taskId}`, {}).toPromise()
   }
+
+  changeIdTaskList(taskId: number, body: any): Promise<any> {
+    return this.http.put<any>(`${environment.endPoint}/tasks/${taskId}`, body).toPromise()
+  }
 }
