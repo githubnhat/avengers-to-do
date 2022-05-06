@@ -78,9 +78,10 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
       isDone: this.checked,
     };
     this.taskService.updateTaskDetail(body).subscribe((res) => {
+      console.log(res);
+      location.reload();
     });
     this.displayDetailTask = false;
-    location.reload();
   }
 
   comment() {
@@ -93,10 +94,10 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
       taskId: this.taskId,
     };
 
-
     this.commentService.comment(body).subscribe((res) => {
       this.fetchCommentData();
     });
+    this.content = '';
   }
   fetchCommentData() {
     this.taskService.getTaskDetail(this.taskId).subscribe((data) => {
