@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -8,9 +8,17 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthService {
   private _httpHeaders!: string
-
+  private _isLogin = new BehaviorSubject<boolean>(false)
   constructor(private http: HttpClient) {
     this.getHeader()
+  }
+
+  get isLogin() {
+    return this._isLogin;
+  }
+
+  setLogin(state: boolean) {
+    this._isLogin.next(state)
   }
 
   get httpHeaders() {
@@ -33,8 +41,17 @@ export class AuthService {
 
   getHeader() {
     const accessToken = localStorage.getItem("accessToken")
-    if (accessToken)
+    if (accessToken) {
       this._httpHeaders = accessToken;
+      this.setLogin(true)
+    }
+  }
+
+  logout() {
+    if (localStorage.getItem("accessToken") != null) {
+      localStorage.removeItem("accessToken");
+      this._httpHeaders = '';
+    }
   }
 
 

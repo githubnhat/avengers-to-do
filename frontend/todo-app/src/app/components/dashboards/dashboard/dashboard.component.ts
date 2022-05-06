@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   displayDetailTask: boolean = false;
   private subscription: Subscription[] = [];
   private draggedTask?: Task;
-  private selectedTaskListId: string = '';
+  private selectedTaskListId?: number
   private newTaskMapping: string[] = [];
 
   public dashboardId: string = '';
@@ -39,16 +39,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   taskList: any;
 
+  workboardName:String ='';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private taskListService: TaskListService,
     private handleMessageService: HandleMessageService,
     private taskService: TaskService,
-    private form: FormBuilder
-  ) {}
+
+    private form: FormBuilder,
+    private dashboardService:DashboardService
+  ) { }
+
 
   ngOnInit(): void {
     this.fetchUrlData();
+    this.fecthWorkboardName();
   }
 
   fetchTasks(): void {
@@ -108,12 +114,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       title: this.createListForm.value.name,
       boardsId: this.dashboardId,
     };
-    this.taskLists.push({
-      id: Guid.create().toString(),
-      listTask: [],
-      title: this.createListForm.value.name,
+
+    this.taskListService.createTaskList(body).subscribe((data: any) => {
+      this.taskLists.push({
+        id: data.data.id,
+        listTask: [],
+        title: this.createListForm.value.name,
+      });
     });
-    this.taskListService.createTaskList(body).subscribe((data) => {});
+
     this.displayCreateNewListDialog = false;
   }
 
@@ -199,6 +208,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
     this.taskListService.createTask(body).subscribe((data) => {
       this.fetchTasks();
+      this.isCreateNewTask = false;
     });
   }
   cancelNewTask(taskList: TaskList): void {
@@ -208,11 +218,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+  deleteTaskList(taskList: TaskList): void {
+    this.taskListService.deleteTaskList(taskList.id).then(() => {
+      this.handleMessageService.setMessage({
+        detail: "Delete successfully",
+        key: 'toast',
+        severity: 'success',
+        summary: 'Success'
+      })
+      this.fetchTasks()
+    })
+  }
+
   deleteTask(task: Task, tasklist: TaskList) {
-    tasklist.listTask = tasklist.listTask.filter((_x) => {
-      return _x.id !== task.id;
-    });
-    if (this.newTaskMapping.some((_id) => _id !== task.id)) {
+    if (task.id !== "newtask") {
+      this.taskService.deleteTask(parseInt(task.id)).then(() => {
+        this.handleMessageService.setMessage({
+          detail: "Delete successfully",
+          key: 'toast',
+          severity: 'success',
+          summary: 'Success'
+        })
+        this.fetchTasks()
+      })
     }
   }
 
@@ -229,5 +257,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.subscription.forEach((_scription) => {
       _scription.unsubscribe();
     });
+  }
+
+  fecthWorkboardName(){
+    this.dashboardService.getDashboardById(this.dashboardId).subscribe((_data)=>{
+      this.workboardName = _data.name;
+    })
   }
 }

@@ -12,5 +12,5 @@ import java.util.List;
 @Builder
 public class InvitationRequest {
     private Long boardId;
-    private List<Long> usersId;
+    private String username;
 }

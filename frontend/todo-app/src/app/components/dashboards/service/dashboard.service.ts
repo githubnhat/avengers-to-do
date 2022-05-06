@@ -1,20 +1,20 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Dashboard, Member, MemberInBoard, TaskList } from 'src/app/interface';
+import { Dashboard, Invitation, Member, MemberInBoard, TaskList } from 'src/app/interface';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAllDashboards(): Observable<Dashboard[]> {
     return this.http.get<Dashboard[]>(`${environment.endPoint}/boards`);
   }
 
   getDashboardById(id: string): Observable<Dashboard> {
-    return this.http.get<Dashboard>(`${environment.endPoint}/boards`);
+    return this.http.get<Dashboard>(`${environment.endPoint}/boards/${id}`);
   }
 
   createDashboard(body: any) {
@@ -32,9 +32,9 @@ export class DashboardService {
       `${environment.endPoint}/invitation/board/${boardId}/users`
     );
   }
-  addTeamMembers(boardId: string, body: any): Observable<MemberInBoard> {
+  addTeamMembers(body: any): Observable<MemberInBoard> {
     return this.http.post<MemberInBoard>(
-      `${environment.endPoint}/boards/${boardId}/users`,
+      `${environment.endPoint}/invitation`,
       body
     );
   }
@@ -46,4 +46,24 @@ export class DashboardService {
   deleteDashboard(id: string) {
     return this.http.delete(`${environment.endPoint}/boards/${id}`);
   }
+
+  getInvitationsOfUser(): Observable<Invitation[]> {
+    return this.http.get<Invitation[]>(
+      `${environment.endPoint}/invitation`,
+    );
+  }
+
+  removeMemberInBoard(invitationId: number): Promise<any> {
+    return this.http.delete<Invitation[]>(
+      `${environment.endPoint}/invitation/${invitationId}`,
+    ).toPromise();
+  }
+
+  updateInvitation(body: any): Promise<any> {
+    return this.http.put(
+      `${environment.endPoint}/invitation`,
+      body
+    ).toPromise();
+  }
+
 }

@@ -19,7 +19,7 @@ export interface Dashboard {
 }
 
 export interface TaskList {
-  id: string;
+  id: number;
   title: string;
   listTask: Task[];
 }
@@ -29,6 +29,14 @@ export interface Task {
   name: string;
   description: string;
   isDone: boolean;
+}
+
+export interface Invitation {
+  invitationId: number,
+  inviter: string,
+  invitationTime: string,
+  status: "PENDING" | "APPROVED",
+  boardName: string
 }
 
 export interface BoardUser {

@@ -1,11 +1,22 @@
 <div class="content">
-  <button pButton class="create-new-list-btn" (click)="newTaskList()">
-    Create new list
-  </button>
-  <button pButton class="create-new-list-btn" (click)="showTeamMember()">
-    Team members
-  </button>
-  <div class="board">
+  <div class="board-header">
+    <div class="board-header-left" >
+      <h2>Wordboard -> <span>{{workboardName}}</span></h2>
+    </div>
+    <div class="board-header-right">
+      <button pButton class="create-new-list-btn" (click)="newTaskList()">
+        Create new list
+      </button>
+      <button pButton class="create-new-list-btn" (click)="showTeamMember()">
+        Team members
+      </button>
+    </div>
+  </div>
+  
+  <div *ngIf="taskLists.length === 0"class="not-found-task-list">
+    <h2>This board have no task list</h2>
+  </div>
+  <div  *ngIf="taskLists.length !== 0" class="board">
     <ng-container *ngFor="let tasklist of taskLists">
       <p-panel [header]="tasklist.title" class="board__list-item">
         <ng-template pTemplate="icons">
@@ -13,7 +24,7 @@
             (click)="addNewTask(tasklist)"></button>
             <button pButton class="p-panel-header-icon" icon="pi pi-pencil" [disabled]="isCreateNewTask"
             (click)="editTaskList(tasklist)"></button>
-          <button pButton class="p-panel-header-icon" icon="pi pi-trash"></button>
+          <button (click)="deleteTaskList(tasklist)" pButton class="p-panel-header-icon" icon="pi pi-trash"></button>
         </ng-template>
         <div *ngFor="let task of tasklist.listTask">
           <div *ngIf="task.id !== 'newtask'" class="task-item task-valid" pDraggable="task" pDroppable="task"
@@ -31,7 +42,7 @@
           <div *ngIf="task.id === 'newtask'" class="new-task task-item">
             <input [(ngModel)]="taskName" pInputText class="p-inputtext-sm new-task__name" />
             <div class="new-task__actions">
-              <button pButton class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-check"
+              <button [disabled]="taskName === ''" pButton class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-check"
                 (click)="submitNewTask(tasklist.id)"></button>
               <button pButton class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-times"
                 (click)="cancelNewTask(tasklist)"></button>
@@ -46,6 +57,7 @@
         </div>
       </p-panel>
     </ng-container>
+
   </div>
 </div>
 <p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Create new list"

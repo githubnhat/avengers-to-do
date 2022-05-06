@@ -1,9 +1,35 @@
 .left-container{
     display:flex;
+    padding-right: 15px;
     .back-btn{
         color:black;
     }
     h2{
         text-transform: uppercase;
     }
+}
+.right-menu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .right-menu-btn{
+        padding: 10px;
+    }
+}
+
+:host::ng-deep{
+ .hide-menubar-item{
+    .p-menubar-button,.p-menuitem{
+      display: none;
+    }
+
+  }
+
+  .right-menu{
+      .focus{
+      .p-button{
+        background: rgba($color: #001995, $alpha: 0.7);
+      }
+}
+}
 }
