@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   taskList: any;
 
-  workboardName:String ='';
+  workboardName: String = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private taskService: TaskService,
 
     private form: FormBuilder,
-    private dashboardService:DashboardService
+    private dashboardService: DashboardService
   ) { }
 
 
@@ -92,23 +92,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   dropHandler(event: Event, taskList: TaskList): void {
-    if (
-      this.draggedTask &&
-      !taskList.listTask.some((_task) => _task.id === this.draggedTask?.id)
-    ) {
-      this.taskLists.forEach((_list) => {
-        if (_list.id !== taskList.id) {
-          _list.listTask = _list.listTask.filter(
-            (_task: { id: string | undefined }) => {
-              return _task.id !== this.draggedTask?.id;
-            }
-          );
-        }
-      });
-
-      taskList.listTask = [...taskList.listTask, this.draggedTask];
+    const body = {
+      taskListId: taskList.id
+    }
+    if (this.draggedTask && !taskList.listTask.some(_task => _task.id === this.draggedTask?.id)) {
+      this.taskService.changeIdTaskList(parseInt(this.draggedTask!.id), body).then(() => {
+        this.fetchTasks()
+      })
     }
   }
+
   onCreateNewList(): void {
     let body = {
       title: this.createListForm.value.name,
@@ -209,6 +202,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.taskListService.createTask(body).subscribe((data) => {
       this.fetchTasks();
       this.isCreateNewTask = false;
+      this.taskName = '';
     });
   }
   cancelNewTask(taskList: TaskList): void {
@@ -250,7 +244,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   }
-  closeDetailTask(event:any) {
+  closeDetailTask(event: any) {
     this.displayDetailTask = event;
   }
   ngOnDestroy(): void {
@@ -259,8 +253,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  fecthWorkboardName(){
-    this.dashboardService.getDashboardById(this.dashboardId).subscribe((_data)=>{
+  fecthWorkboardName() {
+    this.dashboardService.getDashboardById(this.dashboardId).subscribe((_data) => {
       this.workboardName = _data.name;
     })
   }

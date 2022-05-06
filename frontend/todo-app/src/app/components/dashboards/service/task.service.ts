@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class TaskService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   doneTask(body: any): Promise<any> {
     return this.http
@@ -21,11 +21,12 @@ export class TaskService {
   updateTaskDetail(body: any) {
     return this.http.put<any>(`${environment.endPoint}/tasks`, body);
   }
-  deleteTask(id: string) {
-    return this.http.delete<any>(`${environment.endPoint}/tasks/${id}`);
-  }
 
   deleteTask(taskId: number): Promise<any> {
     return this.http.delete<any>(`${environment.endPoint}/tasks/${taskId}`, {}).toPromise()
+  }
+
+  changeIdTaskList(taskId: number, body: any): Promise<any> {
+    return this.http.put<any>(`${environment.endPoint}/tasks/${taskId}`, body).toPromise()
   }
 }
