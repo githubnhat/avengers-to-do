@@ -1,0 +1,117 @@
+<p-dialog
+  *ngIf="this.task"
+  header="Task Detail"
+  [(visible)]="displayDetailTask"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  (onHide)="closeTaskDetail()"
+>
+  <div class="detail-task-container">
+    <div class="detail-name">
+      <div><strong>Task name: </strong></div>
+      <br />
+      <input type="text" pInputText [(ngModel)]="this.task.name" />
+    </div>
+    <div class="detail-description">
+      <div><strong>Description: </strong></div>
+      <br />
+      <textarea
+        [rows]="5"
+        [cols]="30"
+        pInputTextarea
+        placeholder="Type your description..."
+        [(ngModel)]="this.task.description"
+      ></textarea>
+    </div>
+    <br />
+    <div class="detail-info-task">
+      <span
+        ><strong>Complete: </strong>
+        <!-- <button
+          (click)="doneTask(task)"
+          pButton
+          class="p-panel-header-icon p-button-rounded p-button-text"
+          [label]="this.task.isDone ? 'Done' : 'Not Done'"
+        ></button> -->
+
+        <!-- <p-dropdown
+          [options]="status"
+          [(ngModel)]="this.setStatus"
+          optionLabel="statusTask"
+        ></p-dropdown> -->
+        <span *ngIf="this.checked">
+          <label for="binary" [ngClass]="checked? 'done': ''" class="task-item__title">DONE </label>
+          <p-checkbox
+            [(ngModel)]="checked"
+            [binary]="true"
+            inputId="binary"
+          ></p-checkbox>
+        </span>
+        <span *ngIf="!this.checked">
+          <label for="binary" [ngClass]="checked? 'done': ''" class="task-item__title">NOT DONE </label>
+          <p-checkbox
+            [(ngModel)]="checked"
+            [binary]="true"
+            inputId="binary"
+          ></p-checkbox>
+        </span>
+      </span>
+
+      <!-- <button (click)="deleteTask(task, tasklist)" pButton
+          class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-trash"></button> -->
+    </div>
+    <br />
+    <div class="save-detail">
+      <button
+        pButton
+        pRipple
+        icon="pi pi-check"
+        (click)="saveDetailTask()"
+        label="SAVE YOUR CHANGE"
+        class="Primary"
+      ></button>
+    </div>
+    <br />
+
+    <div class="comments-area">
+      <h3>Comments:</h3>
+      <div class="show-comment-area">
+        <div class="comment" *ngFor="let comment of this.commentArray">
+          <div>
+            <strong> {{ comment.fullName }} </strong>
+            <br />
+            <i>
+              {{ comment.createdDate | date: "medium" }}
+            </i>
+            <br />
+            <br />
+          </div>
+          <div>
+            {{ comment.content }}
+          </div>
+        </div>
+      </div>
+      <div class="type-message-area">
+        <div class="col-12 md:col-4">
+          <div class="p-inputgroup">
+            <input
+              type="text"
+              pInputText
+              placeholder="Type your message..."
+              [(ngModel)]="this.content"
+            />
+            <button
+              type="button"
+              pButton
+              pRipple
+              icon="pi pi-send"
+              styleClass="p-button-warn"
+              (click)="comment()"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer"> </ng-template>
+</p-dialog>

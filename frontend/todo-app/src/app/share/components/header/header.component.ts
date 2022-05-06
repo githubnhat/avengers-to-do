@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit {
   paramText: string = '';
   items: MenuItem[] = [
     {
-      label: 'Dashboards',
+      label: 'Workboards',
       icon: 'pi pi-check-square',
       routerLink: ['/dashboards'],
     },
