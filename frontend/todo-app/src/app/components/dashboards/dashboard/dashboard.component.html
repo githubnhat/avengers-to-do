@@ -12,7 +12,7 @@
       </button>
     </div>
   </div>
-  
+  <div class="board-content">
   <div *ngIf="taskLists.length === 0"class="not-found-task-list">
     <h2>This board have no task list</h2>
   </div>
@@ -59,6 +59,7 @@
     </ng-container>
 
   </div>
+</div>
 </div>
 <p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Create new list"
   [(visible)]="displayCreateNewListDialog">

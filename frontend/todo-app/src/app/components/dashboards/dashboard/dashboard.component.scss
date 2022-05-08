@@ -156,4 +156,14 @@
   }
 }
 
+.board-header{
+  position: fixed;
+  width:100%;
+  justify-content: space-between;
+}
+.board-content{
+  position: relative;
+  top: 100px;
+}
+
 
