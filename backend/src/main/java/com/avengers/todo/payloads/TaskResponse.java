@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,4 +19,5 @@ public class TaskResponse {
     private String description;
     private Boolean isDone;
     private List<CommentResponse> comments;
+    private Date deadline;
 }

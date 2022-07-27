@@ -9,8 +9,10 @@ import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
 import com.avengers.todo.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -30,13 +32,19 @@ public class TaskService {
         if (taskList == null) {
             throw new IllegalStateException("TaskList Not Found");
         }
+
         Tasks tasks = taskRepository.save(Tasks.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .isDone(false)
                 .active(true)
+                .deadline(request.getDeadline())
                 .taskList(taskList).build());
-        return CreateTask.builder().name(request.getName()).description(request.getName()).usersList(Collections.emptyList()).build();
+        return CreateTask.builder()
+                .name(request.getName())
+                .description(request.getName())
+                .usersList(Collections.emptyList())
+                .build();
     }
 
 
