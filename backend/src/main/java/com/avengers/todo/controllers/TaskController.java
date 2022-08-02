@@ -75,4 +75,14 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot Change task", ""));
         }
     }
+
+    @GetMapping(path = "{}")
+    public ResponseEntity<?> getDeadlineList(int month, int year, Long boardID){
+        try {
+
+            return ResponseEntity.ok(taskService.getDeadlineList(month, year, boardID));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot delete task list", ""));
+        }
+    }
 }

@@ -9,6 +9,7 @@ import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
 import com.avengers.todo.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -99,4 +100,10 @@ public class TaskService {
         tasks.setTaskList(taskList);
         taskRepository.save(tasks);
     }
+
+    public List<DeadlineResponse> getDeadlineList(int month, int year, Long boardID) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        return taskRepository.getDeadlineList(month,year,boardID,username);
+    }
+    
 }

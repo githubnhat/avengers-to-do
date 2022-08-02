@@ -4,10 +4,11 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/avengers-to-do
     username: postgres
-    password: 123456
+    password: 12345
   jpa:
     hibernate:
-      ddl-auto: create-drop
+#      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
