@@ -105,5 +105,5 @@ public class TaskService {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         return taskRepository.getDeadlineList(month,year,boardID,username);
     }
-    
+
 }

@@ -65,8 +65,9 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot Delete task", ""));
         }
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> changeId(@PathVariable Long id , @RequestBody UpdateTaskListRequest request){
+    public ResponseEntity<?> changeId(@PathVariable Long id, @RequestBody UpdateTaskListRequest request) {
         try {
             taskService.changeId(id, request);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Change task successfully", ""));
@@ -76,10 +77,9 @@ public class TaskController {
         }
     }
 
-    @GetMapping(path = "{}")
-    public ResponseEntity<?> getDeadlineList(int month, int year, Long boardID){
+    @GetMapping(path = "/{deadline}")
+    public ResponseEntity<?> getDeadlineList(@RequestParam int month, @RequestParam int year, @RequestParam Long boardID) {
         try {
-
             return ResponseEntity.ok(taskService.getDeadlineList(month, year, boardID));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot delete task list", ""));
