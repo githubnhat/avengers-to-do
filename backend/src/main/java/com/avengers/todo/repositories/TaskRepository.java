@@ -15,4 +15,7 @@ public interface TaskRepository extends JpaRepository<Tasks, Long> {
     List<Tasks> getAllTaskByTaskListId(@Param("id") Long taskListId);
 
     Optional<Tasks> findByIdAndActiveTrue (Long id);
+
+    @Query(value = "select * from tasks t where t.task_list_id = :id AND t.active = true AND t.is_done = :isDone", nativeQuery = true)
+    List<Tasks> getAllTaskByTaskListIdAndDone(@Param("id") Long taskListId, @Param("isDone") Boolean isDone);
 }
