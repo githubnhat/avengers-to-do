@@ -1,6 +1,9 @@
 server:
   port: 8081
 spring:
+  mvc:
+    format:
+      date: dd-MM-yyyy
   datasource:
     url: jdbc:postgresql://localhost:5432/avengers-to-do
     username: postgres

@@ -19,6 +19,6 @@ public class CreateTask {
     private String description;
     private List<Users> usersList;
 
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date deadline;
 }
