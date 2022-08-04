@@ -9,8 +9,10 @@ import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
 import com.avengers.todo.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -25,18 +27,26 @@ public class TaskService {
 
     private final UsersRepository usersRepository;
 
-    public CreateTask create(CreateTask request) {
+    public TaskResponse create(CreateTask request) {
         TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElse(null);
         if (taskList == null) {
             throw new IllegalStateException("TaskList Not Found");
         }
+
         Tasks tasks = taskRepository.save(Tasks.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .isDone(false)
                 .active(true)
+                .deadline(request.getDeadline())
                 .taskList(taskList).build());
-        return CreateTask.builder().name(request.getName()).description(request.getName()).usersList(Collections.emptyList()).build();
+        return TaskResponse.builder()
+                .id(tasks.getId())
+                .name(tasks.getName())
+                .description(tasks.getDescription())
+                .taskListId(tasks.getTaskList().getId())
+                .deadline(tasks.getDeadline())
+                .build();
     }
 
 
@@ -63,6 +73,7 @@ public class TaskService {
         String nameRequest = updateTaskRequest.getName();
         String descriptionRequest = updateTaskRequest.getDescription();
         Boolean isDoneRequest = updateTaskRequest.getIsDone();
+        String deadlineRequest = updateTaskRequest.getDeadline();
 
         Tasks tasks = taskRepository.findById(taskIdRequest)
                 .orElseThrow(() -> new IllegalArgumentException("Task is not exist"));
@@ -77,6 +88,13 @@ public class TaskService {
 
         if (isDoneRequest != null && !(isDoneRequest == tasks.getIsDone())) {
             tasks.setIsDone(isDoneRequest);
+        }
+
+        if (isDoneRequest != null && !(isDoneRequest == tasks.getIsDone())) {
+            tasks.setIsDone(isDoneRequest);
+        }
+        if(deadlineRequest != null && !(deadlineRequest == tasks.getDeadline())){
+            tasks.setDeadline(deadlineRequest);
         }
 
         taskRepository.save(tasks);
