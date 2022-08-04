@@ -1,13 +1,15 @@
 server:
   port: 8081
 spring:
+  mvc:
+    format:
+      date: dd-MM-yyyy
   datasource:
     url: jdbc:postgresql://localhost:5432/avengers-to-do
     username: postgres
     password: 12345
   jpa:
     hibernate:
-#      ddl-auto: create-drop
       ddl-auto: update
     properties:
       hibernate:

@@ -37,6 +37,6 @@ public class Tasks extends BaseEntity {
 
     private boolean active;
 
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date deadline;
+    @JsonFormat(pattern="dd/MM/yyyy", shape= JsonFormat.Shape.STRING)
+    private String deadline;
 }
