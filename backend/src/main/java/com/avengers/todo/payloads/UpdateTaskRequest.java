@@ -11,4 +11,5 @@ public class UpdateTaskRequest {
     private String name;
     private String description;
     private Boolean isDone;
+    private String deadline;
 }

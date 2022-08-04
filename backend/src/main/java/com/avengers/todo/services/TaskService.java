@@ -73,6 +73,7 @@ public class TaskService {
         String nameRequest = updateTaskRequest.getName();
         String descriptionRequest = updateTaskRequest.getDescription();
         Boolean isDoneRequest = updateTaskRequest.getIsDone();
+        String deadlineRequest = updateTaskRequest.getDeadline();
 
         Tasks tasks = taskRepository.findById(taskIdRequest)
                 .orElseThrow(() -> new IllegalArgumentException("Task is not exist"));
@@ -87,6 +88,13 @@ public class TaskService {
 
         if (isDoneRequest != null && !(isDoneRequest == tasks.getIsDone())) {
             tasks.setIsDone(isDoneRequest);
+        }
+
+        if (isDoneRequest != null && !(isDoneRequest == tasks.getIsDone())) {
+            tasks.setIsDone(isDoneRequest);
+        }
+        if(deadlineRequest != null && !(deadlineRequest == tasks.getDeadline())){
+            tasks.setDeadline(deadlineRequest);
         }
 
         taskRepository.save(tasks);
