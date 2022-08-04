@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -36,6 +35,6 @@ public class Tasks extends BaseEntity {
     private Boolean isDone;
 
     private boolean active;
-    @JsonFormat(pattern="dd/MM/yyyy")
-    private Date deadline;
+    @JsonFormat(pattern="dd/MM/yyyy", shape= JsonFormat.Shape.STRING)
+    private String deadline;
 }

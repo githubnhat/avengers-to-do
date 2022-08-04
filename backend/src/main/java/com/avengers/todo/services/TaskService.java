@@ -27,7 +27,7 @@ public class TaskService {
 
     private final UsersRepository usersRepository;
 
-    public CreateTask create(CreateTask request) {
+    public TaskResponse create(CreateTask request) {
         TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElse(null);
         if (taskList == null) {
             throw new IllegalStateException("TaskList Not Found");
@@ -40,10 +40,12 @@ public class TaskService {
                 .active(true)
                 .deadline(request.getDeadline())
                 .taskList(taskList).build());
-        return CreateTask.builder()
-                .name(request.getName())
-                .description(request.getName())
-                .usersList(Collections.emptyList())
+        return TaskResponse.builder()
+                .id(tasks.getId())
+                .name(tasks.getName())
+                .description(tasks.getDescription())
+                .taskListId(tasks.getTaskList().getId())
+                .deadline(tasks.getDeadline())
                 .build();
     }
 
