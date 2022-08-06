@@ -3,17 +3,19 @@ package com.avengers.todo.services;
 import com.avengers.todo.entity.Comment;
 import com.avengers.todo.entity.TaskList;
 import com.avengers.todo.entity.Tasks;
+import com.avengers.todo.entity.Users;
 import com.avengers.todo.payloads.*;
 import com.avengers.todo.repositories.CommentRepository;
 import com.avengers.todo.repositories.TaskListRepository;
 import com.avengers.todo.repositories.TaskRepository;
 import com.avengers.todo.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,18 +27,34 @@ public class TaskService {
 
     private final UsersRepository usersRepository;
 
-    public CreateTask create(CreateTask request) {
+    public TaskResponse create(CreateTask request) {
         TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElse(null);
+        List<Users> listUser = new ArrayList<>();
+        if (request.getUsersList() != null) {
+            request.getUsersList().forEach(
+                    (user) -> {
+                        listUser.add(usersRepository.findByUsername(user.getUsername()));
+                    });
+        }
         if (taskList == null) {
             throw new IllegalStateException("TaskList Not Found");
         }
+
         Tasks tasks = taskRepository.save(Tasks.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .isDone(false)
                 .active(true)
+                .users(listUser)
+                .deadline(request.getDeadline())
                 .taskList(taskList).build());
-        return CreateTask.builder().name(request.getName()).description(request.getName()).usersList(Collections.emptyList()).build();
+        return TaskResponse.builder()
+                .id(tasks.getId())
+                .name(tasks.getName())
+                .description(tasks.getDescription())
+                .taskListId(tasks.getTaskList().getId())
+                .deadline(tasks.getDeadline())
+                .build();
     }
 
 
@@ -63,6 +81,7 @@ public class TaskService {
         String nameRequest = updateTaskRequest.getName();
         String descriptionRequest = updateTaskRequest.getDescription();
         Boolean isDoneRequest = updateTaskRequest.getIsDone();
+        Date deadlineRequest = updateTaskRequest.getDeadline();
 
         Tasks tasks = taskRepository.findById(taskIdRequest)
                 .orElseThrow(() -> new IllegalArgumentException("Task is not exist"));
@@ -77,6 +96,13 @@ public class TaskService {
 
         if (isDoneRequest != null && !(isDoneRequest == tasks.getIsDone())) {
             tasks.setIsDone(isDoneRequest);
+        }
+
+        if (isDoneRequest != null && !(isDoneRequest == tasks.getIsDone())) {
+            tasks.setIsDone(isDoneRequest);
+        }
+        if (deadlineRequest != null && !(deadlineRequest == tasks.getDeadline())) {
+            tasks.setDeadline(deadlineRequest);
         }
 
         taskRepository.save(tasks);
@@ -99,4 +125,24 @@ public class TaskService {
         tasks.setTaskList(taskList);
         taskRepository.save(tasks);
     }
+
+    public List<DeadlineResponse> getDeadlineList(int month, int year, int boardID) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        List<Tasks> tasks = taskRepository.getDeadlineList(month, year, boardID, username);
+        List<DeadlineResponse> deadlineList=new ArrayList<>();
+        tasks.forEach((task)->{
+            DeadlineResponse deadline=new DeadlineResponse();
+            deadline.setBoardId(boardID);
+            deadline.setTaskID(task.getId());
+            deadline.setTitle(task.getTaskList().getTitle());
+            deadline.setTaskListId(task.getTaskList().getId());
+            deadline.setTaskName(task.getName());
+            deadline.setDescription(task.getDescription());
+            deadline.setDeadline(task.getDeadline());
+            deadline.setDone(task.getIsDone());
+            deadlineList.add(deadline);
+        });
+        return deadlineList;
+    }
+
 }
