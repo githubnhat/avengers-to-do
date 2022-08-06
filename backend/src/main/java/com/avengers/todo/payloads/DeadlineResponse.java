@@ -10,11 +10,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeadlineResponse {
-    private int board_id;
-    private String username;
+    private int boardId;
+    private Long taskID;
     private String title;
-    private int task_list_id;
-    private String task_name;
+    private Long taskListId;
+    private String taskName;
     private String description;
     @JsonFormat(pattern="dd/MM/yyyy")
     private Date deadline;

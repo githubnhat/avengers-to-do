@@ -128,18 +128,18 @@ public class TaskService {
 
     public List<DeadlineResponse> getDeadlineList(int month, int year, int boardID) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<Object[]> objects = taskRepository.getDeadlineList(month, year, boardID, username);
+        List<Tasks> tasks = taskRepository.getDeadlineList(month, year, boardID, username);
         List<DeadlineResponse> deadlineList=new ArrayList<>();
-        objects.forEach((object)->{
+        tasks.forEach((task)->{
             DeadlineResponse deadline=new DeadlineResponse();
-            deadline.setBoard_id((int) object[0]);
-            deadline.setUsername((String) object[1]);
-            deadline.setTitle((String) object[2]);
-            deadline.setTask_list_id((int) object[3]);
-            deadline.setTask_name((String) object[4]);
-            deadline.setDescription((String) object[5]);
-            deadline.setDeadline((Date) object[6]);
-            deadline.setDone((boolean) object[7]);
+            deadline.setBoardId(boardID);
+            deadline.setTaskID(task.getId());
+            deadline.setTitle(task.getTaskList().getTitle());
+            deadline.setTaskListId(task.getTaskList().getId());
+            deadline.setTaskName(task.getName());
+            deadline.setDescription(task.getDescription());
+            deadline.setDeadline(task.getDeadline());
+            deadline.setDone(task.getIsDone());
             deadlineList.add(deadline);
         });
         return deadlineList;
