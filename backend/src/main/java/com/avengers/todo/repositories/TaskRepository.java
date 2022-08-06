@@ -16,6 +16,6 @@ public interface TaskRepository extends JpaRepository<Tasks, Long> {
 
     Optional<Tasks> findByIdAndActiveTrue(Long id);
 
-    @Query(value = "select new com.avengers.todo.payloads.DeadlineResponse(tasks.deadline, tasks.is_done,tasks.name as task_name, tasks.description, tasks.task_list_id, tl.title, tl.board_id, users.username) from task_list tl inner join tasks on tl.id = tasks.task_list_id inner join tasks_users tu on tasks.id = tu.user_id inner join users on tu.user_id=users.id where tasks.active=true and tl.active=true and tl.board_id=:boardID and users.username=:username and DATE_PART('month', tasks.deadline)=:month and DATE_PART('year', tasks.dealine)=:year ", nativeQuery = true)
-    List<DeadlineResponse> getDeadlineList(@Param("month") int month,@Param("year") int year,@Param("boardID") long boardID,@Param("username") String username);
+    @Query(value = "select tl.board_id, users.username, tl.title, tasks.task_list_id, tasks.name as task_name, tasks.description, tasks.deadline, tasks.is_done from task_list tl inner join tasks on tl.id = tasks.task_list_id inner join tasks_users tu on tasks.id = tu.user_id inner join users on tu.user_id=users.id where tasks.active=true and tl.active=true and tl.board_id= :boardID and users.username= :username and DATE_PART('month', tasks.deadline)= :month and DATE_PART('year', tasks.deadline)= :year ", nativeQuery = true)
+    List<Object[]> getDeadlineList(@Param("month") int month,@Param("year") int year,@Param("boardID") int boardID,@Param("username") String username);
 }

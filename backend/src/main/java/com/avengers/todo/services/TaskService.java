@@ -3,6 +3,7 @@ package com.avengers.todo.services;
 import com.avengers.todo.entity.Comment;
 import com.avengers.todo.entity.TaskList;
 import com.avengers.todo.entity.Tasks;
+import com.avengers.todo.entity.Users;
 import com.avengers.todo.payloads.*;
 import com.avengers.todo.repositories.CommentRepository;
 import com.avengers.todo.repositories.TaskListRepository;
@@ -14,9 +15,7 @@ import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +29,13 @@ public class TaskService {
 
     public TaskResponse create(CreateTask request) {
         TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElse(null);
+        List<Users> listUser = new ArrayList<>();
+        if (request.getUsersList() != null) {
+            request.getUsersList().forEach(
+                    (user) -> {
+                        listUser.add(usersRepository.findByUsername(user.getUsername()));
+                    });
+        }
         if (taskList == null) {
             throw new IllegalStateException("TaskList Not Found");
         }
@@ -39,6 +45,7 @@ public class TaskService {
                 .description(request.getDescription())
                 .isDone(false)
                 .active(true)
+                .users(listUser)
                 .deadline(request.getDeadline())
                 .taskList(taskList).build());
         return TaskResponse.builder()
@@ -74,7 +81,7 @@ public class TaskService {
         String nameRequest = updateTaskRequest.getName();
         String descriptionRequest = updateTaskRequest.getDescription();
         Boolean isDoneRequest = updateTaskRequest.getIsDone();
-        String deadlineRequest = updateTaskRequest.getDeadline();
+        Date deadlineRequest = updateTaskRequest.getDeadline();
 
         Tasks tasks = taskRepository.findById(taskIdRequest)
                 .orElseThrow(() -> new IllegalArgumentException("Task is not exist"));
@@ -94,7 +101,7 @@ public class TaskService {
         if (isDoneRequest != null && !(isDoneRequest == tasks.getIsDone())) {
             tasks.setIsDone(isDoneRequest);
         }
-        if(deadlineRequest != null && !(deadlineRequest == tasks.getDeadline())){
+        if (deadlineRequest != null && !(deadlineRequest == tasks.getDeadline())) {
             tasks.setDeadline(deadlineRequest);
         }
 
@@ -119,9 +126,23 @@ public class TaskService {
         taskRepository.save(tasks);
     }
 
-    public List<DeadlineResponse> getDeadlineList(int month, int year, Long boardID) {
+    public List<DeadlineResponse> getDeadlineList(int month, int year, int boardID) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        return taskRepository.getDeadlineList(month,year,boardID,username);
+        List<Object[]> objects = taskRepository.getDeadlineList(month, year, boardID, username);
+        List<DeadlineResponse> deadlineList=new ArrayList<>();
+        objects.forEach((object)->{
+            DeadlineResponse deadline=new DeadlineResponse();
+            deadline.setBoard_id((int) object[0]);
+            deadline.setUsername((String) object[1]);
+            deadline.setTitle((String) object[2]);
+            deadline.setTask_list_id((int) object[3]);
+            deadline.setTask_name((String) object[4]);
+            deadline.setDescription((String) object[5]);
+            deadline.setDeadline((Date) object[6]);
+            deadline.setDone((boolean) object[7]);
+            deadlineList.add(deadline);
+        });
+        return deadlineList;
     }
 
 }

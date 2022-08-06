@@ -78,12 +78,12 @@ public class TaskController {
         }
     }
 
-    @GetMapping(path = "/{deadline}")
-    public ResponseEntity<?> getDeadlineList(@RequestParam int month, @RequestParam int year, @RequestParam Long boardID) {
-        try {
+    @GetMapping(path = "/deadline")
+    public ResponseEntity<?> getDeadlineList(@RequestParam int month, @RequestParam int year, @RequestParam int boardID) {
+//        try {
             return ResponseEntity.ok(taskService.getDeadlineList(month, year, boardID));
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot delete task list", ""));
-        }
+//        } catch (Exception ex) {
+//            return ResponseEntity.badRequest().body(new ResponseObject("Failed", "Cannot get deadline task list", ""));
+//        }
     }
 }

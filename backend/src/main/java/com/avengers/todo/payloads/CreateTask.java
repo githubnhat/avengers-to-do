@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -15,5 +16,5 @@ public class CreateTask {
     private String name;
     private String description;
     private List<Users> usersList;
-    private String deadline;
+    private Date deadline;
 }

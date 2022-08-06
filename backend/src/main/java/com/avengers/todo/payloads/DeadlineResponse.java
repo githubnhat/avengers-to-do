@@ -1,5 +1,6 @@
 package com.avengers.todo.payloads;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,12 +10,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeadlineResponse {
-    private long board_id;
+    private int board_id;
     private String username;
     private String title;
-    private long task_list_id;
-    private String description;
+    private int task_list_id;
     private String task_name;
+    private String description;
+    @JsonFormat(pattern="dd/MM/yyyy")
     private Date deadline;
     private boolean isDone;
 }
