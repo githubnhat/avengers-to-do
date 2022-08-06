@@ -15,4 +15,5 @@ public class GetBoardIdResponse {
     private String name;
     private String descriptiom;
     private String createdBy;
+    private Double percentDone;
 }

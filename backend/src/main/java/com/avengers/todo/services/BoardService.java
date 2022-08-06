@@ -2,13 +2,14 @@ package com.avengers.todo.services;
 
 import com.avengers.todo.common.Constant;
 import com.avengers.todo.entity.Boards;
+import com.avengers.todo.entity.TaskList;
+import com.avengers.todo.entity.Tasks;
 import com.avengers.todo.payloads.GetBoardIdResponse;
 import com.avengers.todo.payloads.HandleBoard;
 import com.avengers.todo.payloads.UsersInBoardResponse;
-import com.avengers.todo.repositories.BoardRepository;
-import com.avengers.todo.repositories.BoardUserRepository;
-import com.avengers.todo.repositories.UsersRepository;
+import com.avengers.todo.repositories.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.config.Task;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
     private final UsersRepository usersRepository;
+    private final TaskListRepository taskListRepository;
+
+    private final TaskRepository taskRepository;
 
     public Boards create(HandleBoard request) {
         Boards entity = Boards.builder().name(request.getName()).description(request.getDescription()).active(true).build();
@@ -36,7 +40,24 @@ public class BoardService {
 
     public GetBoardIdResponse getById(Long id) {
         Boards boards = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Boards not found"));
-        return GetBoardIdResponse.builder().id(boards.getId()).name(boards.getName()).descriptiom(boards.getDescription()).createdBy(boards.getCreatedBy()).build();
+        List<TaskList> taskLists = taskListRepository.getAllTaskListByBoardId(id);
+        int qtnTask= 0;
+        int qtnTaskDone = 0;
+
+        for(TaskList t : taskLists){
+            qtnTaskDone +=  taskRepository.getAllTaskByTaskListIdAndDone(t.getId(), true).size();
+            qtnTask += taskRepository.getAllTaskByTaskListId(t.getId()).size();
+        }
+
+        double percentDone =  Math.ceil((((double) qtnTaskDone * 100) / qtnTask) * 100) / 100;
+
+        return GetBoardIdResponse.builder()
+                .id(boards.getId())
+                .name(boards.getName())
+                .descriptiom(boards.getDescription())
+                .createdBy(boards.getCreatedBy())
+                .percentDone(percentDone)
+                .build();
     }
 
     public HandleBoard update(HandleBoard request, Long id) {
