@@ -1,12 +1,12 @@
 package com.avengers.todo.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -35,6 +35,7 @@ public class Tasks extends BaseEntity {
     private Boolean isDone;
 
     private boolean active;
-    @JsonFormat(pattern="dd/MM/yyyy", shape= JsonFormat.Shape.STRING)
-    private String deadline;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dead_line")
+    private Date deadline;
 }

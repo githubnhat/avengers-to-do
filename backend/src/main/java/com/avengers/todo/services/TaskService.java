@@ -12,8 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,25 +31,29 @@ public class TaskService {
 
     private final UsersRepository usersRepository;
 
-    public TaskResponse create(CreateTask request) {
+    public TaskResponse create(CreateTask request) throws ParseException {
         TaskList taskList = taskListRepository.findById(request.getTaskListId()).orElse(null);
         if (taskList == null) {
             throw new IllegalStateException("TaskList Not Found");
         }
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
+
+        Date deadlineRequest = new SimpleDateFormat("dd/MM/yyyy").parse(request.getDeadline());
         Tasks tasks = taskRepository.save(Tasks.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .isDone(false)
                 .active(true)
-                .deadline(request.getDeadline())
+                .deadline(deadlineRequest)
                 .taskList(taskList).build());
+        String strDate = dateFormat.format(tasks.getDeadline());
         return TaskResponse.builder()
                 .id(tasks.getId())
                 .name(tasks.getName())
                 .description(tasks.getDescription())
                 .taskListId(tasks.getTaskList().getId())
-                .deadline(tasks.getDeadline())
+                .deadline(strDate)
                 .build();
     }
 
@@ -68,12 +76,12 @@ public class TaskService {
     }
 
 
-    public void updateTask(UpdateTaskRequest updateTaskRequest) {
+    public void updateTask(UpdateTaskRequest updateTaskRequest) throws ParseException {
         Long taskIdRequest = updateTaskRequest.getTaskId();
         String nameRequest = updateTaskRequest.getName();
         String descriptionRequest = updateTaskRequest.getDescription();
         Boolean isDoneRequest = updateTaskRequest.getIsDone();
-        String deadlineRequest = updateTaskRequest.getDeadline();
+        Date deadlineRequest = new SimpleDateFormat("dd/MM/yyyy").parse(updateTaskRequest.getDeadline());
 
         Tasks tasks = taskRepository.findById(taskIdRequest)
                 .orElseThrow(() -> new IllegalArgumentException("Task is not exist"));
