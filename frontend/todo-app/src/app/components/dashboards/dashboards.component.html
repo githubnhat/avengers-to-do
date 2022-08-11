@@ -21,6 +21,9 @@
                 <td *ngSwitchCase="'createdDate'">
                     {{rowData[col.field] | date}}
                 </td>
+                <td *ngSwitchCase="'percentDone'">
+                    {{rowData[col.field]}}%
+                </td>
                 <td *ngSwitchDefault="">
                     {{rowData[col.field]}}
                 </td>

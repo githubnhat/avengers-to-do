@@ -54,16 +54,18 @@ public class BoardService {
                 responses.add(GetBoardIdResponse.builder()
                         .id(e.getId())
                         .name(e.getName())
-                        .descriptiom(e.getDescription())
+                        .description(e.getDescription())
                         .createdBy(e.getCreatedBy())
+                        .createdDate(e.getCreatedDate())
                         .percentDone(percentDone)
                         .build());
             } else {
                 responses.add(GetBoardIdResponse.builder()
                         .id(e.getId())
                         .name(e.getName())
-                        .descriptiom(e.getDescription())
+                        .description(e.getDescription())
                         .createdBy(e.getCreatedBy())
+                        .createdDate(e.getCreatedDate())
                         .percentDone(100.0)
                         .build());
             }
@@ -88,7 +90,7 @@ public class BoardService {
         return GetBoardIdResponse.builder()
                 .id(boards.getId())
                 .name(boards.getName())
-                .descriptiom(boards.getDescription())
+                .description(boards.getDescription())
                 .createdBy(boards.getCreatedBy())
                 .percentDone(percentDone)
                 .build();
