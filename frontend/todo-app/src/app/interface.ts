@@ -14,6 +14,7 @@ export interface Dashboard {
   description: string;
   createdDate: string;
   createdBy: string;
+  percentDone: number;
   modifiedBy: string;
   modifiedDate: string;
 }
