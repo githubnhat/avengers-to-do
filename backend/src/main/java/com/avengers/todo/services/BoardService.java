@@ -13,6 +13,7 @@ import org.springframework.scheduling.config.Task;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +34,42 @@ public class BoardService {
         return boardRepository.save(entity);
     }
 
-    public List<Boards> getAll() {
+    public List<GetBoardIdResponse> getAll() {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        return boardRepository.findMyBoards(username, true, Constant.APPROVED_INVITATION);
+        List<Boards> listBoard = boardRepository.findMyBoards(username, true, Constant.APPROVED_INVITATION);
+        List<GetBoardIdResponse> responses = new ArrayList<>();
+        listBoard.forEach(e -> {
+            List<TaskList> taskLists = taskListRepository.getAllTaskListByBoardId(e.getId());
+            if (!taskLists.isEmpty()){
+                int qtnTask= 0;
+                int qtnTaskDone = 0;
+
+                for(TaskList t : taskLists){
+                    qtnTaskDone +=  taskRepository.getAllTaskByTaskListIdAndDone(t.getId(), true).size();
+                    qtnTask += taskRepository.getAllTaskByTaskListId(t.getId()).size();
+                }
+
+                double percentDone =  Math.ceil((((double) qtnTaskDone * 100) / qtnTask) * 100) / 100;
+
+                responses.add(GetBoardIdResponse.builder()
+                        .id(e.getId())
+                        .name(e.getName())
+                        .descriptiom(e.getDescription())
+                        .createdBy(e.getCreatedBy())
+                        .percentDone(percentDone)
+                        .build());
+            } else {
+                responses.add(GetBoardIdResponse.builder()
+                        .id(e.getId())
+                        .name(e.getName())
+                        .descriptiom(e.getDescription())
+                        .createdBy(e.getCreatedBy())
+                        .percentDone(100.0)
+                        .build());
+            }
+        });
+
+        return responses;
     }
 
     public GetBoardIdResponse getById(Long id) {

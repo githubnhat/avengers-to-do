@@ -24,18 +24,8 @@ export class DashboardsComponent implements OnInit, OnDestroy {
 
   subscription: Array<Subscription> = new Array<Subscription>();
 
-  mockDashboards: Dashboard[] = [
-    {
-      id: 'abc',
-      createdBy: 'John',
-      description: 'Here is description',
-      name: 'Dashboard 1',
-      createdDate: new Date().toDateString(),
-      modifiedBy: '',
-      modifiedDate: '',
-    },
-  ];
   listDashboards: Dashboard[] = [];
+  
 
   taskListid: any;
 
@@ -62,6 +52,12 @@ export class DashboardsComponent implements OnInit, OnDestroy {
       field: 'description',
       header: 'Description',
       className: 'description',
+      show: true,
+    },
+    {
+      field: 'percentDone',
+      header: 'Progress',
+      className: 'progress',
       show: true,
     },
   ];
