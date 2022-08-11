@@ -24,7 +24,7 @@ import { LoaderInterceptor } from './interceptors/loader.interceptor';
 import { DetailTaskComponent } from './components/dashboards/dashboard/components/detail-task/detail-task.component';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { InvitationsComponent } from './components/invitations/invitations.component';
-
+import { ProgressBarModule } from 'primeng/progressbar';
 
 const COMPONENTS = [
   AppComponent,
@@ -46,6 +46,7 @@ const MODULES = [
   HttpClientModule,
   ReactiveFormsModule,
   FormsModule,
+  ProgressBarModule,
 ];
 
 @NgModule({
@@ -68,10 +69,9 @@ const MODULES = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
-      multi: true
+      multi: true,
     },
-    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
-
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

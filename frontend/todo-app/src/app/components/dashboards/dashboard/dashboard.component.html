@@ -1,7 +1,10 @@
 <div class="content">
   <div class="board-header">
-    <div class="board-header-left" >
-      <h2>WorkBoard Name: <span>{{workboardName}}</span></h2>
+    <div class="board-header-left">
+      <h2>WorkBoard Name: <span>{{workboardName}} </span>
+
+      </h2>
+
     </div>
     <div class="board-header-right">
       <button pButton class="create-new-list-btn" (click)="newTaskList()">
@@ -13,53 +16,56 @@
     </div>
   </div>
   <div class="board-content">
-  <div *ngIf="taskLists.length === 0"class="not-found-task-list">
-    <h2>This board have no task list</h2>
-  </div>
-  <div  *ngIf="taskLists.length !== 0" class="board">
-    <ng-container *ngFor="let tasklist of taskLists">
-      <p-panel [header]="tasklist.title" class="board__list-item">
-        <ng-template pTemplate="icons">
-          <button pButton class="p-panel-header-icon" icon="pi pi-plus" [disabled]="isCreateNewTask"
-            (click)="addNewTask(tasklist)"></button>
+    <p-progressBar [value]="percentDone" [style]="{'margin-bottom':'10px'}"></p-progressBar>
+    <div *ngIf="taskLists.length === 0" class="not-found-task-list">
+      <h2>This board have no task list</h2>
+    </div>
+    <div *ngIf="taskLists.length !== 0" class="board">
+      <ng-container *ngFor="let tasklist of taskLists">
+        <p-panel [header]="tasklist.title" class="board__list-item">
+          <ng-template pTemplate="icons">
+            <button pButton class="p-panel-header-icon" icon="pi pi-plus" [disabled]="isCreateNewTask"
+              (click)="addNewTask(tasklist)"></button>
             <button pButton class="p-panel-header-icon" icon="pi pi-pencil" [disabled]="isCreateNewTask"
-            (click)="editTaskList(tasklist)"></button>
-          <button (click)="deleteTaskList(tasklist)" pButton class="p-panel-header-icon" icon="pi pi-trash"></button>
-        </ng-template>
-        <div *ngFor="let task of tasklist.listTask">
-          <div *ngIf="task.id !== 'newtask'" class="task-item task-valid" pDraggable="task" pDroppable="task"
-            (onDragStart)="dragStartHandler(task)" (drop)="dropHandler($event, tasklist)" (onDragEnd)="dragEndHandler()"
-            pDroppable="dd" >
-            <p [ngClass]="task.isDone? 'done': ''" class="task-item__title" (click)="showDetailTask(task.id)">{{ task.name }}</p>
-            <div class="task-item__actions">
-              <button (click)="doneTask(task, tasklist)" pButton
-              class="p-panel-header-icon p-button-rounded p-button-text" [icon]="task.isDone? 'pi pi-times': 'pi pi-check'"></button>
-              <button (click)="deleteTask(task, tasklist)" pButton
-                class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-trash"></button>
+              (click)="editTaskList(tasklist)"></button>
+            <button (click)="deleteTaskList(tasklist)" pButton class="p-panel-header-icon" icon="pi pi-trash"></button>
+          </ng-template>
+          <div *ngFor="let task of tasklist.listTask">
+            <div *ngIf="task.id !== 'newtask'" class="task-item task-valid" pDraggable="task" pDroppable="task"
+              (onDragStart)="dragStartHandler(task)" (drop)="dropHandler($event, tasklist)"
+              (onDragEnd)="dragEndHandler()" pDroppable="dd">
+              <p [ngClass]="task.isDone? 'done': ''" class="task-item__title" (click)="showDetailTask(task.id)">{{
+                task.name }}</p>
+              <div class="task-item__actions">
+                <button (click)="doneTask(task, tasklist)" pButton
+                  class="p-panel-header-icon p-button-rounded p-button-text"
+                  [icon]="task.isDone? 'pi pi-times': 'pi pi-check'"></button>
+                <button (click)="deleteTask(task, tasklist)" pButton
+                  class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-trash"></button>
 
+              </div>
             </div>
-          </div>
-          <div *ngIf="task.id === 'newtask'" class="new-task task-item">
-            <input [(ngModel)]="taskName" pInputText class="p-inputtext-sm new-task__name" />
-            <div class="new-task__actions">
-              <button [disabled]="taskName === ''" pButton class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-check"
-                (click)="submitNewTask(tasklist.id)"></button>
-              <button pButton class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-times"
-                (click)="cancelNewTask(tasklist)"></button>
+            <div *ngIf="task.id === 'newtask'" class="new-task task-item">
+              <input [(ngModel)]="taskName" pInputText class="p-inputtext-sm new-task__name" />
+              <div class="new-task__actions">
+                <button [disabled]="taskName === ''" pButton class="p-panel-header-icon p-button-rounded p-button-text"
+                  icon="pi pi-check" (click)="submitNewTask(tasklist.id)"></button>
+                <button pButton class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-times"
+                  (click)="cancelNewTask(tasklist)"></button>
+              </div>
             </div>
+
+
           </div>
+          <div pDroppable="task" class="task-item task-not-found" *ngIf="tasklist.listTask.length == 0"
+            (drop)="dropHandler($event, tasklist)">
+            Task not found
+          </div>
+        </p-panel>
+      </ng-container>
 
-
-        </div>
-        <div pDroppable="task" class="task-item task-not-found" *ngIf="tasklist.listTask.length == 0"
-          (drop)="dropHandler($event, tasklist)">
-          Task not found
-        </div>
-      </p-panel>
-    </ng-container>
-
+    </div>
   </div>
-</div>
 </div>
 <p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Create new list"
   [(visible)]="displayCreateNewListDialog">
@@ -85,7 +91,8 @@
   </p-footer>
 </p-dialog>
 
-<app-team-members-dialog *ngIf="displayTeamMembers" [displayTeamMembers]="displayTeamMembers" [dashboardId]="dashboardId" (teamMembersEmitter)="onCloseTeamMembersDialog($event)"></app-team-members-dialog>
+<app-team-members-dialog *ngIf="displayTeamMembers" [displayTeamMembers]="displayTeamMembers"
+  [dashboardId]="dashboardId" (teamMembersEmitter)="onCloseTeamMembersDialog($event)"></app-team-members-dialog>
 
-<app-detail-task *ngIf="displayDetailTask" [taskId]="taskId" [displayDetailTask]="displayDetailTask" (detailTaskEmitter)="closeDetailTask($event)"></app-detail-task>
-
+<app-detail-task *ngIf="displayDetailTask" [taskId]="taskId" [displayDetailTask]="displayDetailTask"
+  (detailTaskEmitter)="closeDetailTask($event)"></app-detail-task>
