@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 
 @Getter
 @Setter
@@ -13,7 +15,8 @@ import lombok.Setter;
 public class GetBoardIdResponse {
     private Long id;
     private String name;
-    private String descriptiom;
+    private String description;
     private String createdBy;
+    private Date createdDate;
     private Double percentDone;
 }
