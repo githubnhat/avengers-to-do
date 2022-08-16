@@ -16,7 +16,7 @@ public class DeadlineResponse {
     private Long taskListId;
     private String taskName;
     private String description;
-    @JsonFormat(pattern="dd/MM/yyyy")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date deadline;
     private boolean isDone;
 }
