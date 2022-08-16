@@ -79,9 +79,9 @@ public class TaskController {
     }
 
     @GetMapping(path = "/deadline")
-    public ResponseEntity<?> getDeadlineList(@RequestParam int month, @RequestParam int year, @RequestParam int boardID) {
+    public ResponseEntity<?> getDeadlineList( @RequestParam int boardID) {
         try {
-            return ResponseEntity.ok(taskService.getDeadlineList(month, year, boardID));
+            return ResponseEntity.ok(taskService.getDeadlineList(boardID));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(new ResponseObject("Failed", "Cannot get deadline task list", ""));
         }
