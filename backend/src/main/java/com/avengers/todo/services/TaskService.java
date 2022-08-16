@@ -126,9 +126,9 @@ public class TaskService {
         taskRepository.save(tasks);
     }
 
-    public List<DeadlineResponse> getDeadlineList(int month, int year, int boardID) {
+    public List<DeadlineResponse> getDeadlineList(int boardID) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<Tasks> tasks = taskRepository.getDeadlineList(month, year, boardID, username);
+        List<Tasks> tasks = taskRepository.getDeadlineList( boardID, username);
         List<DeadlineResponse> deadlineList=new ArrayList<>();
         tasks.forEach((task)->{
             DeadlineResponse deadline=new DeadlineResponse();
