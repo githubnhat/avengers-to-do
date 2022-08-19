@@ -66,7 +66,7 @@ public class BoardService {
                         .description(e.getDescription())
                         .createdBy(e.getCreatedBy())
                         .createdDate(e.getCreatedDate())
-                        .percentDone(100.0)
+                        .percentDone(0.0)
                         .build());
             }
         });

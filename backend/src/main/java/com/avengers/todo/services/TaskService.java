@@ -66,6 +66,7 @@ public class TaskService {
                 .name(task.getName())
                 .description(task.getDescription())
                 .isDone(task.getIsDone())
+                .deadline(task.getDeadline())
                 .comments(comments.stream().map(e -> CommentResponse.builder()
                         .id(e.getId())
                         .content(e.getContent())
