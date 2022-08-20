@@ -1,14 +1,13 @@
 package com.avengers.todo.services;
 
 import com.avengers.todo.common.Constant;
-import com.avengers.todo.entity.Boards;
-import com.avengers.todo.entity.TaskList;
-import com.avengers.todo.entity.Tasks;
+import com.avengers.todo.entity.*;
 import com.avengers.todo.payloads.GetBoardIdResponse;
 import com.avengers.todo.payloads.HandleBoard;
 import com.avengers.todo.payloads.UsersInBoardResponse;
 import com.avengers.todo.repositories.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.config.Task;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,21 +33,19 @@ public class BoardService {
         return boardRepository.save(entity);
     }
 
-    public List<GetBoardIdResponse> getAll() {
+    public List<GetBoardIdResponse> getAll(Pageable pageable) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<Boards> listBoard = boardRepository.findMyBoards(username, true, Constant.APPROVED_INVITATION);
+        List<Boards> listBoard = boardRepository.findMyBoards(username, true, Constant.APPROVED_INVITATION,pageable);
         List<GetBoardIdResponse> responses = new ArrayList<>();
         listBoard.forEach(e -> {
             List<TaskList> taskLists = taskListRepository.getAllTaskListByBoardId(e.getId());
             if (!taskLists.isEmpty()){
                 int qtnTask= 0;
                 int qtnTaskDone = 0;
-
                 for(TaskList t : taskLists){
                     qtnTaskDone +=  taskRepository.getAllTaskByTaskListIdAndDone(t.getId(), true).size();
                     qtnTask += taskRepository.getAllTaskByTaskListId(t.getId()).size();
                 }
-
                 double percentDone =  Math.ceil((((double) qtnTaskDone * 100) / qtnTask) * 100) / 100;
 
                 responses.add(GetBoardIdResponse.builder()
@@ -70,7 +67,6 @@ public class BoardService {
                         .build());
             }
         });
-
         return responses;
     }
 
@@ -133,5 +129,12 @@ public class BoardService {
                 .status("OWNER")
                 .build());
         return result;
+    }
+
+    public int totalItem() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+//        return boardUserRepository.countByUsersUsernameAndBoardsActiveTrueAndStatus(username, Constant.APPROVED_INVITATION);
+       int totalItem = (int) boardRepository.countMyBoard(username, true, Constant.APPROVED_INVITATION);
+        return totalItem;
     }
 }
