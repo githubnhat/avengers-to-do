@@ -1,15 +1,24 @@
 package com.avengers.todo.controllers;
 
+import com.avengers.todo.common.Constant;
 import com.avengers.todo.common.ErrorResponse;
+import com.avengers.todo.payloads.GetBoardIdResponse;
 import com.avengers.todo.payloads.HandleBoard;
+import com.avengers.todo.payloads.PageResponse;
 import com.avengers.todo.payloads.ResponseObject;
 import com.avengers.todo.services.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import com.avengers.todo.payloads.PagesRequest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -31,14 +40,73 @@ public class BoardController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAll() {
+    @PostMapping("/listBoards")
+    public ResponseEntity<?> getAll(@RequestBody PagesRequest request) {
         try {
-            return ResponseEntity.ok(boardService.getAll());
+            PageResponse<GetBoardIdResponse> response = new PageResponse<>();
+            response.setPage(request.getPage());
+            Pageable pageable;
+            if (request.getSortBy() != null && request.getSortBy().equals("progress")){
+                pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
+
+            } else if (request.getSortBy() != null) {
+                Sort sort = request.getSortDesc()== -1 ? Sort.by(request.getSortBy()).descending() :
+                        Sort.by(request.getSortBy()).ascending();
+                pageable = PageRequest.of(request.getPage() - 1, request.getLimit(), sort);
+            } else {
+                pageable = PageRequest.of(request.getPage() - 1, request.getLimit(),
+                        Sort.by("created_date").descending());
+            }
+            int totalItem = boardService.totalItem();
+            response.setTotalItems(totalItem);
+            response.setTotalPages((int) Math.ceil((double) (totalItem) / request.getLimit()));
+            List<GetBoardIdResponse> boards = boardService.getAll(pageable);
+            if (request.getSortBy() != null && request.getSortBy().equals("progress")) {
+                boards = sortByProgress(boards, request);
+            }
+            response.setData(boards);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Query Create Board Successfully", response));
         } catch (Exception ex) {
             log.error("API /api/v1/boards: ", ex);
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message(ex.getMessage()).build());
         }
+
+    }
+
+    private List<GetBoardIdResponse> sortByProgress(List<GetBoardIdResponse> boards, PagesRequest request){
+
+            if (request.getSortDesc() == 1){
+                Collections.sort(boards, new Comparator<>() {
+                    @Override
+                    public int compare(GetBoardIdResponse b1, GetBoardIdResponse b2) {
+                        if (b1.getPercentDone() < b2.getPercentDone()) {
+                            return 1;
+                        } else {
+                            if (b1.getPercentDone() == b2.getPercentDone()) {
+                                return 0;
+                            } else {
+                                return -1;
+                            }
+                        }
+                    }
+                });
+            } else {
+                Collections.sort(boards, new Comparator<>() {
+                    @Override
+                    public int compare(GetBoardIdResponse b1, GetBoardIdResponse b2) {
+                        if (b1.getPercentDone() < b2.getPercentDone()) {
+                            return -1;
+                        } else {
+                            if (b1.getPercentDone() == b2.getPercentDone()) {
+                                return 0;
+                            } else {
+                                return 1;
+                            }
+                        }
+                    }
+                });
+
+        } return boards;
     }
 
     @GetMapping("/{id}")

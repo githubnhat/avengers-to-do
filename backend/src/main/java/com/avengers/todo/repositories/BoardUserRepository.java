@@ -13,4 +13,5 @@ public interface BoardUserRepository extends JpaRepository<BoardsUsers, Long> {
     List<BoardsUsers> findByBoardsIdAndStatusIn(@Param("boardId") Long id, @Param("statusList") Collection<String> status);
     List<BoardsUsers> findByUsersUsernameAndBoardsActiveTrueAndStatusIn(String username, Collection<String> status);
 
+    int countByUsersUsernameAndBoardsActiveTrueAndStatus(String username, String approvedInvitation);
 }

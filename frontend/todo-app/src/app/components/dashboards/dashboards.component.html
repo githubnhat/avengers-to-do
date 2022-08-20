@@ -3,12 +3,20 @@
     <button pButton class="p-panel-header-icon btn" icon="pi pi-plus" label="Add New Workboard"
         (click)="onCreateNewList()"></button>
 </div>
-<p-table [columns]="tableHeaders" [value]="listDashboards">
+<p-table [columns]="tableHeaders" [value]="listDashboards"
+[lazy]="true" (onLazyLoad)="loadBoardsLazy($event)" 
+[paginator]="true"
+[rows]="rows" 
+[showCurrentPageReport]="true" 
+[(first)]="first" 
+[totalRecords]="totalRecords"
+responsiveLayout="scroll"
+currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" 
+ >
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
+            <th *ngFor="let col of columns" pSortableColumn="{{col.className}}"> {{col.header}} 
+                <p-sortIcon field="{{col.className}}"></p-sortIcon> </th>
             <th>
                 Action
             </th>

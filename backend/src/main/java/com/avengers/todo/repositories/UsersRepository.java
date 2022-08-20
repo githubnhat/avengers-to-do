@@ -10,5 +10,6 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     Users findByUsernameAndIsActive(String username, boolean isActive);
 
-    List<Users> findByIsActiveTrue();
+
+    Users findByUsernameAndIsActiveTrue(String username);
 }
