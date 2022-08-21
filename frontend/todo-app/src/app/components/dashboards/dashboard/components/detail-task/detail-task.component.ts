@@ -89,6 +89,7 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
     };
     this.taskService.updateTaskDetail(body).subscribe((res) => {
       console.log(res);
+      location.reload();
     });
     this.displayDetailTask = false;
   }
