@@ -38,7 +38,7 @@
                 <p [ngClass]="task.isDone? 'done': ''">{{
                   task.name }}
                 </p>
-                <p [ngClass]="taskDealine(task.deadline)">Dealine: {{task.deadline}}</p>
+                <p [ngClass]="taskDealine(task.deadline)">Deadline: {{task.deadline}}</p>
               </div>
               <div class="task-item__actions">
                 <button (click)="doneTask(task, tasklist)" pButton
