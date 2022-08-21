@@ -11,7 +11,8 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   getAllDashboards(body: any): Observable<PageResponse> {
-    return this.http.post<PageResponse>(`${environment.endPoint}/boards/listBoards`, body);
+    // return this.http.post<PageResponse>(`${environment.endPoint}/boards/listBoards`, body);
+    return this.http.post<PageResponse>(`http://localhost:8081/api/v1/boards/listBoards`, body);
   }
 
   getDashboardById(id: string): Observable<Dashboard> {

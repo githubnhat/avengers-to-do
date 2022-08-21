@@ -27,4 +27,12 @@ public interface BoardRepository extends JpaRepository<Boards, Long> {
             "(b.created_by =:username or (bu.user_id in (select id from users where username =:username) and bu.status = :status))",
             nativeQuery = true)
     long countMyBoard(@Param("username") String username, @Param("active") boolean active, @Param("status") String status);
+
+    @Query(value = "select b.* " +
+            "from boards b " +
+            "left join boards_users bu on b.id = bu.board_id " +
+            "where b.active =:active and " +
+            "(b.created_by =:username or (bu.user_id in (select id from users where username =:username) and bu.status = :status)) ",
+            nativeQuery = true)
+    List<Boards> findMyBoardsOrderByProgress(@Param("username") String username, @Param("active") boolean active, @Param("status") String status);
 }

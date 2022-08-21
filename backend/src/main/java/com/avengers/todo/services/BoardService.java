@@ -4,21 +4,27 @@ import com.avengers.todo.common.Constant;
 import com.avengers.todo.entity.*;
 import com.avengers.todo.payloads.GetBoardIdResponse;
 import com.avengers.todo.payloads.HandleBoard;
+import com.avengers.todo.payloads.PagesRequest;
 import com.avengers.todo.payloads.UsersInBoardResponse;
 import com.avengers.todo.repositories.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.config.Task;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -34,8 +40,33 @@ public class BoardService {
     }
 
     public List<GetBoardIdResponse> getAll(Pageable pageable) {
+        List<GetBoardIdResponse> responses = new ArrayList<>();
+        List<Boards> listBoard = new ArrayList<>();
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<Boards> listBoard = boardRepository.findMyBoards(username, true, Constant.APPROVED_INVITATION,pageable);
+        if(pageable.getSort().equals(Sort.by("progress").descending()) ||
+                pageable.getSort().equals(Sort.by("progress").ascending())) {
+            listBoard = boardRepository.findMyBoardsOrderByProgress(username, true, Constant.APPROVED_INVITATION);
+            responses = getBoardIdResponses(listBoard);
+            responses = sortByProgress(responses, pageable);
+            int toFrom = (int) pageable.getOffset();
+            int toIndex = (int) (pageable.getOffset() + pageable.getPageSize()-1);
+            if (responses.size() - toIndex < pageable.getPageSize()){
+                responses = responses.subList(toFrom, responses.size()-1);
+            } else {
+                responses = responses.subList(toFrom, toIndex);
+            }
+
+            log.error("true {}", pageable.getOffset());
+            log.error("true {}", pageable.getOffset() + pageable.getPageSize());
+        } else {
+            listBoard = boardRepository.findMyBoards(username, true, Constant.APPROVED_INVITATION,pageable);
+            responses = getBoardIdResponses(listBoard);
+            log.error("false");
+        }
+        return responses;
+    }
+
+    private List<GetBoardIdResponse> getBoardIdResponses(List<Boards> listBoard){
         List<GetBoardIdResponse> responses = new ArrayList<>();
         listBoard.forEach(e -> {
             List<TaskList> taskLists = taskListRepository.getAllTaskListByBoardId(e.getId());
@@ -47,7 +78,6 @@ public class BoardService {
                     qtnTask += taskRepository.getAllTaskByTaskListId(t.getId()).size();
                 }
                 double percentDone =  Math.ceil((((double) qtnTaskDone * 100) / qtnTask) * 100) / 100;
-
                 responses.add(GetBoardIdResponse.builder()
                         .id(e.getId())
                         .name(e.getName())
@@ -69,6 +99,43 @@ public class BoardService {
         });
         return responses;
     }
+
+    private List<GetBoardIdResponse> sortByProgress(List<GetBoardIdResponse> boards, Pageable pageable){
+
+        if (pageable.getSort().equals(Sort.by("progress").ascending())){
+            Collections.sort(boards, new Comparator<>() {
+                @Override
+                public int compare(GetBoardIdResponse b1, GetBoardIdResponse b2) {
+                    if (b1.getPercentDone() < b2.getPercentDone()) {
+                        return 1;
+                    } else {
+                        if (b1.getPercentDone() == b2.getPercentDone()) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    }
+                }
+            });
+        } else {
+            Collections.sort(boards, new Comparator<>() {
+                @Override
+                public int compare(GetBoardIdResponse b1, GetBoardIdResponse b2) {
+                    if (b1.getPercentDone() < b2.getPercentDone()) {
+                        return -1;
+                    } else {
+                        if (b1.getPercentDone() == b2.getPercentDone()) {
+                            return 0;
+                        } else {
+                            return 1;
+                        }
+                    }
+                }
+            });
+
+        } return boards;
+    }
+
 
     public GetBoardIdResponse getById(Long id) {
         Boards boards = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Boards not found"));

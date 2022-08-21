@@ -26,6 +26,7 @@ import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { InvitationsComponent } from './components/invitations/invitations.component';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DatePipe } from '@angular/common';
+import { PaginatorModule } from "primeng/paginator";
 
 const COMPONENTS = [
   AppComponent,
@@ -48,6 +49,7 @@ const MODULES = [
   ReactiveFormsModule,
   FormsModule,
   ProgressBarModule,
+  PaginatorModule,
 ];
 
 @NgModule({

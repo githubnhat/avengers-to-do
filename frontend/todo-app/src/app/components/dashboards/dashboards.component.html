@@ -3,16 +3,7 @@
     <button pButton class="p-panel-header-icon btn" icon="pi pi-plus" label="Add New Workboard"
         (click)="onCreateNewList()"></button>
 </div>
-<p-table [columns]="tableHeaders" [value]="listDashboards"
-[lazy]="true" (onLazyLoad)="loadBoardsLazy($event)" 
-[paginator]="true"
-[rows]="rows" 
-[showCurrentPageReport]="true" 
-[(first)]="first" 
-[totalRecords]="totalRecords"
-responsiveLayout="scroll"
-currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]" 
- >
+<p-table [columns]="tableHeaders" [value]="listDashboards" [lazy]="true" (onLazyLoad)="loadBoardsLazy($event)">
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns" pSortableColumn="{{col.className}}"> {{col.header}} 
@@ -47,10 +38,23 @@ currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
             </td>
         </tr>
     </ng-template>
-    <ng-template pTemplate="summary">
-        There are {{listDashboards?.length}} Workboard
+    <ng-template pTemplate="footer">
+
+            <p-paginator 
+            (onPageChange)="paginate($event)"
+            [rows]="rows" 
+            [first]="first"
+            [totalRecords]="totalRecords"   
+            [pageLinkSize]="pageLinkSize"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showCurrentPageReport] = "true"
+           
+            currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries" ></p-paginator>
+    
+       
     </ng-template>
 </p-table>
+
 <p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Add New Workboard"
     [(visible)]="displayCreateNewListDialog" [breakpoints]="{'400px': '75vw', '640px': '100vw'}"
     [style]="{width: '400px'}">

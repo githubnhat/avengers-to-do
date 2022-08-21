@@ -1,4 +1,3 @@
-import { Page } from './../../interface';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -29,11 +28,22 @@ export class DashboardsComponent implements OnInit, OnDestroy {
   listDashboards: Dashboard[] = [];
   taskListid: any;
 
-  first = 0;
+  first: number = 0;
   
-  rows = 10;
+  rows = 5;
+
+  page = 0;
+
+  rowsPerPageOptions = [5,10,25,50];
+
+  pageLinkSize = 0; 
 
   totalRecords= 0;
+
+  sortBy: string | null = null;
+
+  sortDesc = 1;
+
 
   tableHeaders = [
     {
@@ -100,9 +110,9 @@ export class DashboardsComponent implements OnInit, OnDestroy {
     }
     this.subscription.push(
       this.dashboardService.getAllDashboards(body).subscribe((data) => {
-        this.totalRecords = data?.data.totalItems
+        this.totalRecords = data?.data.totalItems;
         this.listDashboards = data?.data?.data;
-        console.log(this.listDashboards);
+        this.pageLinkSize = data?.data?.totalPages;
       })
     );
   }
@@ -192,19 +202,41 @@ export class DashboardsComponent implements OnInit, OnDestroy {
     });
   }
   loadBoardsLazy(event: LazyLoadEvent) {
-    
-    console.log("event.first",event.first)
+    if(event.sortField !== undefined && event.sortOrder !== undefined){
+      this.sortBy =  event.sortField;
+      this.sortDesc = event.sortOrder;
+    }
     const body = {
-      page: event.first == 0 ? 1 : (event.rows != undefined && event.first!= undefined) ? (event.first/event.rows) + 1 : 1,
-      limit:  event.rows,
-      sortBy: event.sortField === undefined ? null : event.sortField,
-      sortDesc: event.sortOrder,
+      page: this.page + 1,
+      limit:  this.rows,
+      sortBy: this.sortBy,
+      sortDesc:this.sortDesc, 
     }
     this.subscription.push(
-      this.dashboardService.getAllDashboards(body).subscribe((data) => {
+      this.dashboardService.getAllDashboards(body).subscribe((data) => {  
         this.listDashboards = data?.data?.data;
+        this.totalRecords = data?.data.totalItems;
+        this.pageLinkSize = data?.data?.totalPages;
       })
     );
-    event.first = (this.first + this.rows);
+  }
+  paginate(event: any) {
+    console.log(event)
+    this.page = event.page; 
+    this.rows = event.rows;
+    this.pageLinkSize = event.pageCount;
+    const body = {
+      page: this.page + 1,
+      limit:  this.rows,
+      sortBy: this.sortBy,
+      sortDesc: this.sortDesc,
+    }
+    this.subscription.push(
+      this.dashboardService.getAllDashboards(body).subscribe((data) => {  
+        this.listDashboards = data?.data?.data;
+        this.totalRecords = data?.data.totalItems;
+        
+      })
+    );
   }
 }
