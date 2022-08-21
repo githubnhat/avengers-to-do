@@ -221,7 +221,6 @@ export class DashboardsComponent implements OnInit, OnDestroy {
     );
   }
   paginate(event: any) {
-    console.log(event)
     this.page = event.page; 
     this.rows = event.rows;
     this.pageLinkSize = event.pageCount;
