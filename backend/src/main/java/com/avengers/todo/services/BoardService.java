@@ -55,9 +55,6 @@ public class BoardService {
             } else {
                 responses = responses.subList(toFrom, toIndex);
             }
-
-            log.error("true {}", pageable.getOffset());
-            log.error("true {}", pageable.getOffset() + pageable.getPageSize());
         } else {
             listBoard = boardRepository.findMyBoards(username, true, Constant.APPROVED_INVITATION,pageable);
             responses = getBoardIdResponses(listBoard);
