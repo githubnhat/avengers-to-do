@@ -4,4 +4,5 @@ export class Task {
   description!: string;
   comments!: [{ fullName: string; content: string; createdDate: string }];
   isDone!: boolean;
+  deadline!:string;
 }
