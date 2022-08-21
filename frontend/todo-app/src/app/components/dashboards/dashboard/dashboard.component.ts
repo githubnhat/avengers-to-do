@@ -206,6 +206,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       taskListId: id,
       name: this.taskName,
       description: '',
+      deadline:formatDate(new Date(), 'yyyy-MM-dd', 'en-US', '+0700'),
     };
     this.taskListService.createTask(body).subscribe((data) => {
       this.fetchTasks();
@@ -281,7 +282,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       return "dealine-yel";
     }
 
-    if(time !== undefined){
+    if(time === null){
+      return "dealine-green";  
+    }
+
+    if(time !== undefined ){
       arraynow = now.split('-');
       arraydealine = time.split('-');
 
