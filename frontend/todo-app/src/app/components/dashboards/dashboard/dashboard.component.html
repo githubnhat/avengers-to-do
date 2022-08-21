@@ -33,13 +33,9 @@
           <div *ngFor="let task of tasklist.listTask">
             <div *ngIf="task.id !== 'newtask'" class="task-item task-valid" pDraggable="task" pDroppable="task"
               (onDragStart)="dragStartHandler(task)" (drop)="dropHandler($event, tasklist)"
-              (onDragEnd)="dragEndHandler()" pDroppable="dd" (click)="showDetailTask(task.id)">
-              <div>
-                <p [ngClass]="task.isDone? 'done': ''" >{{
-                  task.name }}
-                </p>
-                <p [ngClass]="taskDealine(task.deadline)">Dealine: {{task.deadline}}</p>
-              </div>
+              (onDragEnd)="dragEndHandler()" pDroppable="dd">
+              <p [ngClass]="task.isDone? 'done': ''" class="task-item__title" (click)="showDetailTask(task.id)">{{
+                task.name }}</p>
               <div class="task-item__actions">
                 <button (click)="doneTask(task, tasklist)" pButton
                   class="p-panel-header-icon p-button-rounded p-button-text"
