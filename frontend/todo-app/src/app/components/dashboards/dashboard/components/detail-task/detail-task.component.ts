@@ -14,6 +14,7 @@ import { TaskService } from '../../../service/task.service';
 import { Task } from './model/detail-task';
 import jwt_decode from 'jwt-decode';
 import { AuthService } from 'src/app/services/auth.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-detail-task',
@@ -33,11 +34,13 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
   commentArray: any[] = [];
   checked: boolean = true;
   setStatus: any;
+  date:any;
   constructor(
     private taskService: TaskService,
     private handleMessageService: HandleMessageService,
     private commentService: CommentService,
-    private authService: AuthService
+    private authService: AuthService,
+    public datepipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +49,12 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
         this.task = data;
         this.commentArray = this.task.comments;
         this.checked = data.isDone;
+        
+        if (!data.deadline){
+          this.date = new Date();
+        } else { 
+          this.date = data.deadline;
+        }
       });
     }
   }
@@ -76,10 +85,10 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
       name: this.task.name,
       description: this.task.description,
       isDone: this.checked,
+      deadline: this.datepipe.transform(this.date, 'yyyy-MM-dd')
     };
     this.taskService.updateTaskDetail(body).subscribe((res) => {
       console.log(res);
-      location.reload();
     });
     this.displayDetailTask = false;
   }

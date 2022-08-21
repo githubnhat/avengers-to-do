@@ -60,6 +60,11 @@
       <!-- <button (click)="deleteTask(task, tasklist)" pButton
           class="p-panel-header-icon p-button-rounded p-button-text" icon="pi pi-trash"></button> -->
     </div>
+    <br>
+    <div class="deadline">
+      <div><strong>Deadline: </strong></div>
+      <p-calendar [(ngModel)]="date" dateFormat="yy-mm-dd" [showIcon]="true"></p-calendar>
+    </div>
     <br />
     <div class="save-detail">
       <button

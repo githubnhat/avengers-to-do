@@ -19,6 +19,8 @@ export class TaskService {
     return this.http.get<any>(`${environment.endPoint}/tasks/${id}`);
   }
   updateTaskDetail(body: any) {
+    console.log(body);
+    
     return this.http.put<any>(`${environment.endPoint}/tasks`, body);
   }
 

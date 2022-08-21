@@ -25,6 +25,7 @@ import { DetailTaskComponent } from './components/dashboards/dashboard/component
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { InvitationsComponent } from './components/invitations/invitations.component';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { DatePipe } from '@angular/common';
 
 const COMPONENTS = [
   AppComponent,
@@ -50,9 +51,10 @@ const MODULES = [
 ];
 
 @NgModule({
-  declarations: [...COMPONENTS, InvitationsComponent],
+  declarations: [...COMPONENTS, InvitationsComponent,],
   imports: [...MODULES],
   providers: [
+    DatePipe,
     MessageService,
     AuthGuardsService,
     {
