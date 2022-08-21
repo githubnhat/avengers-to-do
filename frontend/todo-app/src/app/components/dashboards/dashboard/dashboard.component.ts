@@ -8,6 +8,7 @@ import { Guid } from 'guid-typescript';
 import { TaskListService } from '../service/task-list.service';
 import { HandleMessageService } from 'src/app/services/handle-message.service';
 import { TaskService } from '../service/task.service';
+import { formatDate } from '@angular/common';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -152,6 +153,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       id: 'newtask',
       name: '',
       isDone: false,
+      deadline:'',
     });
   }
 
@@ -267,5 +269,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.percentDone = _data.percentDone + '';
         console.log(this.percentDone);
       });
+  }
+
+   //xử lý màu dealine
+   taskDealine(time:string){
+    let now = formatDate(new Date(), 'yyyy-MM-dd', 'en-US', '+0700');
+    let arraynow:any;
+    let arraydealine:any;
+
+    if(time===now){
+      return "dealine-yel";
+    }
+
+    if(time !== undefined){
+      arraynow = now.split('-');
+      arraydealine = time.split('-');
+
+      if(parseInt(arraydealine[0]) < parseInt(arraynow[0])){
+        return "dealine-red"
+      }
+      if(parseInt(arraydealine[0]) == parseInt(arraynow[0])){
+        if(parseInt(arraydealine[1]) < parseInt(arraynow[1])){
+          return "dealine-red";
+        }
+        if(parseInt(arraydealine[1]) == parseInt(arraynow[1])){
+          if(parseInt(arraydealine[2]) < parseInt(arraynow[2])){
+            return "dealine-red";
+          }
+        }
+      }
+    }
+    return "dealine-green"
   }
 }

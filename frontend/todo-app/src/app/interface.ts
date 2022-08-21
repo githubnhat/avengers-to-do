@@ -43,6 +43,7 @@ export interface Task {
   name: string;
   description: string;
   isDone: boolean;
+  deadline: string;
 }
 
 export interface Invitation {
