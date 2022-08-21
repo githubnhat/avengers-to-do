@@ -2,9 +2,7 @@
   <div class="board-header">
     <div class="board-header-left">
       <h2>WorkBoard Name: <span>{{workboardName}} </span>
-
       </h2>
-
     </div>
     <div class="board-header-right">
       <button pButton class="create-new-list-btn" (click)="newTaskList()">
@@ -15,8 +13,10 @@
       </button>
     </div>
   </div>
-  <div class="board-content">
+  <div class="board-progress">
     <p-progressBar [value]="percentDone" [style]="{'margin-bottom':'10px'}"></p-progressBar>
+  </div>
+  <div class="board-content">
     <div *ngIf="taskLists.length === 0" class="not-found-task-list">
       <h2>This board have no task list</h2>
     </div>
@@ -33,7 +33,7 @@
           <div *ngFor="let task of tasklist.listTask">
             <div *ngIf="task.id !== 'newtask'" class="task-item task-valid" pDraggable="task" pDroppable="task"
               (onDragStart)="dragStartHandler(task)" (drop)="dropHandler($event, tasklist)"
-              (onDragEnd)="dragEndHandler()" pDroppable="dd"   (click)="showDetailTask(task.id)">
+              (onDragEnd)="dragEndHandler()" pDroppable="dd" (click)="showDetailTask(task.id)">
               <div>
                 <p [ngClass]="task.isDone? 'done': ''">{{
                   task.name }}
