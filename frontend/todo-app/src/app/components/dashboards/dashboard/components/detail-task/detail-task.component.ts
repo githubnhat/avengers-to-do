@@ -35,6 +35,14 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
   checked: boolean = true;
   setStatus: any;
   date:any;
+  assignedMember:any;
+  members:any = [
+    {name: 'New York', code: 'NY'},
+    {name: 'Rome', code: 'RM'},
+    {name: 'London', code: 'LDN'},
+    {name: 'Istanbul', code: 'IST'},
+    {name: 'Paris', code: 'PRS'}
+];;
   constructor(
     private taskService: TaskService,
     private handleMessageService: HandleMessageService,
