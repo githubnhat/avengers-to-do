@@ -22,8 +22,11 @@ public interface TaskRepository extends JpaRepository<Tasks, Long> {
 
 
     @Query(value = "select tasks.* from task_list tl inner join tasks on tl.id = tasks.task_list_id inner join tasks_users tu on tasks.id = tu.task_id inner join users on tu.user_id=users.id where tasks.active=true and tl.active=true and tl.board_id= :boardID and users.username= :username", nativeQuery = true)
-    List<Tasks> getDeadlineList(@Param("boardID") int boardID,@Param("username") String username);
+    List<Tasks> getDeadlineList(@Param("boardID") Long boardID,@Param("username") String username);
+
+    @Query(value = "select tasks.* from task_list tl inner join tasks on tl.id = tasks.task_list_id where tasks.active=true and tl.active=true and tl.board_id= :boardID", nativeQuery = true)
+    List<Tasks> getAllDeadlineList(@Param("boardID") Long boardID);
 
     @Query(value = "select tasks.* from task_list tl inner join tasks on tl.id = tasks.task_list_id inner join tasks_users tu on tasks.id = tu.task_id inner join users on tu.user_id=users.id where tasks.active=true and tl.active=true and To_Char(tasks.deadline,'yyyy-mm-dd') =:date and tl.board_id= :boardID and users.username= :username", nativeQuery = true)
-    List<Tasks> getDeadlineListAtDate(@Param("date") String date,@Param("boardID") int boardID,@Param("username") String username);
+    List<Tasks> getDeadlineListByDate(@Param("date") String date,@Param("boardID") long boardID,@Param("username") String username);
 }
