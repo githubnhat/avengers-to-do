@@ -30,6 +30,7 @@
                     label="Detail" [style]="{marginRight:'10px'}"></button>
                 <button pButton icon="pi pi-pencil" class="p-button-success" (click)="onEditDashboard(rowData)"
                     label="Edit" [style]="{marginRight:'10px'}"></button>
+                    <button (click)="viewSchedule(rowData.id)"  [style]="{marginRight:'10px'}" pButton label="View schedule" class="p-panel-header-icon p-button-warning" icon="pi pi-trash"></button>
                 <button pButton icon="pi pi-trash" class="p-button-danger" label="Delete"
                     (click)="onDeleteDashboard(rowData)"></button>
 

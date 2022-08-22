@@ -7,6 +7,7 @@ import { DashboardComponent } from './components/dashboards/dashboard/dashboard.
 import { AuthGuardsService } from './services/auth-guards.service';
 import { LoginGuardService } from './services/login-guard.service';
 import { InvitationsComponent } from './components/invitations/invitations.component';
+import { ScheduleComponent } from './components/schedule/schedule.component';
 
 const routes: Routes = [
   {
@@ -33,7 +34,12 @@ const routes: Routes = [
     path: '',
     component: DashboardsComponent,
     canActivate: [AuthGuardsService]
-  }
+  },
+  {
+    path: 'schedule/:dashboardId',
+    component: ScheduleComponent,
+    canActivate: [AuthGuardsService]
+  },
 
 ];
 

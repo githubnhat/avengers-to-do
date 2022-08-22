@@ -24,7 +24,15 @@ import { LoaderInterceptor } from './interceptors/loader.interceptor';
 import { DetailTaskComponent } from './components/dashboards/dashboard/components/detail-task/detail-task.component';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { InvitationsComponent } from './components/invitations/invitations.component';
+import { ScheduleComponent } from './components/schedule/schedule.component';
+import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin!
 
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  interactionPlugin
+]);
 
 const COMPONENTS = [
   AppComponent,
@@ -46,10 +54,11 @@ const MODULES = [
   HttpClientModule,
   ReactiveFormsModule,
   FormsModule,
+  FullCalendarModule,
 ];
 
 @NgModule({
-  declarations: [...COMPONENTS, InvitationsComponent],
+  declarations: [...COMPONENTS, InvitationsComponent, ScheduleComponent],
   imports: [...MODULES],
   providers: [
     MessageService,
@@ -75,4 +84,4 @@ const MODULES = [
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

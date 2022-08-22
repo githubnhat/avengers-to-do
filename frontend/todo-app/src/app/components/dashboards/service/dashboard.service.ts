@@ -66,4 +66,12 @@ export class DashboardService {
     ).toPromise();
   }
 
+  getDeadlineTasks(boardId: number): Observable<any> {
+    return this.http.get(`${environment.endPoint}/tasks/deadline?boardID=${boardId}`)
+  }
+
+  getDeadlineByDate(boardId: number, date: string) {
+    return this.http.get(`${environment.endPoint}/tasks/deadline-at-date?boardID=${boardId}&date=${date}`)
+  }
+
 }
