@@ -8,6 +8,7 @@ import com.avengers.todo.payloads.UpdateTaskRequest;
 import com.avengers.todo.services.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,14 +66,33 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot Delete task", ""));
         }
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> changeId(@PathVariable Long id , @RequestBody UpdateTaskListRequest request){
+    public ResponseEntity<?> changeId(@PathVariable Long id, @RequestBody UpdateTaskListRequest request) {
         try {
             taskService.changeId(id, request);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("OK", "Change task successfully", ""));
         } catch (Exception ex) {
             log.error("tasks", ex);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("Failed", "Cannot Change task", ""));
+        }
+    }
+
+    @GetMapping(path = "/deadline")
+    public ResponseEntity<?> getDeadlineList( @RequestParam int boardID) {
+        try {
+            return ResponseEntity.ok(taskService.getDeadlineList(boardID));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(new ResponseObject("Failed", "Cannot get deadline task list", ""));
+        }
+    }
+
+    @GetMapping(path = "/deadline-at-date")
+    public ResponseEntity<?> getDeadlineList(@RequestParam String date, @RequestParam int boardID) {
+        try {
+            return ResponseEntity.ok(taskService.getDeadlineList(date,boardID));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(new ResponseObject("Failed", "Cannot get deadline task list", ""));
         }
     }
 }

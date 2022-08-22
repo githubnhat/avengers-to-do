@@ -24,6 +24,10 @@ import { LoaderInterceptor } from './interceptors/loader.interceptor';
 import { DetailTaskComponent } from './components/dashboards/dashboard/components/detail-task/detail-task.component';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { InvitationsComponent } from './components/invitations/invitations.component';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { DatePipe } from '@angular/common';
+import { PaginatorModule } from "primeng/paginator";
+
 import { ScheduleComponent } from './components/schedule/schedule.component';
 import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
@@ -33,6 +37,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
   interactionPlugin
 ]);
+
 
 const COMPONENTS = [
   AppComponent,
@@ -44,6 +49,8 @@ const COMPONENTS = [
   TeamMembersDialogComponent,
   LoadingPageComponent,
   DetailTaskComponent,
+  ScheduleComponent,
+  InvitationsComponent
 ];
 
 const MODULES = [
@@ -55,12 +62,15 @@ const MODULES = [
   ReactiveFormsModule,
   FormsModule,
   FullCalendarModule,
+  ProgressBarModule,
+  PaginatorModule,
 ];
 
 @NgModule({
-  declarations: [...COMPONENTS, InvitationsComponent, ScheduleComponent],
+  declarations: [...COMPONENTS],
   imports: [...MODULES],
   providers: [
+    DatePipe,
     MessageService,
     AuthGuardsService,
     {
@@ -77,10 +87,9 @@ const MODULES = [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
-      multi: true
+      multi: true,
     },
-    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }
-
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

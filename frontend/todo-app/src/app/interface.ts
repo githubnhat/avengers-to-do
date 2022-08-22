@@ -8,12 +8,26 @@ export interface Item {
   modifiedDate: string;
 }
 
+export interface Page {
+  page: number,
+  totalPages: number,
+  totalItems: number,
+  data: Array<Dashboard>,
+}
+
+export interface PageResponse {
+  status: string,
+  message: string,
+  data: Page
+}
+
 export interface Dashboard {
   id: string;
   name: string;
   description: string;
   createdDate: string;
   createdBy: string;
+  percentDone: number;
   modifiedBy: string;
   modifiedDate: string;
 }
@@ -29,6 +43,7 @@ export interface Task {
   name: string;
   description: string;
   isDone: boolean;
+  deadline: string;
 }
 
 export interface Invitation {

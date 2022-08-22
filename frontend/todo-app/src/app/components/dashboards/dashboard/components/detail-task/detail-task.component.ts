@@ -12,6 +12,10 @@ import { HandleMessageService } from 'src/app/services/handle-message.service';
 import { CommentService } from '../../../service/comment.service';
 import { TaskService } from '../../../service/task.service';
 import { Task } from './model/detail-task';
+import jwt_decode from 'jwt-decode';
+import { AuthService } from 'src/app/services/auth.service';
+import { DatePipe } from '@angular/common';
+
 @Component({
   selector: 'app-detail-task',
   templateUrl: './detail-task.component.html',
@@ -30,10 +34,13 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
   commentArray: any[] = [];
   checked: boolean = true;
   setStatus: any;
+  date:any;
   constructor(
     private taskService: TaskService,
     private handleMessageService: HandleMessageService,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private authService: AuthService,
+    public datepipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +49,12 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
         this.task = data;
         this.commentArray = this.task.comments;
         this.checked = data.isDone;
+        
+        if (!data.deadline){
+          this.date = new Date();
+        } else { 
+          this.date = data.deadline;
+        }
       });
     }
   }
@@ -72,20 +85,33 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
       name: this.task.name,
       description: this.task.description,
       isDone: this.checked,
+      deadline: this.datepipe.transform(this.date, 'yyyy-MM-dd')
     };
     this.taskService.updateTaskDetail(body).subscribe((res) => {
       console.log(res);
+      location.reload();
     });
     this.displayDetailTask = false;
-    location.reload();
   }
+
   comment() {
+    let token = this.authService.httpHeaders;
+    let decoded: any = jwt_decode(token);
+
     let body = {
+      fullName: decoded.fullName,
       content: this.content,
       taskId: this.taskId,
     };
+
     this.commentService.comment(body).subscribe((res) => {
-      location.reload();
+      this.fetchCommentData();
+    });
+    this.content = '';
+  }
+  fetchCommentData() {
+    this.taskService.getTaskDetail(this.taskId).subscribe((data) => {
+      this.commentArray = data.comments;
     });
   }
   // Work against memory leak if component is destroyed

@@ -8,6 +8,7 @@ import { Guid } from 'guid-typescript';
 import { TaskListService } from '../service/task-list.service';
 import { HandleMessageService } from 'src/app/services/handle-message.service';
 import { TaskService } from '../service/task.service';
+import { formatDate } from '@angular/common';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -19,7 +20,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   displayDetailTask: boolean = false;
   private subscription: Subscription[] = [];
   private draggedTask?: Task;
-  private selectedTaskListId?: number
+  private selectedTaskListId?: number;
   private newTaskMapping: string[] = [];
 
   public dashboardId: string = '';
@@ -40,6 +41,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   taskList: any;
 
   workboardName: String = '';
+  percentDone: String = '';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -49,8 +51,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     private form: FormBuilder,
     private dashboardService: DashboardService
-  ) { }
-
+  ) {}
 
   ngOnInit(): void {
     this.fetchUrlData();
@@ -93,12 +94,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   dropHandler(event: Event, taskList: TaskList): void {
     const body = {
-      taskListId: taskList.id
-    }
-    if (this.draggedTask && !taskList.listTask.some(_task => _task.id === this.draggedTask?.id)) {
-      this.taskService.changeIdTaskList(parseInt(this.draggedTask!.id), body).then(() => {
-        this.fetchTasks()
-      })
+      taskListId: taskList.id,
+    };
+    if (
+      this.draggedTask &&
+      !taskList.listTask.some((_task) => _task.id === this.draggedTask?.id)
+    ) {
+      this.taskService
+        .changeIdTaskList(parseInt(this.draggedTask!.id), body)
+        .then(() => {
+          this.fetchTasks();
+        });
     }
   }
 
@@ -147,6 +153,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       id: 'newtask',
       name: '',
       isDone: false,
+      deadline:'',
     });
   }
 
@@ -190,6 +197,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.taskService.doneTask(body).then(() => {
       task.isDone = body.isDone;
       this.handleMessageService.setMessage(message);
+      this.fecthWorkboardName();
     });
   }
 
@@ -198,11 +206,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       taskListId: id,
       name: this.taskName,
       description: '',
+      deadline:formatDate(new Date(), 'yyyy-MM-dd', 'en-US', '+0700'),
     };
     this.taskListService.createTask(body).subscribe((data) => {
       this.fetchTasks();
       this.isCreateNewTask = false;
       this.taskName = '';
+      this.fecthWorkboardName();
     });
   }
   cancelNewTask(taskList: TaskList): void {
@@ -215,34 +225,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
   deleteTaskList(taskList: TaskList): void {
     this.taskListService.deleteTaskList(taskList.id).then(() => {
       this.handleMessageService.setMessage({
-        detail: "Delete successfully",
+        detail: 'Delete successfully',
         key: 'toast',
         severity: 'success',
-        summary: 'Success'
-      })
-      this.fetchTasks()
-    })
+        summary: 'Success',
+      });
+      this.fetchTasks();
+    });
   }
 
   deleteTask(task: Task, tasklist: TaskList) {
-    if (task.id !== "newtask") {
+    if (task.id !== 'newtask') {
       this.taskService.deleteTask(parseInt(task.id)).then(() => {
         this.handleMessageService.setMessage({
-          detail: "Delete successfully",
+          detail: 'Delete successfully',
           key: 'toast',
           severity: 'success',
-          summary: 'Success'
-        })
-        this.fetchTasks()
-      })
+          summary: 'Success',
+        });
+        this.fetchTasks();
+        this.fecthWorkboardName();
+      });
     }
   }
 
   showDetailTask(id: string) {
     this.taskId = id;
     this.displayDetailTask = true;
-
-
   }
   closeDetailTask(event: any) {
     this.displayDetailTask = event;
@@ -254,8 +263,47 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   fecthWorkboardName() {
-    this.dashboardService.getDashboardById(this.dashboardId).subscribe((_data) => {
-      this.workboardName = _data.name;
-    })
+    this.dashboardService
+      .getDashboardById(this.dashboardId)
+      .subscribe((_data) => {
+        this.workboardName = _data.name;
+        this.percentDone = _data.percentDone + '';
+        console.log(this.percentDone);
+      });
+  }
+
+   //xử lý màu dealine
+   taskDealine(time:string){
+    let now = formatDate(new Date(), 'yyyy-MM-dd', 'en-US', '+0700');
+    let arraynow:any;
+    let arraydealine:any;
+
+    if(time===now){
+      return "dealine-yel";
+    }
+
+    if(time === null){
+      return "dealine-green";  
+    }
+
+    if(time !== undefined ){
+      arraynow = now.split('-');
+      arraydealine = time.split('-');
+
+      if(parseInt(arraydealine[0]) < parseInt(arraynow[0])){
+        return "dealine-red"
+      }
+      if(parseInt(arraydealine[0]) == parseInt(arraynow[0])){
+        if(parseInt(arraydealine[1]) < parseInt(arraynow[1])){
+          return "dealine-red";
+        }
+        if(parseInt(arraydealine[1]) == parseInt(arraynow[1])){
+          if(parseInt(arraydealine[2]) < parseInt(arraynow[2])){
+            return "dealine-red";
+          }
+        }
+      }
+    }
+    return "dealine-green"
   }
 }

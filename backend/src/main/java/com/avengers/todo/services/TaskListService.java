@@ -53,6 +53,7 @@ public class TaskListService {
             List<TaskResponse> taskReponses = tasks.stream().map(e -> TaskResponse.builder()
                     .id(e.getId()).name(e.getName()).description(e.getDescription())
                     .isDone(e.getIsDone())
+                    .deadline(e.getDeadline())
                     .build()).collect(Collectors.toList());
 
 

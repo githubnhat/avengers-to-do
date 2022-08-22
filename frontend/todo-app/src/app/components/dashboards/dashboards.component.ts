@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { LazyLoadEvent } from 'primeng/api/lazyloadevent';
+import { Subscription, finalize } from 'rxjs';
 import { HandleMessageService } from 'src/app/services/handle-message.service';
 import { Dashboard } from '../../interface';
 import { DashboardService } from './service/dashboard.service';
@@ -24,44 +25,55 @@ export class DashboardsComponent implements OnInit, OnDestroy {
 
   subscription: Array<Subscription> = new Array<Subscription>();
 
-  mockDashboards: Dashboard[] = [
-    {
-      id: 'abc',
-      createdBy: 'John',
-      description: 'Here is description',
-      name: 'Dashboard 1',
-      createdDate: new Date().toDateString(),
-      modifiedBy: '',
-      modifiedDate: '',
-    },
-  ];
   listDashboards: Dashboard[] = [];
-
   taskListid: any;
+
+  first: number = 0;
+  
+  rows = 5;
+
+  page = 0;
+
+  rowsPerPageOptions = [5,10,25,50];
+
+  pageLinkSize = 0; 
+
+  totalRecords= 0;
+
+  sortBy: string | null = null;
+
+  sortDesc = 1;
+
 
   tableHeaders = [
     {
       field: 'name',
       header: 'Workboard Name',
-      className: 'dashboard-name',
+      className: 'name',
       show: true,
     },
     {
       field: 'createdDate',
       header: 'Created Date',
-      className: 'created-date',
+      className: 'created_date',
       show: true,
     },
     {
       field: 'createdBy',
       header: 'Created By',
-      className: 'created-by',
+      className: 'created_by',
       show: true,
     },
     {
       field: 'description',
       header: 'Description',
       className: 'description',
+      show: true,
+    },
+    {
+      field: 'percentDone',
+      header: 'Progress',
+      className: 'progress',
       show: true,
     },
   ];
@@ -94,10 +106,17 @@ export class DashboardsComponent implements OnInit, OnDestroy {
   }
 
   fetchDashboards(): void {
+    const body = {
+      page: 1,
+      limit: this.rows,
+      sortBy: null,
+      sortDesc: 1,
+    }
     this.subscription.push(
-      this.dashboardService.getAllDashboards().subscribe((data) => {
-        this.listDashboards = data;
-        console.log(data);
+      this.dashboardService.getAllDashboards(body).subscribe((data) => {
+        this.totalRecords = data?.data.totalItems;
+        this.listDashboards = data?.data?.data;
+        this.pageLinkSize = data?.data?.totalPages;
       })
     );
   }
@@ -185,5 +204,42 @@ export class DashboardsComponent implements OnInit, OnDestroy {
     this.subscription.forEach((_x) => {
       _x.unsubscribe();
     });
+  }
+  loadBoardsLazy(event: LazyLoadEvent) {
+    if(event.sortField !== undefined && event.sortOrder !== undefined){
+      this.sortBy =  event.sortField;
+      this.sortDesc = event.sortOrder;
+    }
+    const body = {
+      page: this.page + 1,
+      limit:  this.rows,
+      sortBy: this.sortBy,
+      sortDesc:this.sortDesc, 
+    }
+    this.subscription.push(
+      this.dashboardService.getAllDashboards(body).subscribe((data) => {  
+        this.listDashboards = data?.data?.data;
+        this.totalRecords = data?.data.totalItems;
+        this.pageLinkSize = data?.data?.totalPages;
+      })
+    );
+  }
+  paginate(event: any) {
+    this.page = event.page; 
+    this.rows = event.rows;
+    this.pageLinkSize = event.pageCount;
+    const body = {
+      page: this.page + 1,
+      limit:  this.rows,
+      sortBy: this.sortBy,
+      sortDesc: this.sortDesc,
+    }
+    this.subscription.push(
+      this.dashboardService.getAllDashboards(body).subscribe((data) => {  
+        this.listDashboards = data?.data?.data;
+        this.totalRecords = data?.data.totalItems;
+        
+      })
+    );
   }
 }

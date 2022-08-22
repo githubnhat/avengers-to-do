@@ -3,12 +3,11 @@
     <button pButton class="p-panel-header-icon btn" icon="pi pi-plus" label="Add New Workboard"
         (click)="onCreateNewList()"></button>
 </div>
-<p-table [columns]="tableHeaders" [value]="listDashboards">
+<p-table [columns]="tableHeaders" [value]="listDashboards" [lazy]="true" (onLazyLoad)="loadBoardsLazy($event)">
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
+            <th *ngFor="let col of columns" pSortableColumn="{{col.className}}"> {{col.header}} 
+                <p-sortIcon field="{{col.className}}"></p-sortIcon> </th>
             <th>
                 Action
             </th>
@@ -20,6 +19,9 @@
             <ng-container *ngFor="let col of columns" [ngSwitch]="col.field">
                 <td *ngSwitchCase="'createdDate'">
                     {{rowData[col.field] | date}}
+                </td>
+                <td *ngSwitchCase="'percentDone'">
+                    {{rowData[col.field]}}%
                 </td>
                 <td *ngSwitchDefault="">
                     {{rowData[col.field]}}
@@ -37,10 +39,23 @@
             </td>
         </tr>
     </ng-template>
-    <ng-template pTemplate="summary">
-        There are {{listDashboards?.length}} Workboard
+    <ng-template pTemplate="footer">
+
+            <p-paginator 
+            (onPageChange)="paginate($event)"
+            [rows]="rows" 
+            [first]="first"
+            [totalRecords]="totalRecords"   
+            [pageLinkSize]="pageLinkSize"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showCurrentPageReport] = "true"
+           
+            currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries" ></p-paginator>
+    
+       
     </ng-template>
 </p-table>
+
 <p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Add New Workboard"
     [(visible)]="displayCreateNewListDialog" [breakpoints]="{'400px': '75vw', '640px': '100vw'}"
     [style]="{width: '400px'}">

@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
+import {CalendarModule} from 'primeng/calendar';
 
 const PRIMENG_MODULE = [
   ButtonModule,
@@ -25,6 +26,7 @@ const PRIMENG_MODULE = [
   DropdownModule,
   InputTextareaModule,
   CheckboxModule,
+  CalendarModule
 ];
 
 @NgModule({
