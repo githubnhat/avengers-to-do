@@ -19,6 +19,16 @@
 }
 
 .detail-task-container {
+    .header-area{
+      display: flex;
+      justify-content: space-between;
+      .detail-name{
+          width: 65%;
+      }
+      .members{
+        width: 30%;
+      }
+    }
   ::ng-deep {
     .p-inputtext {
       width: 100%;
