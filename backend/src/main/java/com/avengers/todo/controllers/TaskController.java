@@ -79,7 +79,7 @@ public class TaskController {
     }
 
     @GetMapping(path = "/deadline")
-    public ResponseEntity<?> getDeadlineList( @RequestParam int boardID) {
+    public ResponseEntity<?> getDeadlineList( @RequestParam long boardID) {
         try {
             return ResponseEntity.ok(taskService.getDeadlineList(boardID));
         } catch (Exception ex) {

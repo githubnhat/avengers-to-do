@@ -1,14 +1,8 @@
 package com.avengers.todo.services;
 
-import com.avengers.todo.entity.Comment;
-import com.avengers.todo.entity.TaskList;
-import com.avengers.todo.entity.Tasks;
-import com.avengers.todo.entity.Users;
+import com.avengers.todo.entity.*;
 import com.avengers.todo.payloads.*;
-import com.avengers.todo.repositories.CommentRepository;
-import com.avengers.todo.repositories.TaskListRepository;
-import com.avengers.todo.repositories.TaskRepository;
-import com.avengers.todo.repositories.UsersRepository;
+import com.avengers.todo.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
@@ -22,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final BoardRepository boardRepository;
     private final TaskListRepository taskListRepository;
     private final CommentRepository commentRepository;
 
@@ -127,9 +122,15 @@ public class TaskService {
         taskRepository.save(tasks);
     }
 
-    public List<DeadlineResponse> getDeadlineList(int boardID) {
+    public List<DeadlineResponse> getDeadlineList(long boardID) {
+        Boards boards = boardRepository.findById(boardID).orElseThrow(() -> new IllegalArgumentException("Boards not found"));
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<Tasks> tasks = taskRepository.getDeadlineList( boardID, username);
+        List<Tasks> tasks;
+        if (boards.getCreatedBy().equals(username)) {
+            tasks = taskRepository.getAllDeadlineList(boardID);
+        } else {
+            tasks = taskRepository.getDeadlineList(boardID, username);
+        }
         List<DeadlineResponse> deadlineList=new ArrayList<>();
         tasks.forEach((task)->{
             DeadlineResponse deadline=new DeadlineResponse();
