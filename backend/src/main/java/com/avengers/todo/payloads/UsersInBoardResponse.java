@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 @Builder
 public class UsersInBoardResponse {
+    private Long userId;
     private Long invitationId;
     private String fullName;
     private Date joinDate;

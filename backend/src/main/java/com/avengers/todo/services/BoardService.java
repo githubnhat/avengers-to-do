@@ -9,6 +9,7 @@ import com.avengers.todo.payloads.UsersInBoardResponse;
 import com.avengers.todo.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.config.Task;
@@ -190,6 +191,23 @@ public class BoardService {
                 .joinDate(board.getCreatedDate())
                 .inviteDate(board.getCreatedDate())
                 .fullName(usersRepository.findByUsername(board.getCreatedBy()).getFullName())
+                .status("OWNER")
+                .build());
+        return result;
+    }
+
+    public List<UsersInBoardResponse> getApprovedUsersInBoard(Long boardId) {
+        Boards board = boardRepository.findByIdAndActiveTrue(boardId).orElseThrow(() -> new IllegalStateException("Board not found"));
+        List<UsersInBoardResponse> result = boardUserRepository.findByBoardsIdAndBoardsActiveTrueAndStatus(boardId, Constant.APPROVED_INVITATION)
+                .stream().map(e -> UsersInBoardResponse.builder()
+                        .userId(e.getUsers().getId())
+                        .fullName(e.getUsers().getFullName())
+                        .status(e.getStatus())
+                        .build()).collect(Collectors.toList());
+        Users owner = usersRepository.findByUsername(board.getCreatedBy());
+        result.add(UsersInBoardResponse.builder()
+                .userId(owner.getId())
+                .fullName(owner.getFullName())
                 .status("OWNER")
                 .build());
         return result;
