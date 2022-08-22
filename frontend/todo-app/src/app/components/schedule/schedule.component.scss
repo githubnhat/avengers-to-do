@@ -1,0 +1,30 @@
+:host::ng-deep{
+  .fc-direction-ltr{
+    height: 80vh;
+  }
+  .deadline-tasks-card{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 2px;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  .action{
+    .pi{
+      margin-right: 10px;
+    }
+  }
+  .blue{
+    background: rgb(150, 150, 255);
+  }
+  .red{
+    background: rgb(255, 123, 123);
+  }
+  .green{
+    background: rgb(151, 255, 151);
+  }
+}

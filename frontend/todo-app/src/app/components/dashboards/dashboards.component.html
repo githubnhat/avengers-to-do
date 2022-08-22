@@ -6,7 +6,7 @@
 <p-table [columns]="tableHeaders" [value]="listDashboards" [lazy]="true" (onLazyLoad)="loadBoardsLazy($event)">
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns" pSortableColumn="{{col.className}}"> {{col.header}} 
+            <th *ngFor="let col of columns" pSortableColumn="{{col.className}}"> {{col.header}}
                 <p-sortIcon field="{{col.className}}"></p-sortIcon> </th>
             <th>
                 Action
@@ -27,34 +27,29 @@
                     {{rowData[col.field]}}
                 </td>
             </ng-container>
-            <td>
+            <td [width]="'650px'">
                 <button pButton icon="pi pi-info" (click)="onSelectDashboard(rowData.id)" class="p-button-infor"
                     label="Detail" [style]="{marginRight:'10px'}"></button>
                 <button pButton icon="pi pi-pencil" class="p-button-success" (click)="onEditDashboard(rowData)"
                     label="Edit" [style]="{marginRight:'10px'}"></button>
+                    <button (click)="viewSchedule(rowData.id)"  [style]="{marginRight:'10px'}" pButton label="View schedule" class="p-panel-header-icon p-button-warning" icon="pi pi-calendar"></button>
                 <button pButton icon="pi pi-trash" class="p-button-danger" label="Delete"
                     (click)="onDeleteDashboard(rowData)"></button>
 
             </td>
         </tr>
     </ng-template>
-    <ng-template pTemplate="footer">
-
-            <p-paginator 
-            (onPageChange)="paginate($event)"
-            [rows]="rows" 
-            [first]="first"
-            [totalRecords]="totalRecords"   
-            [pageLinkSize]="pageLinkSize"
-            [rowsPerPageOptions]="rowsPerPageOptions"
-            [showCurrentPageReport] = "true"
-           
-            currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries" ></p-paginator>
-    
-       
-    </ng-template>
 </p-table>
+<p-paginator
+(onPageChange)="paginate($event)"
+[rows]="rows"
+[first]="first"
+[totalRecords]="totalRecords"
+[pageLinkSize]="pageLinkSize"
+[rowsPerPageOptions]="rowsPerPageOptions"
+[showCurrentPageReport] = "true"
 
+currentPageReportTemplate = "Showing {first} to {last} of {totalRecords} entries" ></p-paginator>
 <p-dialog class="create-new-list-dialog" *ngIf="this.displayCreateNewListDialog" header="Add New Workboard"
     [(visible)]="displayCreateNewListDialog" [breakpoints]="{'400px': '75vw', '640px': '100vw'}"
     [style]="{width: '400px'}">

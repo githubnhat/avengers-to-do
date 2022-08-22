@@ -28,6 +28,17 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { DatePipe } from '@angular/common';
 import { PaginatorModule } from "primeng/paginator";
 
+import { ScheduleComponent } from './components/schedule/schedule.component';
+import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin!
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  interactionPlugin
+]);
+
+
 const COMPONENTS = [
   AppComponent,
   LoginComponent,
@@ -38,6 +49,8 @@ const COMPONENTS = [
   TeamMembersDialogComponent,
   LoadingPageComponent,
   DetailTaskComponent,
+  ScheduleComponent,
+  InvitationsComponent
 ];
 
 const MODULES = [
@@ -48,12 +61,13 @@ const MODULES = [
   HttpClientModule,
   ReactiveFormsModule,
   FormsModule,
+  FullCalendarModule,
   ProgressBarModule,
   PaginatorModule,
 ];
 
 @NgModule({
-  declarations: [...COMPONENTS, InvitationsComponent,],
+  declarations: [...COMPONENTS],
   imports: [...MODULES],
   providers: [
     DatePipe,
@@ -79,4 +93,4 @@ const MODULES = [
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

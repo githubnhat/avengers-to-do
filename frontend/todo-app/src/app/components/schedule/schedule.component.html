@@ -1,0 +1,19 @@
+
+<full-calendar  [options]="calendarOptions"></full-calendar>
+<p-dialog header="Date Detail" [(visible)]="isDisplayDetailDateDialog" [closable]="false" [style]="{width: '40vw'}">
+  <ng-container *ngIf="listTasks.length > 0">
+  <div *ngFor="let task of listTasks" class="deadline-tasks-card" [ngStyle]="{backgroundColor:validateColor(task)}">
+     <div class="title">{{task.title}}</div>
+     <div class="action">
+        <span class=" pi pi-check"></span>
+        <span class=" pi pi-times"></span>
+     </div>
+  </div>
+</ng-container>
+<ng-container  *ngIf="listTasks.length == 0">
+  There are no task available in this day!
+</ng-container>
+  <ng-template pTemplate="footer">
+      <p-button icon="pi pi-check" (click)="onHidingDialog()" label="Ok" styleClass="p-button-text"></p-button>
+  </ng-template>
+</p-dialog>

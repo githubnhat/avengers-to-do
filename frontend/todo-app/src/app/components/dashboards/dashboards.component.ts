@@ -83,7 +83,7 @@ export class DashboardsComponent implements OnInit, OnDestroy {
     private router: Router,
     private form: FormBuilder,
     private handleMessageService: HandleMessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchDashboards();
@@ -95,6 +95,10 @@ export class DashboardsComponent implements OnInit, OnDestroy {
       name: [null, [Validators.required]],
       description: [null, [Validators.required]],
     });
+  }
+
+  viewSchedule(dashboardId: string): void {
+    this.router.navigateByUrl(`/schedule/${dashboardId}`);
   }
 
   onSelectDashboard(dashboardId: string): void {
