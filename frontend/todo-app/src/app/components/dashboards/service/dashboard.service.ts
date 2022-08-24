@@ -18,6 +18,10 @@ export class DashboardService {
     return this.http.get<Dashboard>(`${environment.endPoint}/boards/${id}`);
   }
 
+  getApprovedUserInBoard(boardId: string): Observable<any> {
+    return this.http.get(`${environment.endPoint}/boards/${boardId}/approvedusers`);
+  }
+
   createDashboard(body: any) {
     return this.http.post(`${environment.endPoint}/boards`, body);
   }

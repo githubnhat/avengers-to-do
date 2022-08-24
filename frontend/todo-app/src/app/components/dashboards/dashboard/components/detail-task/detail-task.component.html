@@ -66,6 +66,15 @@
       <p-calendar [(ngModel)]="date" dateFormat="yy-mm-dd" [showIcon]="true"></p-calendar>
     </div>
     <br />
+    <div class="assignee">
+      <div><strong>Assign to: </strong></div>
+        <p-dropdown
+        [style]="{'width':'200px'}"
+          [options]="listAsignee"
+          [(ngModel)]="this.selectedMember"
+          optionLabel="fullName"
+        ></p-dropdown>
+      </div>
     <div class="save-detail">
       <button
         pButton

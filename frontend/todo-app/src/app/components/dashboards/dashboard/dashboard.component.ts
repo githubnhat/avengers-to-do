@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public displayCreateNewListDialog: boolean = false;
   public displayEditTaskList: boolean = false;
   public displayTeamMembers: boolean = false;
+  public approvedMembers: any[] = []
 
   taskLists: TaskList[] = [];
   item!: Task;
@@ -51,11 +52,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     private form: FormBuilder,
     private dashboardService: DashboardService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchUrlData();
     this.fecthWorkboardName();
+    this.fetchMember();
   }
 
   fetchTasks(): void {
@@ -91,6 +93,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   dragEndHandler(): void {
     this.draggedTask = undefined;
   }
+
+  fetchMember() {
+    this.subscription.push(
+      this.dashboardService.getApprovedUserInBoard(this.dashboardId).subscribe(_x => {
+        this.approvedMembers = _x;
+      })
+    )
+  }
+
 
   dropHandler(event: Event, taskList: TaskList): void {
     const body = {
@@ -153,7 +164,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       id: 'newtask',
       name: '',
       isDone: false,
-      deadline:'',
+      deadline: '',
     });
   }
 
@@ -206,7 +217,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       taskListId: id,
       name: this.taskName,
       description: '',
-      deadline:formatDate(new Date(), 'yyyy-MM-dd', 'en-US', '+0700'),
+      deadline: formatDate(new Date(), 'yyyy-MM-dd', 'en-US', '+0700'),
     };
     this.taskListService.createTask(body).subscribe((data) => {
       this.fetchTasks();
@@ -272,33 +283,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-   //xử lý màu dealine
-   taskDealine(time:string){
+  //xử lý màu dealine
+  taskDealine(time: string) {
     let now = formatDate(new Date(), 'yyyy-MM-dd', 'en-US', '+0700');
-    let arraynow:any;
-    let arraydealine:any;
+    let arraynow: any;
+    let arraydealine: any;
 
-    if(time===now){
+    if (time === now) {
       return "dealine-yel";
     }
 
-    if(time === null){
-      return "dealine-green";  
+    if (time === null) {
+      return "dealine-green";
     }
 
-    if(time !== undefined ){
+    if (time !== undefined) {
       arraynow = now.split('-');
       arraydealine = time.split('-');
 
-      if(parseInt(arraydealine[0]) < parseInt(arraynow[0])){
+      if (parseInt(arraydealine[0]) < parseInt(arraynow[0])) {
         return "dealine-red"
       }
-      if(parseInt(arraydealine[0]) == parseInt(arraynow[0])){
-        if(parseInt(arraydealine[1]) < parseInt(arraynow[1])){
+      if (parseInt(arraydealine[0]) == parseInt(arraynow[0])) {
+        if (parseInt(arraydealine[1]) < parseInt(arraynow[1])) {
           return "dealine-red";
         }
-        if(parseInt(arraydealine[1]) == parseInt(arraynow[1])){
-          if(parseInt(arraydealine[2]) < parseInt(arraynow[2])){
+        if (parseInt(arraydealine[1]) == parseInt(arraynow[1])) {
+          if (parseInt(arraydealine[2]) < parseInt(arraynow[2])) {
             return "dealine-red";
           }
         }

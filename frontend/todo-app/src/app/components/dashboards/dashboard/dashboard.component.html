@@ -14,6 +14,7 @@
     </div>
   </div>
   <div class="board-progress">
+    <h3 [style]="{'margin':'0'}">Progress: </h3>
     <p-progressBar [value]="percentDone" [style]="{'margin-bottom':'10px'}"></p-progressBar>
   </div>
   <div class="board-content">
@@ -35,10 +36,10 @@
               (onDragStart)="dragStartHandler(task)" (drop)="dropHandler($event, tasklist)"
               (onDragEnd)="dragEndHandler()" pDroppable="dd" (click)="showDetailTask(task.id)">
               <div>
-                <p [ngClass]="task.isDone? 'done': ''">{{
+                <p [style]="{'margin':'2px'}" [ngClass]="task.isDone? 'done': ''">{{
                   task.name }}
                 </p>
-                <p [ngClass]="taskDealine(task.deadline)">Deadline: {{task.deadline}}</p>
+                <p [style]="{'margin':'2px'}" [ngClass]="taskDealine(task.deadline)">Deadline: {{task.deadline}}</p>
               </div>
               <div class="task-item__actions">
                 <button (click)="doneTask(task, tasklist)" pButton
@@ -98,5 +99,5 @@
 <app-team-members-dialog *ngIf="displayTeamMembers" [displayTeamMembers]="displayTeamMembers"
   [dashboardId]="dashboardId" (teamMembersEmitter)="onCloseTeamMembersDialog($event)"></app-team-members-dialog>
 
-<app-detail-task *ngIf="displayDetailTask" [taskId]="taskId" [displayDetailTask]="displayDetailTask"
+<app-detail-task *ngIf="displayDetailTask" [listAsignee]="approvedMembers" [taskId]="taskId" [displayDetailTask]="displayDetailTask"
   (detailTaskEmitter)="closeDetailTask($event)"></app-detail-task>

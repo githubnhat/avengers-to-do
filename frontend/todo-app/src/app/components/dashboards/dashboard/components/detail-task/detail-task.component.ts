@@ -15,6 +15,8 @@ import { Task } from './model/detail-task';
 import jwt_decode from 'jwt-decode';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatePipe } from '@angular/common';
+import { DashboardService } from '../../../service/dashboard.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-detail-task',
@@ -24,6 +26,7 @@ import { DatePipe } from '@angular/common';
 export class DetailTaskComponent implements OnInit, OnDestroy {
   @Input() taskId!: string;
   @Input() displayDetailTask!: boolean;
+  @Input() listAsignee: any = [];
   @Output() detailTaskEmitter = new EventEmitter();
   task!: Task;
   content: string = '';
@@ -32,16 +35,19 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
     { statusTask: 'NO', value: false },
   ];
   commentArray: any[] = [];
+  subscriptions: Subscription[] = []
   checked: boolean = true;
   setStatus: any;
-  date:any;
+  date: any;
+  selectedMember: any;
   constructor(
     private taskService: TaskService,
     private handleMessageService: HandleMessageService,
     private commentService: CommentService,
     private authService: AuthService,
-    public datepipe: DatePipe
-  ) {}
+    public datepipe: DatePipe,
+    private dashboardService: DashboardService
+  ) { }
 
   ngOnInit(): void {
     if (this.taskId) {
@@ -49,10 +55,10 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
         this.task = data;
         this.commentArray = this.task.comments;
         this.checked = data.isDone;
-        
-        if (!data.deadline){
+
+        if (!data.deadline) {
           this.date = new Date();
-        } else { 
+        } else {
           this.date = data.deadline;
         }
       });
@@ -62,6 +68,7 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
   closeTaskDetail() {
     this.detailTaskEmitter.emit(false);
   }
+
 
   doneTask(task: Task): void {
     const body = {
