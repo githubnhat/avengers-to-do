@@ -142,8 +142,14 @@ public class TaskService {
     }
 
     public List<DeadlineResponse> getDeadlineListByDate(String date, long boardID) {
+        Boards boards = boardRepository.findById(boardID).orElseThrow(() -> new IllegalArgumentException("Boards not found"));
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<Tasks> tasks = taskRepository.getDeadlineListByDate(date, boardID, username);
+        List<Tasks> tasks;
+        if (boards.getCreatedBy().equals(username)) {
+            tasks = taskRepository.getDeadlineListByDate(date, boardID);
+        } else {
+            tasks = taskRepository.getDeadlineListByDate(date, boardID, username);
+        }
         return tasksToDeadlineResponses(tasks, boardID);
     }
 
