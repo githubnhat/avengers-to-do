@@ -15,6 +15,5 @@ public class CreateTask {
     private Long taskListId;
     private String name;
     private String description;
-    private List<Users> usersList;
     private Date deadline;
 }

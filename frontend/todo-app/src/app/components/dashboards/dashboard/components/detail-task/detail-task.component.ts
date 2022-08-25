@@ -27,6 +27,7 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
   @Input() taskId!: string;
   @Input() displayDetailTask!: boolean;
   @Input() listAsignee: any = [];
+  @Input() isOwner: boolean = false;
   @Output() detailTaskEmitter = new EventEmitter();
   task!: Task;
   content: string = '';
@@ -55,7 +56,10 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
         this.task = data;
         this.commentArray = this.task.comments;
         this.checked = data.isDone;
-
+        this.selectedMember = this.listAsignee.filter((_x: any) => {
+          console.log(_x)
+          return _x.fullName == data.usersList[0].userName;
+        })[0]
         if (!data.deadline) {
           this.date = new Date();
         } else {
@@ -64,6 +68,9 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+
+
 
   closeTaskDetail() {
     this.detailTaskEmitter.emit(false);
@@ -92,7 +99,12 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
       name: this.task.name,
       description: this.task.description,
       isDone: this.checked,
-      deadline: this.datepipe.transform(this.date, 'yyyy-MM-dd')
+      deadline: this.datepipe.transform(this.date, 'yyyy-MM-dd'),
+      usersList: [
+        {
+          username: this.selectedMember.fullName
+        }
+      ]
     };
     this.taskService.updateTaskDetail(body).subscribe((res) => {
       console.log(res);

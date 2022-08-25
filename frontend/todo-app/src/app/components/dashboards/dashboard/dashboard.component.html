@@ -99,5 +99,5 @@
 <app-team-members-dialog *ngIf="displayTeamMembers" [displayTeamMembers]="displayTeamMembers"
   [dashboardId]="dashboardId" (teamMembersEmitter)="onCloseTeamMembersDialog($event)"></app-team-members-dialog>
 
-<app-detail-task *ngIf="displayDetailTask" [listAsignee]="approvedMembers" [taskId]="taskId" [displayDetailTask]="displayDetailTask"
+<app-detail-task *ngIf="displayDetailTask" [isOwner]="isOwner"  [listAsignee]="approvedMembers" [taskId]="taskId" [displayDetailTask]="displayDetailTask"
   (detailTaskEmitter)="closeDetailTask($event)"></app-detail-task>

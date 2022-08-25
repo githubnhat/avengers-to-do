@@ -21,6 +21,7 @@ public class TaskResponse {
     private Long taskListId;
     private Boolean isDone;
     private List<CommentResponse> comments;
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date deadline;
+    private List<UserResponse> usersList;
 }

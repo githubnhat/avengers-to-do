@@ -7,11 +7,21 @@
   (onHide)="closeTaskDetail()"
 >
   <div class="detail-task-container">
-    <div class="detail-name">
-      <div><strong>Task name: </strong></div>
-      <br />
-      <input type="text" pInputText [(ngModel)]="this.task.name" />
+    <div class="header-area d-flex">
+      <div class="detail-name">
+        <div><strong>Task name: </strong></div>
+        <br />
+        <input type="text" pInputText [(ngModel)]="this.task.name" />
+      </div>
+
+      <div class="members">
+        <div><strong>Assignee: </strong></div>
+        <br />
+        <p-dropdown [options]="listAsignee" [style]="{'minWidth':'100%'}" [(ngModel)]="selectedMember" [placeholder]="'Assign a member'"  optionLabel="fullName"></p-dropdown>
+      </div>
+
     </div>
+
     <div class="detail-description">
       <div><strong>Description: </strong></div>
       <br />
@@ -66,15 +76,6 @@
       <p-calendar [(ngModel)]="date" dateFormat="yy-mm-dd" [showIcon]="true"></p-calendar>
     </div>
     <br />
-    <div class="assignee">
-      <div><strong>Assign to: </strong></div>
-        <p-dropdown
-        [style]="{'width':'200px'}"
-          [options]="listAsignee"
-          [(ngModel)]="this.selectedMember"
-          optionLabel="fullName"
-        ></p-dropdown>
-      </div>
     <div class="save-detail">
       <button
         pButton

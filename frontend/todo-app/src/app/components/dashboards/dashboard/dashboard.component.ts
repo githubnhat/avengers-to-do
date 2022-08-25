@@ -9,6 +9,8 @@ import { TaskListService } from '../service/task-list.service';
 import { HandleMessageService } from 'src/app/services/handle-message.service';
 import { TaskService } from '../service/task.service';
 import { formatDate } from '@angular/common';
+import jwt_decode from 'jwt-decode';
+import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -32,6 +34,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public displayEditTaskList: boolean = false;
   public displayTeamMembers: boolean = false;
   public approvedMembers: any[] = []
+  public isOwner: boolean = false;
 
   taskLists: TaskList[] = [];
   item!: Task;
@@ -49,14 +52,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private taskListService: TaskListService,
     private handleMessageService: HandleMessageService,
     private taskService: TaskService,
-
+    private authService: AuthService,
     private form: FormBuilder,
     private dashboardService: DashboardService
   ) { }
 
   ngOnInit(): void {
+
     this.fetchUrlData();
-    this.fecthWorkboardName();
     this.fetchMember();
   }
 
@@ -149,6 +152,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           (_respone) => {
             console.log(_respone);
             this.taskLists = _respone;
+            this.fecthWorkboardName();
           },
           (error) => {
             console.log();
@@ -170,7 +174,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   editTaskList(taskList: TaskList): void {
     this.selectedTaskListId = taskList.id;
-    console.log(taskList);
     this.displayEditTaskList = true;
     this.editTaskListForm = this.form.group({
       title: [taskList.title, [Validators.required]],
@@ -262,6 +265,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   showDetailTask(id: string) {
     this.taskId = id;
+    console.log(this.isOwner)
     this.displayDetailTask = true;
   }
   closeDetailTask(event: any) {
@@ -274,12 +278,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   fecthWorkboardName() {
+    let token = localStorage.getItem('accessToken')
+    var decoded: any
+    if (token !== null) {
+      decoded = jwt_decode(token);
+    }
+    console.log(decoded.sub)
+    console.log(this.dashboardId)
     this.dashboardService
       .getDashboardById(this.dashboardId)
       .subscribe((_data) => {
         this.workboardName = _data.name;
         this.percentDone = _data.percentDone + '';
-        console.log(this.percentDone);
+        console.log(_data.createdBy)
+        if (decoded.sub == _data.createdBy) {
+          this.isOwner = true;
+        }
+        console.log(this.isOwner)
       });
   }
 

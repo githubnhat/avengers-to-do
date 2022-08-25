@@ -17,8 +17,12 @@ export class ScheduleComponent implements OnInit {
 
   private subscription: Subscription[] = [];
   public isDisplayDetailDateDialog = false;
+  public approvedMembers: any[] = []
 
   selectedDate = "";
+
+  displayDetailTask: boolean = false;
+
 
   dashboardId: any;
 
@@ -33,6 +37,8 @@ export class ScheduleComponent implements OnInit {
 
   events: any[] = [];
 
+  public selectedTask: any;
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -41,6 +47,11 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchUrlData();
+    this.fetchMember();
+  }
+
+  markDone(task: any) {
+
   }
 
   onHidingDialog() {
@@ -54,12 +65,24 @@ export class ScheduleComponent implements OnInit {
       this.dashboardService.getDeadlineTasks(this.dashboardId).subscribe((_response: any) => {
         this.events = _response.map((_x: any) => {
           return {
-            title: _x.title,
+            title: _x.taskName,
             date: _x.deadline,
             backgroundColor: this.validateColor(_x)
           }
         })
         this.calendarOptions.events = this.events;
+      })
+    )
+  }
+
+  closeDetailTask(event: any) {
+    this.displayDetailTask = false;
+  }
+
+  fetchMember() {
+    this.subscription.push(
+      this.dashboardService.getApprovedUserInBoard(this.dashboardId).subscribe(_x => {
+        this.approvedMembers = _x;
       })
     )
   }
@@ -77,7 +100,7 @@ export class ScheduleComponent implements OnInit {
           (_respone) => {
             this.events = _respone.map((_x: any) => {
               return {
-                title: _x.title,
+                title: _x.taskName,
                 date: _x.deadline,
                 backgroundColor: this.validateColor(_x)
               }
@@ -108,6 +131,11 @@ export class ScheduleComponent implements OnInit {
     return false;
   }
 
+
+  selectTask(task: any) {
+    this.selectedTask = task;
+    this.displayDetailTask = true;
+  }
 
 
   handleDateClick(arg: any) {

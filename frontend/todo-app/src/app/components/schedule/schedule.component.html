@@ -2,11 +2,10 @@
 <full-calendar  [options]="calendarOptions"></full-calendar>
 <p-dialog header="Date Detail" [(visible)]="isDisplayDetailDateDialog" [closable]="false" [style]="{width: '40vw'}">
   <ng-container *ngIf="listTasks.length > 0">
-  <div *ngFor="let task of listTasks" class="deadline-tasks-card" [ngStyle]="{backgroundColor:validateColor(task)}">
+  <div *ngFor="let task of listTasks" class="deadline-tasks-card" (click)="selectTask(task)" [ngStyle]="{backgroundColor:validateColor(task)}">
      <div class="title">{{task.title}}</div>
      <div class="action">
-        <span class=" pi pi-check"></span>
-        <span class=" pi pi-times"></span>
+        <span *ngIf="!task.isDone" (click)="markDone(task)" class="mark-done pi pi-check"></span>
      </div>
   </div>
 </ng-container>
@@ -17,3 +16,4 @@
       <p-button icon="pi pi-check" (click)="onHidingDialog()" label="Ok" styleClass="p-button-text"></p-button>
   </ng-template>
 </p-dialog>
+<app-detail-task *ngIf="displayDetailTask" [displayDetailTask]="displayDetailTask" (detailTaskEmitter)="closeDetailTask($event)" [taskId]="selectedTask.taskID" [listAsignee]="approvedMembers"></app-detail-task>

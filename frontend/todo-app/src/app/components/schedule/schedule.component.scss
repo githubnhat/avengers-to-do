@@ -2,6 +2,17 @@
   .fc-direction-ltr{
     height: 80vh;
   }
+  .deadline-tasks-card:hover{
+    opacity: 0.8;
+    transition: 0.3s all;
+    transform: translateX(-5px);
+  }
+  .mark-done:hover{
+    color: rgb(124, 255, 124);
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.3s all;
+  }
   .deadline-tasks-card{
     display: flex;
     align-items: center;
@@ -13,6 +24,7 @@
     border-radius: 5px;
     padding: 5px;
   }
+
   .action{
     .pi{
       margin-right: 10px;

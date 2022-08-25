@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeadlineResponse {
-    private int boardId;
+    private long boardId;
     private Long taskID;
     private String title;
     private Long taskListId;
