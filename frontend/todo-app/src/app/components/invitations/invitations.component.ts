@@ -56,16 +56,20 @@ export class InvitationsComponent implements OnInit, OnDestroy {
   fetchInvitations() {
     this.subscriptions.push(
       this.dashBoardService.getInvitationsOfUser().subscribe(_invitations => {
+        console.log('invite', _invitations)
+        // this.listInvitations = _invitations.filter((item) => item?.status == 'PENDING')
         this.listInvitations = _invitations
       })
     )
   }
 
   acceptInvitation(invitation: Invitation): void {
+
     const body = {
       invitationId: invitation.invitationId,
       status: 'APPROVED'
     }
+
     this.dashBoardService.updateInvitation(body).then(() => {
       this.handleMessageService.setMessage({
         key: 'toast',
@@ -73,8 +77,8 @@ export class InvitationsComponent implements OnInit, OnDestroy {
         summary: 'Success',
         detail: 'Accepted successfully',
       });
+      this.fetchInvitations()
     })
-    this.fetchInvitations()
   }
 
   rejectInvitation(invitation: Invitation): void {

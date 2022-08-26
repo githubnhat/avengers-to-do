@@ -58,7 +58,7 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
         this.checked = data.isDone;
         this.selectedMember = this.listAsignee.filter((_x: any) => {
           console.log(_x)
-          return _x.fullName == data.usersList[0].userName;
+          return _x?.fullName == data.usersList[0]?.userName;
         })[0]
         if (!data.deadline) {
           this.date = new Date();
@@ -102,7 +102,7 @@ export class DetailTaskComponent implements OnInit, OnDestroy {
       deadline: this.datepipe.transform(this.date, 'yyyy-MM-dd'),
       usersList: [
         {
-          username: this.selectedMember.fullName
+          username: this.selectedMember?.fullName
         }
       ]
     };
