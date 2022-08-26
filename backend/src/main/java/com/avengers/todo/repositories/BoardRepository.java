@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Boards, Long> {
-    @Query(value = "select b.* " +
+    @Query(value = "select DISTINCT b.* " +
             "from boards b " +
             "left join boards_users bu on b.id = bu.board_id " +
             "where b.active =:active and " +
