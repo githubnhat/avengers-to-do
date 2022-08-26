@@ -1,12 +1,9 @@
 
 <full-calendar  [options]="calendarOptions"></full-calendar>
-<p-dialog header="Date Detail" [(visible)]="isDisplayDetailDateDialog" [closable]="false" [style]="{width: '40vw'}">
+<p-dialog class="listTask" header="Date Detail" [(visible)]="isDisplayDetailDateDialog" [closable]="false" [style]="{width: '40vw'}">
   <ng-container *ngIf="listTasks.length > 0">
   <div *ngFor="let task of listTasks" class="deadline-tasks-card" (click)="selectTask(task)" [ngStyle]="{backgroundColor:validateColor(task)}">
-     <div class="title">{{task.title}}</div>
-     <div class="action">
-        <span *ngIf="!task.isDone" (click)="markDone(task)" class="mark-done pi pi-check"></span>
-     </div>
+     <div class="title">{{task.taskName}}</div>
   </div>
 </ng-container>
 <ng-container  *ngIf="listTasks.length == 0">

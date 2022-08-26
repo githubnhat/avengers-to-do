@@ -117,11 +117,21 @@ export class ScheduleComponent implements OnInit {
 
   validateColor(task: any): string {
     let backgroundColor = "rgb(150, 150, 255)";
-    if (new Date() > new Date(task.deadline)) {
+    let currentDay = new Date();
+    let deadlineDay = new Date(task.deadline)
+    deadlineDay.setHours(0, 0, 0, 0);
+    currentDay.setHours(0, 0, 0, 0);
+    if (currentDay > deadlineDay) {
       backgroundColor = "rgb(255, 123, 123)";
     }
-    if (task.isDone) {
-      backgroundColor = "rgb(151, 255, 151)";
+    if ((currentDay.getDay() == deadlineDay.getDay())
+      && (currentDay.getMonth() == deadlineDay.getMonth())
+      && (currentDay.getFullYear() == deadlineDay.getFullYear())
+    ) {
+      backgroundColor = "rgb(219, 184, 80)";
+    }
+    if (task.done) {
+      backgroundColor = "rgb(94, 199, 94)";
     }
     return backgroundColor;
   }

@@ -1,4 +1,13 @@
 :host::ng-deep{
+  .fc-daygrid-day-events{
+    max-height: 100px;
+    overflow: auto;
+  }
+ .listTask .p-dialog .p-dialog-content{
+    max-height: 40vh;
+    overflow: auto;
+    padding-bottom: 0 !important;
+  }
   .fc-direction-ltr{
     height: 80vh;
   }
@@ -14,6 +23,7 @@
     transition: 0.3s all;
   }
   .deadline-tasks-card{
+    transition: 0.3s all;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -37,6 +47,9 @@
     background: rgb(255, 123, 123);
   }
   .green{
-    background: rgb(151, 255, 151);
+    background: rgb(94, 199, 94);
+  }
+  .yellow{
+    background-color: rgb(219, 184, 80) ;
   }
 }

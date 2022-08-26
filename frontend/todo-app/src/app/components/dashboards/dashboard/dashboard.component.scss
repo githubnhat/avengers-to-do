@@ -20,7 +20,7 @@
 .content {
   padding: 10px 10px 10px 10px;
   .create-new-list-btn {
-    margin-left: 10px;
+    margin-right: 20px;
   }
   .not-found-task-list {
     display: flex;
@@ -36,17 +36,15 @@
     // display: flex;
   }
   .board-header {
-    display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
     .board-header-left {
       margin: 10px;
 
       h2 {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
           "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        color: #989898;
+        color: var(--primary-text-color);
         span {
           color: #fdaa4b;
         }
@@ -151,6 +149,7 @@
     }
   }
   .create-new-list-dialog {
+
     .p-dialog-footer {
       .p-button:focus {
         box-shadow: unset !important;
@@ -167,18 +166,33 @@
     }
   }
 }
+.board-header-left{
+  h2{
+    margin: 0;
+  }
+}
+.board-header-right{
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+
+}
 
 .board-header {
+
   position: fixed;
   width: 100%;
   justify-content: space-between;
+  z-index: 900;
+  background-color: var(--primary-50);
+  padding: 15px;
+  border-radius: 10px;
 }
 .board-content {
   position: relative;
-  top: 100px;
+  top: 150px;
 }
 .board-progress {
-  position: fixed;
   width: 100%;
-  top: 100px;
+  // top: 100px;
 }

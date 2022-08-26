@@ -3,6 +3,10 @@
     <div class="board-header-left">
       <h2>WorkBoard Name: <span>{{workboardName}} </span>
       </h2>
+      <div class="board-progress">
+        <strong [style]="{'margin':'0'}">Progress: </strong>
+        <p-progressBar [value]="percentDone" [style]="{'margin-bottom':'10px'}"></p-progressBar>
+      </div>
     </div>
     <div class="board-header-right">
       <button pButton class="create-new-list-btn" (click)="newTaskList()">
@@ -13,10 +17,7 @@
       </button>
     </div>
   </div>
-  <div class="board-progress">
-    <h3 [style]="{'margin':'0'}">Progress: </h3>
-    <p-progressBar [value]="percentDone" [style]="{'margin-bottom':'10px'}"></p-progressBar>
-  </div>
+
   <div class="board-content">
     <div *ngIf="taskLists.length === 0" class="not-found-task-list">
       <h2>This board have no task list</h2>
