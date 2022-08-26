@@ -28,7 +28,7 @@ public interface BoardRepository extends JpaRepository<Boards, Long> {
             nativeQuery = true)
     long countMyBoard(@Param("username") String username, @Param("active") boolean active, @Param("status") String status);
 
-    @Query(value = "select b.* " +
+    @Query(value = "select distinct b.* " +
             "from boards b " +
             "left join boards_users bu on b.id = bu.board_id " +
             "where b.active =:active and " +
