@@ -7,7 +7,7 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngFor="let col of columns" pSortableColumn="{{col.className}}"> {{col.header}}
-                <p-sortIcon field="{{col.className}}"></p-sortIcon> </th>
+                <p-sortIcon *ngIf="col.className!== 'progress'" field="{{col.className}}"></p-sortIcon> </th>
             <th>
                 Action
             </th>
