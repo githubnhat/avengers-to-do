@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Boards, Long> {
-    @Query(value = "select b.* " +
+    @Query(value = "select DISTINCT b.* " +
             "from boards b " +
             "left join boards_users bu on b.id = bu.board_id " +
             "where b.active =:active and " +
@@ -20,7 +20,7 @@ public interface BoardRepository extends JpaRepository<Boards, Long> {
 
     Optional<Boards> findByIdAndActiveTrue(Long id);
 
-    @Query(value = "select count(b.*) " +
+    @Query(value = "select count(distinct b.id) " +
             "from boards b " +
             "left join boards_users bu on b.id = bu.board_id " +
             "where b.active =:active and " +
@@ -28,7 +28,7 @@ public interface BoardRepository extends JpaRepository<Boards, Long> {
             nativeQuery = true)
     long countMyBoard(@Param("username") String username, @Param("active") boolean active, @Param("status") String status);
 
-    @Query(value = "select b.* " +
+    @Query(value = "select distinct b.* " +
             "from boards b " +
             "left join boards_users bu on b.id = bu.board_id " +
             "where b.active =:active and " +
