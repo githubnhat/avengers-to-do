@@ -20,7 +20,7 @@ public interface BoardRepository extends JpaRepository<Boards, Long> {
 
     Optional<Boards> findByIdAndActiveTrue(Long id);
 
-    @Query(value = "select count(b.*) " +
+    @Query(value = "select count(distinct b.id) " +
             "from boards b " +
             "left join boards_users bu on b.id = bu.board_id " +
             "where b.active =:active and " +
